@@ -1,15 +1,15 @@
-import { getProduct } from "@/actions/prodoucts";
+import { getProduct } from "@/actions/rooms";
 import { auth } from "@/auth";
 import Pagination from "@/components/Pagination";
 import SearchComponent from "@/components/SearchComponent";
 import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
 
-const productPage = async ({ searchParams }) => {
+const roomPage = async ({ searchParams }) => {
   const session = await auth();
   const { query } = await searchParams;
 
-  const pathname = "products"
+  const pathname = "room"
   const { page } = (await searchParams) || 1;
   const { products, count, ITEM_PER_PAGE } = await getProduct(query, page);
   const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
@@ -29,11 +29,11 @@ const productPage = async ({ searchParams }) => {
         <div>
           <SearchComponent
             placeHolder="Search for product..."
-            linkPage="/dashboard/products"
+            linkPage="/dashboard/admin/rooms"
           />
         </div>
         <Link
-          href="/dashboard/products/add"
+          href="/dashboard/admin/rooms/add"
           className="bg-blue-500 text-secondarytext px-2 py-1 text-center rounded-md hover:bg-blue-900 text-sm"
         >
           Add new
@@ -57,4 +57,4 @@ const productPage = async ({ searchParams }) => {
   );
 };
 
-export default productPage;
+export default roomPage;

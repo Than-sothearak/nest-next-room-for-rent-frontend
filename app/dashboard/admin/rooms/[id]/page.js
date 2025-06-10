@@ -1,5 +1,5 @@
 import { mongoDb } from "@/utils/connectDB";
-import ProductForm from "@/components/ProductForm";
+import ProductForm from "@/components/RoomForm";
 import { Product } from "@/models/Product";
 import mongoose from "mongoose";
 import { getCategories } from "@/actions/categories";

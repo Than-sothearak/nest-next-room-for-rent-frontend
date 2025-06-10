@@ -1,13 +1,13 @@
 import { getCategories } from "@/actions/categories";
-import ProductForm from "@/components/ProductForm";
+import RoomForm from "@/components/RoomForm";
 
-export default async function addProductPage() {
+export default async function addRoomPage() {
   const fecthCategories = await getCategories()
   const getCategory =  JSON.parse(JSON.stringify(fecthCategories))
   const parentCategory = JSON.parse(JSON.stringify(fecthCategories.filter(category => !category.parentCategory)))
 
   return (
     <>
-    <ProductForm categories={getCategory} parentCategory={parentCategory}/></>
+    <RoomForm categories={getCategory} parentCategory={parentCategory}/></>
   );
 }

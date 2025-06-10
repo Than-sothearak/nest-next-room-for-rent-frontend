@@ -4,16 +4,17 @@ import { mongoDb } from "@/utils/connectDB";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadFileToS3";
+import { Room } from "@/models/Room";
 await mongoDb();
 
-export async function getProduct(query, page) {
+export async function getRoom(query, page) {
   const ITEM_PER_PAGE = 20;
 
   try {
     if (query) {
-      const products = await Product.find({
+      const rooms = await Room.find({
         $or: [
-          { productName: { $regex: query, $options: "i" } },
+          { roomName: { $regex: query, $options: "i" } },
 
           { BrandName: { $regex: query, $options: "i" } },
         ],
@@ -24,21 +25,21 @@ export async function getProduct(query, page) {
       const count = products.length;
       return { products, count, ITEM_PER_PAGE };
     }
-    const products = await Product.find()
+    const rooms = await Room.find()
       .sort({ createdAt: -1 })
       .populate("category")
       .populate("parentCategory")
       .limit(ITEM_PER_PAGE)
       .skip(ITEM_PER_PAGE * (page - 1));
-    const count = await Product.countDocuments();
-    return { products, count, ITEM_PER_PAGE };
+    const count = await Room.countDocuments();
+    return { rooms, count, ITEM_PER_PAGE };
   } catch (err) {
     console.error("Error fetching products:", err);
     return { error: "Failed to fetch due to a server error" };
   }
 }
 
-export async function addProduct(prevState, formData) {
+export async function addRoom(prevState, formData) {
   try {
     if (!formData || typeof formData.get !== "function") {
       console.error("Invalid or missing formData:", formData);

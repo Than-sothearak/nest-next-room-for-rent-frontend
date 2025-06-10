@@ -1,4 +1,4 @@
-import { getProduct } from "@/actions/prodoucts";
+import { getProduct } from "@/actions/rooms";
 import { auth } from "@/auth";
 import PosCard from "@/components/PosCard";
 
