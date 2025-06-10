@@ -29,6 +29,7 @@ export default async function Home() {
         <h1 className="text-4xl font-extrabold text-primary leading-tight tracking-tight">
           Welcome, Admin!
         </h1>
+        <p>This is room for rent system</p>
         <Link
           href="/dashboard"
           className="mt-10 px-6 py-3 bg-primary text-tertiary rounded-lg hover:bg-secondary transition-colors"
