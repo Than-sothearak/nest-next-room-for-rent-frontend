@@ -111,27 +111,28 @@ export async function addRoom(prevState, formData) {
     
 }
 
-export async function updateRoom(productId, prevState, formData) {
-  const product = await Product.findById(productId);
+export async function updateRoom(roomId, prevState, formData) {
+  const room = await Room.findById(roomId);
 
-  if (!product) {
-    return { error: "Product not found" };
+  if (!room) {
+    return { error: "Room not found" };
   }
 
   try {
-    const productName = formData.get("productName");
-    const brandName = formData.get("brandName");
+    const roomName = formData.get("roomName");
+    const floor = formData.get("floor");
+    const capacity = formData.get("capacity");
     const category = formData.get("category");
     const price = formData.get("price");
-    const stock = formData.get("stock");
     const status = formData.get("status");
     const description = formData.get("description");
     const parentCategory = formData.get("parentCategory");
     const imageFiles = formData.getAll("images");
-    let removedImages = formData.getAll("removeImages") || [];
     const properties = propertiesFormData(formData);
+    let removedImages = formData.getAll("removeImages") || [];
+ 
 
-    const updatedImageUrls = product.imageUrls.filter(
+    const updatedImageUrls = room.imageUrls.filter(
       (imageUrl) => !removedImages.includes(imageUrl) // Remove only matching URLs
     );
     let imageUrls = updatedImageUrls || [];
@@ -167,29 +168,32 @@ export async function updateRoom(productId, prevState, formData) {
       );
     }
 
-    const productData = {
-      productName,
-      brandName,
+    console.log("Image URLs after processing:", imageUrls);
+
+    const roomData = {
+      roomName,
+      capacity,
       category,
       price,
-      stock,
+      floor,
       status,
-      description,
-      parentCategory,
       imageUrls,
+      description,
+      parentCategory: parentCategory || null,
       properties,
     };
 
-    const errors = validateProductFields(productData);
+    const errors = validateProductFields(roomData);
     if (Object.keys(errors).length > 0) return { errors };
 
     // Update the product
-    await Product.updateOne({ _id: productId }, productData);
-    console.log("Product updated!");
-    revalidatePath(`/dashboard/products/${productId}`);
+    await Room.updateOne({ _id: roomId }, roomData);
+
+    revalidatePath(`/dashboard/admin/rooms/${roomId}`);
+        console.log("Room updated!");
     return { success: true, message: "Product update successfully!" };
   } catch (err) {
-    console.error("Error updating product:", err);
+    console.error("Error updating room:", err);
     return { error: "Failed to update product due to a server error" };
   }
 }

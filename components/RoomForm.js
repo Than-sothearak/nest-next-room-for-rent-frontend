@@ -26,10 +26,11 @@ export default function RoomForm({
     parentCategory: room?.parentCategory || "",
     capacity: room?.capacity || "",            // Instead of stock, number of people room can hold
     price: room?.price || "",                  // e.g. rent price
-    status: room?.status ? 0 : 1,              // 1 = available, 0 = unavailable
+    status: room?.status ? 1 : 0,              // 1 = available, 0 = unavailable
     imageUrls: room?.imageUrls || [],
     properties: room?.properties || [],       // Extra features or amenities
   });
+
 
   const [currentProperties, setCurrentProperties] = useState([]);
   const [files, setFiles] = useState([] || null);
@@ -37,14 +38,14 @@ export default function RoomForm({
   // Remove variants block since rooms usually don’t have variants like products
   // If you want features or amenities you can use properties instead
 
-  const handleRemoveImage = (index) => {
+   const handleRemoveImage = (index) => {
     setFormData((prevFormData) => {
-      const removedImage = prevFormData.imageUrls[index];
+      const removedImage = prevFormData.imageUrls[index]; // Get the removed image URL
 
       return {
         ...prevFormData,
-        imageUrls: prevFormData.imageUrls.filter((_, i) => i !== index),
-        removedImages: [...(prevFormData.removedImages || []), removedImage],
+        imageUrls: prevFormData.imageUrls.filter((_, i) => i !== index), // Remove from imageUrls
+        removedImages: [...(prevFormData.removedImages || []), removedImage], // Store removed image properly
       };
     });
   };
@@ -168,7 +169,7 @@ export default function RoomForm({
                   </div>
 
                   <div>
-                    <label className="block font-medium">Price (per night)</label>
+                    <label className="block font-medium">Price (per month)</label>
                     <input
                       name="price"
                       onChange={handleChange}
@@ -276,7 +277,7 @@ export default function RoomForm({
                   />
                   <label>Available</label>
                 </div>
-                <div className="flex items-center">
+                <div className="flex gap-1 items-center">
                   <input
                     onChange={handleChange}
                     checked={formData?.status === 0}
@@ -292,38 +293,60 @@ export default function RoomForm({
                 The room will be affected by the visibility choice.
               </p>
             </div>
-
-            <div className="bg-primary p-4 w-full flex flex-col gap-4 rounded-lg">
-              <div className="space-y-4 w-full bg-primary rounded-lg">
-                <h1 className="text-lg font-bold">Room Images</h1>
-                <div className="flex gap-4 flex-wrap">
-                  {formData.imageUrls?.map((image, i) => (
-                    <div
-                      key={i}
-                      className="relative overflow-hidden rounded-lg w-[200px] aspect-video"
-                    >
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleRemoveImage(i);
-                        }}
-                        className="absolute top-2 right-2 rounded-lg bg-primary border border-red-600 hover:bg-red-600 p-1 text-red-600 hover:text-white transition-colors z-10"
-                      >
-                        <BiTrash />
-                      </button>
-                      <Image
-                        src={image}
-                        alt="room image"
-                        fill
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="object-cover"
-                      />
-                    </div>
+  <div className="grid gap-2 grid-cols-2">
+                {formData?.removedImages &&
+                  formData.removedImages.map((item, index) => (
+                    <input
+                      key={index}
+                      name="removeImages"
+                      type="text"
+                      defaultValue={item}
+                      className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none hidden"
+                    />
                   ))}
-                </div>
+                {room?.imageUrls && room?.imageUrls.length > 0 ? (
+                  formData?.imageUrls.map((image, index) => (
+                    <div
+                      className={`${
+                        index === 0 ? "col-span-2" : ""
+                      } overflow-hidden shadow-md relative aspect-square rounded-md bg-slate-500 group`}
+                      key={index}
+                    >
+                      <Image
+                        fill
+                        alt={`Image ${index}`}
+                        className="rounded-md object-cover transition-opacity duration-300 group-hover:opacity-25"
+                        src={`${image}`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className="flex justify-center items-center absolute top-1/2 left-1/2  text-slate-200
+               opacity-0 group-hover:opacity-100 transition-opacity duration-300 
+               transform -translate-x-1/2 -translate-y-1/2 "
+                      >
+                        <BiTrash
+                          className="duration-300 rounded-full p-2 w-9 h-9
+               transform hover:scale-125 scale-100 bg-black opacity-50 hover:opacity-90 "
+                          size={20}
+                        />
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div
+                    className={`col-span-2 rounded-md w-full min-h-32 bg-slate-500 relative aspect-square`}
+                  >
+                    <img
+                      alt={`Image`}
+                      className="opacity-20 rounded-md object-cover h-full w-full "
+                      src={`https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png`}
+                    />
+                  </div>
+                )}
               </div>
+              <p className="text-xs text-slate-500">Product images.</p>
             </div>
-          </div>
         </div>
 
         <button

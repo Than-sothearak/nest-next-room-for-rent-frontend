@@ -137,8 +137,8 @@ export default function ProductPropertyForm({
             className="flex flex-col gap-2 border border-secondary p-2 rounded-md"
             key={index}
           >
-            <div className="flex gap-4 justify-between">
-              <label>Part {index + 1}</label>
+            <div className="flex gap-2 justify-between">
+              <label className="text-xs">Part {index + 1}</label>
               <button
                 title="Remove"
                 className=""
@@ -154,7 +154,7 @@ export default function ProductPropertyForm({
                 type="text"
                 name="part"
                 placeholder="Enter part..."
-                className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none"
+                className="text-sm font-bold w-full p-2 rounded-md bg-secondary  focus:ring-0 focus:outline-none"
                 value={item.part}
                 onChange={(e) => handleChange(index, "part", e.target.value)}
               />
@@ -163,7 +163,7 @@ export default function ProductPropertyForm({
                 name="value"
                 type="text"
                 placeholder="Enter value..."
-                className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none"
+                className="w-full p-2 rounded-md bg-secondary text-sm focus:ring-0 focus:outline-none"
                 value={item.value}
                 onChange={(e) => handleChange(index, "value", e.target.value)}
               />

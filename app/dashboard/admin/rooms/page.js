@@ -1,6 +1,7 @@
 import { getRoom } from "@/actions/rooms";
 import { auth } from "@/auth";
 import Pagination from "@/components/Pagination";
+import { RoomView } from "@/components/RoomView";
 import SearchComponent from "@/components/SearchComponent";
 import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
@@ -20,6 +21,7 @@ const roomPage = async ({ searchParams }) => {
     { header: "Category", accessor: "category" },
     { header: "Floor", accessor: "floor" },
      { header: "Price", accessor: "price" },
+      { header: "Status", accessor: "status" },
     { header: "Created At", accessor: "createdAt" },
   ];
 
@@ -39,7 +41,10 @@ const roomPage = async ({ searchParams }) => {
           Add new
         </Link>
       </div>
-      <TableComponent
+      <RoomView 
+      data={JSON.parse(JSON.stringify(rooms))} 
+      pageName="admin/rooms"/>
+      {/* <TableComponent
         productCount={count}
         session={session}
         data={JSON.parse(JSON.stringify(rooms))}
@@ -47,7 +52,7 @@ const roomPage = async ({ searchParams }) => {
         columns={productColumns}
         currentPage={page || 1}
         itemPerPage={ITEM_PER_PAGE}
-      />
+      /> */}
       {/* Pagination Buttons */}
       <Pagination 
       totalPages={countPage} 
