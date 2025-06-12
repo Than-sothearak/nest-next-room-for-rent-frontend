@@ -2,7 +2,7 @@
 const bcrypt = require("bcryptjs");
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
-import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadFileToS3";
+import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { auth } from "@/auth";
@@ -11,7 +11,10 @@ await mongoDb();
 
 
 export async function getUsers(query, page) {
- 
+   const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!")
+  }
   const ITEM_PER_PAGE = 10
   
   try {
@@ -131,8 +134,8 @@ export async function addUsers(prevState, formData) {
   
   }
 
-  revalidatePath(`/dashboard/users/`);
-  redirect("/dashboard/users/");
+  revalidatePath(`/dashboard/admin/users/`);
+  redirect("/dashboard/admin/users/");
 }
 
     
@@ -220,5 +223,5 @@ export async function updateUser(userId, prevState, formData) {
   }
 
     revalidatePath(`/dashboard/`);
-    redirect(`/dashboard/users/${userId}`);
+    redirect(`/dashboard/admin/users/${userId}`);
 }

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 
 export const SidebarList = ({ navList, handleClick }) => {
   const pathName = usePathname();
+    if (!navList) return null; // or a fallback UI like <div>Loading...</div>
 
   return (
     <div className="mt-8 font-bold ">

@@ -3,17 +3,19 @@ import React, { useState } from "react";
 import { SidebarList } from "./SidebarList";
 import Logout from "./Logout";
 import { IoClose } from "react-icons/io5";
-import {
-  analyticNavigation,
-  pageNavigation,
-  userNavigation,
-} from "@/lib/navLinks";
+
 import ChooseSingleImageFile from "./ChooseSingleImage";
 import { IoMdClose } from "react-icons/io";
 import Link from "next/link";
 import Image from "next/image";
 
-const SideBarMain = ({ handleClick, isOpen, session, currentUser }) => {
+import {
+  analyticNavigation,
+  pageNavigation,
+  userNavigation,
+} from "@/lib/navLinks";
+
+const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) => {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -106,8 +108,8 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser }) => {
       </div>
 
       <SidebarList navList={pageNavigation} handleClick={handleClick}/>
-      <SidebarList navList={analyticNavigation} handleClick={handleClick}/>
-      <SidebarList navList={userNavigation} handleClick={handleClick}/>
+      
+    
 
       <Logout />
     </div>

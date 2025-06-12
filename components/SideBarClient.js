@@ -1,13 +1,13 @@
 "use client";
+import { IoMdMenu } from "react-icons/io";
+import { SidebarListMobile } from "@/components/SidebarListMobile";
+import { useState } from "react";
+import SideBarMain from "./SideBarMain";
 import {
   analyticNavigation,
   pageNavigation,
   userNavigation,
 } from "@/lib/navLinks";
-import { IoMdMenu } from "react-icons/io";
-import { SidebarListMobile } from "@/components/SidebarListMobile";
-import { useState } from "react";
-import SideBarMain from "./SideBarMain";
 
 const SideBarClient = ({ session, user}) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +15,7 @@ const SideBarClient = ({ session, user}) => {
   function handleClick() {
     setIsOpen((prev) => !prev);
   }
+
   return (
     <>
       {/*small side */}
@@ -30,8 +31,6 @@ const SideBarClient = ({ session, user}) => {
           </button>
         </div>
         <SidebarListMobile navList={pageNavigation} />
-        <SidebarListMobile navList={analyticNavigation} />
-        <SidebarListMobile navList={userNavigation} />
       </div>
 
       <SideBarMain

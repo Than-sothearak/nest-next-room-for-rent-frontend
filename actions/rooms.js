@@ -3,7 +3,7 @@ import { Product } from "@/models/Product";
 import { mongoDb } from "@/utils/connectDB";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadFileToS3";
+import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { Room } from "@/models/Room";
 await mongoDb();
 

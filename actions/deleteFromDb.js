@@ -4,7 +4,7 @@ import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
-import { deleteFileFromS3 } from "@/utils/uploadFileToS3";
+import { deleteFileFromS3 } from "@/utils/uploadImageFileToS3";
 import { revalidatePath } from "next/cache";
 
 export async function deleteById(id) {

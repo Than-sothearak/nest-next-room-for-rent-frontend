@@ -1,0 +1,175 @@
+"use client";
+
+import { createBooking, updateBooking } from "@/actions/Booking";
+import { useActionState, useState } from "react";
+import ChooseFile from "./ChooseFile";
+
+export default function BookingForm({ users, rooms, bookId}) {
+  const [files, setFiles] = useState([] || null);
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [rent, setRent] = useState("");
+  const [deposit, setDeposit] = useState("");
+  const [status, setStatus] = useState("active");
+  const [notes, setNotes] = useState("");
+
+  const calculateTotal = () => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const months =
+      (end.getFullYear() - start.getFullYear()) * 12 +
+      (end.getMonth() - start.getMonth()) +
+      1;
+    return months > 0 ? Number(rent) + Number(deposit) : 0;
+  };
+
+   const updateBookWithId = updateBooking.bind(null, bookId);
+    const [state, action, isPending] = useActionState(
+      bookId ? updateBookWithId : createBooking,
+      undefined
+    );
+
+  return (
+    <form action={action} className="grid gap-4 max-w-2xl p-4 mt-4 bg-white shadow rounded-xl">
+      <h2 className="text-xl font-semibold">Create Booking</h2>
+
+      <div className="grid gap-2">
+        <label>User phone number</label>
+        <select
+          name="userId"
+          value={selectedUser}
+          onChange={(e) => setSelectedUser(e.target.value)}
+          required
+          className="border rounded p-2"
+        >
+          <option value="">Select user</option>
+          {users.map((u) => (
+            <option key={u._id} value={u._id}>
+              {u.phone}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="grid gap-2">
+        <label>Room</label>
+        <select
+          name="roomId"
+          value={selectedRoom}
+          onChange={(e) => setSelectedRoom(e.target.value)}
+          required
+          className="border rounded p-2"
+        >
+          <option value="">Select room</option>
+          {rooms.map((r) => (
+            <option key={r._id} value={r._id}>
+              {r.name || r.roomName}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-2">
+          <label>Start Date</label>
+          <input
+            type="date"
+            name="startDate"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            required
+            className="border rounded p-2"
+          />
+        </div>
+        <div className="grid gap-2">
+          <label>End Date</label>
+          <input
+            type="date"
+            name="endDate"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            required
+            className="border rounded p-2"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="grid gap-2">
+          <label>Monthly Rent ($)</label>
+          <input
+            type="number"
+            name="rent"
+            value={rent}
+            onChange={(e) => {
+              const value = e.target.value;
+              setRent(value === "" ? "" : Number(e.target.value));
+            }}
+            required
+            className="border rounded p-2"
+          />
+        </div>
+        <div className="grid gap-2">
+          <label>Deposit ($)</label>
+          <input
+            type="number"
+            name="deposit"
+            value={deposit}
+            onChange={(e) => {
+              const value = e.target.value;
+              setDeposit(value === "" ? "" : Number(e.target.value));
+            }}
+            required
+            className="border rounded p-2"
+          />
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <label>Total Price</label>
+        <input
+          type="text"
+          value={calculateTotal()}
+          disabled
+          className="border rounded p-2 bg-gray-100"
+        />
+      </div>
+
+      <div className="grid gap-2">
+        <label>Status</label>
+        <select
+          name="status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          required
+          className="border rounded p-2"
+        >
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
+      <div className="grid gap-2">
+        <label>Notes</label>
+        <textarea
+          name="notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          rows={3}
+          className="border rounded p-2"
+        />
+      </div>
+      <ChooseFile files={files} setFiles={setFiles} />
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white rounded p-2 hover:bg-blue-700"
+      >
+        Create Booking
+      </button>
+    </form>
+  );
+}

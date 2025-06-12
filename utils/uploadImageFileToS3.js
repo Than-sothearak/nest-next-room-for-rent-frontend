@@ -9,33 +9,39 @@ const s3Client = new S3Client({
   },
 });
 
-// Helper function to upload file to S3
 export async function uploadFileToS3(file) {
   try {
     const fileName = `${Date.now()}-${file.name}`;
-    
+    const fileType = file.type;
+
     // Convert file to Buffer
     const fileBuffer = Buffer.isBuffer(file) ? file : Buffer.from(await file.arrayBuffer());
 
-    // Compress and resize the image to ensure it's under 500 KB
-    let compressedImageBuffer = await sharp(fileBuffer)
-      .resize({ width: 1024 }) // Resize to a max width of 1024px (adjust as needed)
-      .jpeg({ quality: 80 }) // Set JPEG quality to 80%
-      .toBuffer();
+    let uploadBuffer = fileBuffer;
+    let contentType = fileType || "application/octet-stream";
 
-    // Check if the compressed image exceeds 500 KB
-    while (compressedImageBuffer.length > 500 * 1024) {
-      compressedImageBuffer = await sharp(compressedImageBuffer)
-        .jpeg({ quality: Math.max(10, Math.floor((compressedImageBuffer.length / 500) * 80)) }) // Reduce quality further
+    // Only compress/resize if it's an image
+    if (fileType.startsWith("image/")) {
+      uploadBuffer = await sharp(fileBuffer)
+        .resize({ width: 1024 })
+        .jpeg({ quality: 80 })
         .toBuffer();
+
+      // Ensure under 500KB
+      while (uploadBuffer.length > 500 * 1024) {
+        uploadBuffer = await sharp(uploadBuffer)
+          .jpeg({ quality: Math.max(10, Math.floor((uploadBuffer.length / 500) * 80)) })
+          .toBuffer();
+      }
+      contentType = "image/jpeg";
     }
 
     const params = {
       Bucket: process.env.AWS_S3_BUCKET,
-      ACL: "public-read", // Remove this if you don't want public access
-      Key: `${fileName}`,
-      Body: compressedImageBuffer,
-      ContentType: "image/jpeg",
+      ACL: "public-read",
+      Key: fileName,
+      Body: uploadBuffer,
+      ContentType: contentType,
     };
 
     await s3Client.send(new PutObjectCommand(params));
