@@ -3,17 +3,27 @@
 import { createBooking, updateBooking } from "@/actions/Booking";
 import { useActionState, useState } from "react";
 import ChooseFile from "./ChooseFile";
+import { formatDate } from "@/utils/formatDate";
+import { BsFillFileCodeFill } from "react-icons/bs";
 
-export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
-  const [files, setFiles] = useState([] || null);
-  const [selectedUser, setSelectedUser] = useState("");
-  const [selectedRoom, setSelectedRoom] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [rent, setRent] = useState("");
-  const [deposit, setDeposit] = useState("");
-  const [status, setStatus] = useState("active");
-  const [notes, setNotes] = useState("");
+export default function BookingForm({
+  users,
+  rooms,
+  booking,
+  bookingId,
+  oneRoom,
+}) {
+  const [files, setFiles] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(booking?.userId || "");
+  const [selectedRoom, setSelectedRoom] = useState(booking?.roomId || "");
+  const [startDate, setStartDate] = useState( formatDate(booking?.startDate) || "");
+  const [endDate, setEndDate] = useState(formatDate(booking?.endDate) || "");
+  const [rent, setRent] = useState(booking?.rent || "");
+  const [deposit, setDeposit] = useState(booking?.deposit || "");
+  const [status, setStatus] = useState(booking?.status || "");
+  const [notes, setNotes] = useState(booking?.notes || "");
+  const [attactFiles, setAttactFiles] = ([booking?.files]|| [])
+
 
   const calculateTotal = () => {
     const start = new Date(startDate);
@@ -25,14 +35,17 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
     return months > 0 ? Number(rent) + Number(deposit) : 0;
   };
 
-   const updateBookWithId = updateBooking.bind(null, bookingId);
-    const [state, action, isPending] = useActionState(
-      bookingId ? updateBookWithId : createBooking,
-      undefined
-    );
+  const updateBookingWithId = updateBooking.bind(null, booking?._id);
+  const [state, action, isPending] = useActionState(
+    booking?._id ? updateBookingWithId : createBooking,
+    undefined
+  );
 
   return (
-    <form action={action} className="grid gap-4 max-w-2xl p-4 mt-4 bg-white shadow rounded-xl">
+    <form
+      action={action}
+      className="grid gap-4 max-w-2xl p-4 mt-4 bg-white shadow rounded-xl"
+    >
       <h2 className="text-xl font-semibold">Create Booking</h2>
 
       <div className="grid gap-2">
@@ -53,8 +66,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
         </select>
       </div>
 
-       
-
       <div className="grid gap-2">
         <label>Room</label>
         <select
@@ -64,19 +75,23 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
           required
           className="border rounded p-2"
         >
-            {state?.errors?.userId && (
-                    <p className="text-red-500">{state.errors.userId}</p>
-                  )}
-          {oneRoom ? <option value={oneRoom._id}>{oneRoom.roomName}</option> : <option value="">Select room</option>}
+          {state?.errors?.userId && (
+            <p className="text-red-500">{state.errors.userId}</p>
+          )}
+          {oneRoom ? (
+            <option value={oneRoom._id}>{oneRoom.roomName}</option>
+          ) : (
+            <option value="">Select room</option>
+          )}
           {rooms.map((r) => (
             <option key={r._id} value={r._id}>
               {r.name || r.roomName}
             </option>
           ))}
         </select>
-         {state?.errors?.roomId && (
-                    <p className="text-red-500">{state.errors.roomId}</p>
-                  )}
+        {state?.errors?.roomId && (
+          <p className="text-red-500">{state.errors.roomId}</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -90,9 +105,9 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.startDate && (
-                    <p className="text-red-500">{state.errors.startDate}</p>
-                  )}
+          {state?.errors?.startDate && (
+            <p className="text-red-500">{state.errors.startDate}</p>
+          )}
         </div>
         <div className="grid gap-2">
           <label>End Date</label>
@@ -104,9 +119,9 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.endDate && (
-                    <p className="text-red-500">{state.errors.endDate}</p>
-                  )}
+          {state?.errors?.endDate && (
+            <p className="text-red-500">{state.errors.endDate}</p>
+          )}
         </div>
       </div>
 
@@ -124,9 +139,9 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.rent && (
-                    <p className="text-red-500">{state.errors.rent}</p>
-                  )}
+          {state?.errors?.rent && (
+            <p className="text-red-500">{state.errors.rent}</p>
+          )}
         </div>
         <div className="grid gap-2">
           <label>Deposit ($)</label>
@@ -141,10 +156,9 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.deposit && (
-                    <p className="text-red-500">{state.errors.deposit}</p>
-                  )}
-          
+          {state?.errors?.deposit && (
+            <p className="text-red-500">{state.errors.deposit}</p>
+          )}
         </div>
       </div>
 
@@ -159,7 +173,7 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
       </div>
 
       <div className="grid gap-2">
-        <label>Status</label>
+        <label className="font-bold">Status</label>
         <select
           name="status"
           value={status}
@@ -172,7 +186,16 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
           <option value="cancelled">Cancelled</option>
         </select>
       </div>
+<div>
+<h1 className="font-bold">Attacment file</h1>
+        {attactFiles?.map((item, index) => (
+          <div key={index} className="w-full border p-2">
+            <BsFillFileCodeFill /> {item}
+          </div>
 
+        ))}
+</div>
+   
       <div className="grid gap-2">
         <label>Notes</label>
         <textarea
@@ -183,24 +206,24 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
           className="border rounded p-2"
         />
       </div>
+   
       <ChooseFile files={files} setFiles={setFiles} />
 
-      
-        <button
-          type="submit"
-          disabled={isPending}
-          className={`p-2 bg-blue-600 text-secondarytext w-full mt-6 mb-10 hover:bg-blue-500 hover:text-slate-200 rounded-md ${
-            isPending ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          {isPending
-            ? bookingId
-              ? "Updating..."
-              : "Adding..."
-            : bookingId
-            ? "Update"
-            : "Create Booking"}
-        </button>
+      <button
+        type="submit"
+        disabled={isPending}
+        className={`p-2 bg-blue-600 text-secondarytext w-full mt-6 mb-10 hover:bg-blue-500 hover:text-slate-200 rounded-md ${
+          isPending ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+      >
+        {isPending
+          ? booking._id
+            ? "Updating..."
+            : "Adding..."
+          : booking._id
+          ? "Update"
+          : "Create Booking"}
+      </button>
     </form>
   );
 }

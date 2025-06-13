@@ -1,19 +1,34 @@
+import { getBooking } from '@/actions/Booking';
 import { getRoom } from '@/actions/rooms';
 import { getUsers } from '@/actions/users'
+import { auth } from '@/auth';
+import BookingList from '@/components/BookingList';
 import SearchCompoenent from '@/components/SearchComponent';
 import Link from 'next/link';
 import React from 'react'
 
-const bookPage = async () => {
+const bookPage = async ({searchParams}) => {
+   const session = await auth();
+   const { query } = await searchParams;
+    const { page } = (await searchParams) || 1;
+    const {sortKey} = (await searchParams) || "date";
+    const {sortDirection }= await searchParams || "descending";
+    const { booking, count } = await getBooking(
+      query,
+      page,
+    );
+    const ITEM_PER_PAGE = 20;
+    const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
     const {users} = await getUsers();
     const { rooms } = await getRoom()
+
   return (
     <div className='p-4 bg-primary mt-4 rounded-lg'>
          <div className="flex justify-between items-center gap-4">
         <div>
           <SearchCompoenent
             placeHolder="Search for product..."
-            linkPage="/dashboard/admin/rooms"
+            linkPage="/dashboard/booking"
           />
         </div>
         <Link
@@ -23,6 +38,17 @@ const bookPage = async () => {
           Add new
         </Link>
       </div>
+      <BookingList 
+      session={session}
+        booking={JSON.parse(JSON.stringify(booking))}
+        currentPage={page ||1}
+        itemPerPage={ITEM_PER_PAGE}
+        sortKey={sortKey}
+        sortDirection={sortDirection}
+        pathname={"booking"}
+        totalPages={countPage}
+        query={query}
+      />
     </div>
   )
 }

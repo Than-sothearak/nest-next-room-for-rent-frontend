@@ -134,8 +134,8 @@ export async function addUsers(prevState, formData) {
   
   }
 
-  revalidatePath(`/dashboard/admin/users/`);
-  redirect("/dashboard/admin/users/");
+  revalidatePath(`/dashboard/users/`);
+  redirect("/dashboard/users/");
 }
 
     
@@ -223,5 +223,5 @@ export async function updateUser(userId, prevState, formData) {
   }
 
     revalidatePath(`/dashboard/`);
-    redirect(`/dashboard/admin/users/${userId}`);
+    redirect(`/dashboard/users/${userId}`);
 }

@@ -1,6 +1,8 @@
 "use server";
 import { auth } from "@/auth";
 import { Booking } from "@/models/Booking";
+import { Room } from "@/models/Room";
+import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
 import { uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { revalidatePath } from "next/cache";
@@ -9,11 +11,11 @@ import { redirect } from "next/navigation";
 export async function createBooking(prevState, formData) {
   await mongoDb();
 
-   const session = await auth();
-    if (!session?.user?.isAdmin) {
-      return console.log("Access denied!")
-    }
-  
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!");
+  }
+
   try {
     if (!formData || typeof formData.get !== "function") {
       console.error("Invalid or missing formData:", formData);
@@ -50,7 +52,7 @@ export async function createBooking(prevState, formData) {
     });
     if (existingName) {
       errors.roomId = "This room is already booked";
-      console.log("XX This room is already booked XX")
+      console.log("XX This room is already booked XX");
       return { errors };
     }
 
@@ -83,7 +85,60 @@ export async function createBooking(prevState, formData) {
   redirect("/dashboard/admin/booking/");
 }
 
-export async function updateBooking({ prev, formData, bookingId }) {}
+export async function getBooking(query, page) {
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!");
+  }
+  await mongoDb();
+  const ITEM_PER_PAGE = 20;
+
+  let sort = {};
+
+  try {
+    if (query) {
+
+      const matchedRooms = await Room.find({
+        roomName: { $regex: query, $options: "i"}
+      })
+      const matchedRoomIds = matchedRooms.map((room) => room._id);
+
+      const matchedUsers = await User.find({
+      $or: [
+        { phone: { $regex: query, $options: "i" } },
+      ],
+    });
+    const matchedUserIds = matchedUsers.map((user) => user._id);
+
+      const booking = await Booking.find({
+        $or: [
+        { userId: { $in: matchedUserIds } },
+        { roomId: { $in: matchedRoomIds } },
+      ],
+      })
+        .populate("userId")
+        .populate("roomId");
+      const count = Booking.length;
+      return { booking, count };
+    }
+
+    const count = await Booking.countDocuments();
+    const booking = await Booking.find()
+      .populate("userId")
+      .populate("roomId")
+      .limit(ITEM_PER_PAGE)
+      .skip(ITEM_PER_PAGE * (page - 1));
+
+    return { booking, count };
+  } catch (err) {
+    console.error(err);
+    throw new Error("Failed to fetch booking!");
+  }
+}
+
+export async function updateBooking({ prev, formData, bookingId }) {
+  alert("updated?")
+}
 
 function validateProductFields({
   userId,
