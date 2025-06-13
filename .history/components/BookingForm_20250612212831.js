@@ -4,7 +4,7 @@ import { createBooking, updateBooking } from "@/actions/Booking";
 import { useActionState, useState } from "react";
 import ChooseFile from "./ChooseFile";
 
-export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
+export default function BookingForm({ users, rooms, bookingId}) {
   const [files, setFiles] = useState([] || null);
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
@@ -30,6 +30,8 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
       bookingId ? updateBookWithId : createBooking,
       undefined
     );
+
+    console.log(state)
 
   return (
     <form action={action} className="grid gap-4 max-w-2xl p-4 mt-4 bg-white shadow rounded-xl">
@@ -64,10 +66,7 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
           required
           className="border rounded p-2"
         >
-            {state?.errors?.userId && (
-                    <p className="text-red-500">{state.errors.userId}</p>
-                  )}
-          {oneRoom ? <option value={oneRoom._id}>{oneRoom.roomName}</option> : <option value="">Select room</option>}
+          <option value="">Select room</option>
           {rooms.map((r) => (
             <option key={r._id} value={r._id}>
               {r.name || r.roomName}
@@ -90,9 +89,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.startDate && (
-                    <p className="text-red-500">{state.errors.startDate}</p>
-                  )}
         </div>
         <div className="grid gap-2">
           <label>End Date</label>
@@ -104,9 +100,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.endDate && (
-                    <p className="text-red-500">{state.errors.endDate}</p>
-                  )}
         </div>
       </div>
 
@@ -124,9 +117,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.rent && (
-                    <p className="text-red-500">{state.errors.rent}</p>
-                  )}
         </div>
         <div className="grid gap-2">
           <label>Deposit ($)</label>
@@ -141,10 +131,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.deposit && (
-                    <p className="text-red-500">{state.errors.deposit}</p>
-                  )}
-          
         </div>
       </div>
 

@@ -50,7 +50,7 @@ export async function createBooking(prevState, formData) {
     });
     if (existingName) {
       errors.roomId = "This room is already booked";
-      console.log("XX This room is already booked XX")
+      console.log("This room is already booked")
       return { errors };
     }
 

@@ -48,25 +48,23 @@ export const RoomView = ({ data }) => {
                   src={room.imageUrls[0]}
                 />
                 <div className="absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-4 text-white font-bold text-lg">
-                  <Link
-                   href={`/dashboard/booking/${room._id}`}
+                  <button
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
                     title="Booking room"
                   >
                     <FaBook />
-                  </Link>
+                  </button>
 
-                     <Link
-                      href={`/dashboard/booking/${room._id}`}
+                     <button
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
                     title="View room details"
                   >
                     <FaEye />
-                  </Link>
+                  </button>
 
                      <Link
                      href={`/dashboard/rooms/${room._id}`}

@@ -4,7 +4,7 @@ import { createBooking, updateBooking } from "@/actions/Booking";
 import { useActionState, useState } from "react";
 import ChooseFile from "./ChooseFile";
 
-export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
+export default function BookingForm({ users, rooms, bookingId, roomId}) {
   const [files, setFiles] = useState([] || null);
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
@@ -67,7 +67,7 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             {state?.errors?.userId && (
                     <p className="text-red-500">{state.errors.userId}</p>
                   )}
-          {oneRoom ? <option value={oneRoom._id}>{oneRoom.roomName}</option> : <option value="">Select room</option>}
+          {roomId ? <option value={roomId._id}>{}</option> : <option value="">Select room</option>}
           {rooms.map((r) => (
             <option key={r._id} value={r._id}>
               {r.name || r.roomName}

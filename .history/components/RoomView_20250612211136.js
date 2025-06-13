@@ -9,7 +9,6 @@ import {
   FaRegClock,
   FaRegSnowflake,
   FaRulerCombined,
-  FaStairs,
   FaWifi,
 } from "react-icons/fa6";
 import { GrStatusGood } from "react-icons/gr";
@@ -48,28 +47,26 @@ export const RoomView = ({ data }) => {
                   src={room.imageUrls[0]}
                 />
                 <div className="absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-4 text-white font-bold text-lg">
-                  <Link
-                   href={`/dashboard/booking/${room._id}`}
+                  <button
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
                     title="Booking room"
                   >
                     <FaBook />
-                  </Link>
+                  </button>
 
-                     <Link
-                      href={`/dashboard/booking/${room._id}`}
+                     <button
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
                     title="View room details"
                   >
                     <FaEye />
-                  </Link>
+                  </button>
 
                      <Link
-                     href={`/dashboard/rooms/${room._id}`}
+                     href={`/dashboard/admin/rooms/${room._id}`}
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
@@ -89,7 +86,7 @@ export const RoomView = ({ data }) => {
                 </div>
               </div>
 
-              <div className="w-full justify-between flex px-4 flex-wrap">
+              <div className="w-full justify-between flex px-4 ">
                 <div
                   className={`flex gap-1 items-center ${
                     room?.status === 1 ? "text-green-500" : "text-red-500"
@@ -98,16 +95,14 @@ export const RoomView = ({ data }) => {
                   <GrStatusGood />
                   {room?.status === 1 ? "available" : "unavailable"}
                 </div>
-               <div className="flex gap-2">
-                   <div className="flex gap-1 items-center" title="Floor">
-                  <FaStairs />
+                  <div className="flex gap-1 items-center">
+                  <IoPersonAdd />
                   {room?.floor}
                 </div>
-                <div className="flex gap-1 items-center" title="Capacity">
+                <div className="flex gap-1 items-center">
                   <IoPersonAdd />
                   {room?.capacity}
                 </div>
-               </div>
               </div>
             </div>
             <div className="flex flex-wrap items-center px-4 py-2">

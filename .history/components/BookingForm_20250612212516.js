@@ -4,7 +4,7 @@ import { createBooking, updateBooking } from "@/actions/Booking";
 import { useActionState, useState } from "react";
 import ChooseFile from "./ChooseFile";
 
-export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
+export default function BookingForm({ users, rooms, bookId}) {
   const [files, setFiles] = useState([] || null);
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedRoom, setSelectedRoom] = useState("");
@@ -25,11 +25,13 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
     return months > 0 ? Number(rent) + Number(deposit) : 0;
   };
 
-   const updateBookWithId = updateBooking.bind(null, bookingId);
+   const updateBookWithId = updateBooking.bind(null, bookId);
     const [state, action, isPending] = useActionState(
-      bookingId ? updateBookWithId : createBooking,
+      bookId ? updateBookWithId : createBooking,
       undefined
     );
+
+    console.log(state)
 
   return (
     <form action={action} className="grid gap-4 max-w-2xl p-4 mt-4 bg-white shadow rounded-xl">
@@ -53,7 +55,9 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
         </select>
       </div>
 
-       
+        {state?.errors?.roomId && (
+                    <p className="text-red-500 mt-2">{state.errors.roomId}</p>
+                  )}
 
       <div className="grid gap-2">
         <label>Room</label>
@@ -64,19 +68,13 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
           required
           className="border rounded p-2"
         >
-            {state?.errors?.userId && (
-                    <p className="text-red-500">{state.errors.userId}</p>
-                  )}
-          {oneRoom ? <option value={oneRoom._id}>{oneRoom.roomName}</option> : <option value="">Select room</option>}
+          <option value="">Select room</option>
           {rooms.map((r) => (
             <option key={r._id} value={r._id}>
               {r.name || r.roomName}
             </option>
           ))}
         </select>
-         {state?.errors?.roomId && (
-                    <p className="text-red-500">{state.errors.roomId}</p>
-                  )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -90,9 +88,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.startDate && (
-                    <p className="text-red-500">{state.errors.startDate}</p>
-                  )}
         </div>
         <div className="grid gap-2">
           <label>End Date</label>
@@ -104,9 +99,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.endDate && (
-                    <p className="text-red-500">{state.errors.endDate}</p>
-                  )}
         </div>
       </div>
 
@@ -124,9 +116,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.rent && (
-                    <p className="text-red-500">{state.errors.rent}</p>
-                  )}
         </div>
         <div className="grid gap-2">
           <label>Deposit ($)</label>
@@ -141,10 +130,6 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
             required
             className="border rounded p-2"
           />
-           {state?.errors?.deposit && (
-                    <p className="text-red-500">{state.errors.deposit}</p>
-                  )}
-          
         </div>
       </div>
 
@@ -185,22 +170,12 @@ export default function BookingForm({ users, rooms, bookingId, oneRoom}) {
       </div>
       <ChooseFile files={files} setFiles={setFiles} />
 
-      
-        <button
-          type="submit"
-          disabled={isPending}
-          className={`p-2 bg-blue-600 text-secondarytext w-full mt-6 mb-10 hover:bg-blue-500 hover:text-slate-200 rounded-md ${
-            isPending ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-        >
-          {isPending
-            ? bookingId
-              ? "Updating..."
-              : "Adding..."
-            : bookingId
-            ? "Update"
-            : "Create Booking"}
-        </button>
+      <button
+        type="submit"
+        className="bg-blue-600 text-white rounded p-2 hover:bg-blue-700"
+      >
+        Create Booking
+      </button>
     </form>
   );
 }
