@@ -217,10 +217,10 @@ export default function BookingForm({
         }`}
       >
         {isPending
-          ? booking._id
+          ? booking?._id
             ? "Updating..."
             : "Adding..."
-          : booking._id
+          : booking?._id
           ? "Update"
           : "Create Booking"}
       </button>

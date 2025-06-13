@@ -32,80 +32,80 @@ const BookingList = ({
         }
       };
   return (
-    <>
-      <div className="overflow-x-auto mt-4">
-        <table className="w-full border border-gray-300">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">No</th>
-              <th className="border border-gray-300 px-4 py-2">Guest number</th>
-              <th className="border border-gray-300 px-4 py-2">Room number</th>
-              <th className="border border-gray-300 px-4 py-2">Deposit</th>
-              <th className=" border-gray-300 px-4 py-2 border">
+   
+      <div className="mt-4 z-50 max-sm:overflow-x-auto max-sm:h-screen">
+        <table className="w-full bg-slate-100">
+          <thead className="bg-primary text-tertiary shadow-md">
+            <tr className="p-4">
+              <th className="text-start py-4">No</th>
+              <th className="text-start">Guest</th>
+              <th className="text-start">Room</th>
+              <th className="text-start">Deposit</th>
+              <th className="text-start">
                 <Link
                   href={`/dashboard/${pathname}?page=${currentPage}${
                     query ? `&query=${query}` : ""
                   }&sortKey=price&sortDirection=${direction}`}
                   onClick={() => handleSort("price")}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
+                  className="flex items-center gap-2 rounded-md"
                 >
-                  <p>Price/month</p>
+                  <p>Price/m</p>
                   {getSortIcon("price")}
                 </Link>
               </th>
-              <th className=" border-gray-300 px-4 py-2">
+              <th className="">
                 <Link
                   href={`/dashboard/${pathname}?page=${currentPage}${
                     query ? `&query=${query}` : ""
                   }&sortKey=date&sortDirection=${direction}`}
                   onClick={() => handleSort("date")}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
+                  className="flex text-center items-center gap-2 rounded-md"
                 >
-                  <p>Start date</p>
+                  <p>Date</p>
                   {getSortIcon("date")}
                 </Link>
               </th>
-              <th className="border border-gray-300 px-4 py-2">
+              <th className="">
                 <Link
                   href={`/dashboard/${pathname}?page=${currentPage}${
                     query ? `&query=${query}` : ""
                   }&sortKey=status&sortDirection=${direction}`}
                   onClick={() => handleSort("status")}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
+                  className="flex text-center items-center gap-2 rounded-md"
                 >
                   <p>Status</p>
                   {getSortIcon("status")}
                 </Link>
               </th>
-               <th className="border border-gray-300 px-4 py-2">Action</th>
+               <th className="text-start">Action</th>
             </tr>
           </thead>
           <tbody>
             {booking.map((item, index) => (
-              <tr key={item._id}>
-                <td className="border border-gray-300 px-4 py-2">
+              <tr key={item._id} className="border-b">
+                <td className="p-2">
                   <p>{Number(currentPage - 1) * itemPerPage + index + 1}</p>
                 </td>
 
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="p-2 font-bold">
                   {item.userId.phone}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="">
                   {item.roomId.roomName}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="">
                   ${item.deposit}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="">
                   ${item.rent}
                 </td>
-                 <td className="border border-gray-300 px-4 py-2">
+                 <td className="">
                   {item.createdAt ? formatDate(item.createdAt) : "N/A"}
                 </td>
-                <td className="border border-gray-300 px-4 py-2">
+                <td className="">
                   {item.status}
                 </td>
-                  <td className="border border-gray-300 px-4 py-2">
+                  <td className="">
                       <ButtonViewAndDelete
                                     session={session}
                                     link={`/dashboard/${pathname}/${item._id}`}
@@ -117,7 +117,7 @@ const BookingList = ({
           </tbody>
         </table>
       </div>
-    </>
+   
   );
 };
 

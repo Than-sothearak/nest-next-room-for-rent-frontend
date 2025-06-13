@@ -75,14 +75,20 @@ export async function createBooking(prevState, formData) {
       files: fileUrls,
     });
 
+    await Room.findByIdAndUpdate(
+      roomId,
+      { status: 0 }, // Assuming 0 means booked
+     
+    );
+
     console.log("Booking created successfully");
   } catch (error) {
     console.error("Error creating booking:", error);
     return { error: "Failed to create booking due to a server error" };
   }
 
-  revalidatePath(`/dashboard/admin/booking`);
-  redirect("/dashboard/admin/booking/");
+  revalidatePath(`/dashboard/booking`);
+  redirect("/dashboard/booking/");
 }
 
 export async function getBooking(query, page) {
