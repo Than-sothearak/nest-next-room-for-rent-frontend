@@ -1,0 +1,34 @@
+// app/api/cron/process-billing/route.js
+import { NextResponse } from "next/server";
+import dayjs from "dayjs";
+import { mongoDb } from "@/utils/connectDB";
+import { Booking } from "@/models/Booking";
+import { updateToNextBillingCycle } from "@/lib/billing";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+export async function GET() {
+  try {
+    await mongoDb();
+    const today = dayjs().startOf("day").toDate();
+
+    const bookings = await Booking.find({
+      paymentStatus: "paid",
+      endDate: { $lte: today },
+      status: "active",
+    });
+
+    let updatedCount = 0;
+
+    for (const booking of bookings) {
+      await updateToNextBillingCycle(booking);
+      updatedCount++;
+    }
+    redirect('/dashboard/booking')
+ 
+  } catch (err) {
+    console.error("Billing cron error:", err);
+    return NextResponse.json({ error: "Failed to process billing." }, { status: 500 });
+  }
+   
+}

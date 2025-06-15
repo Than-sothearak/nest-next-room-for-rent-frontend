@@ -1,0 +1,20 @@
+import { processBilling } from '@/actions/processBilling';
+import React, { useActionState } from 'react'
+
+const ProcessBilling = () => {
+    const handleRun = async () => {
+        await processBilling();
+    }
+  return (
+     
+        <form
+          action={handleRun}
+          className="p-2 rounded-md text-primary bg-blue-600 cursor-pointer"
+        >
+          {isPending ? "Running..." : "Run Billing Update Now"}
+        </form>
+     
+  )
+}
+
+export default ProcessBilling

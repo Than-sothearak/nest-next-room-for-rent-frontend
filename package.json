@@ -11,9 +11,13 @@
   "dependencies": {
     "@auth/mongodb-adapter": "^3.8.0",
     "@aws-sdk/client-s3": "^3.758.0",
+    "@react-pdf/renderer": "^4.3.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "chart.js": "^4.4.8",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.5.0",
+    "grammy": "^1.36.3",
     "lucia": "^3.2.2",
     "mongodb": "^6.15.0",
     "mongoose": "^8.12.1",
