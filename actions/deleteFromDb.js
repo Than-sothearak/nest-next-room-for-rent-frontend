@@ -1,8 +1,10 @@
 "use server";
 
+import { auth } from "@/auth";
 import { Booking } from "@/models/Booking";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
+import { Room } from "@/models/Room";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
 import { deleteFileFromS3 } from "@/utils/uploadImageFileToS3";
@@ -10,7 +12,10 @@ import { revalidatePath } from "next/cache";
 
 export async function deleteById(id) {
   await mongoDb();
-
+const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied! you are not admin");
+  }
   try {
     if (!id) {
       return { error: "ID is required" };
@@ -73,6 +78,10 @@ export async function deleteById(id) {
       await Booking.deleteOne({ _id: id });
       await User.findOneAndUpdate(
           { telegramChatId: null }
+        );
+      await Room.findOneAndUpdate(
+          { _id: booking.roomId },
+          { $inc: { status: 1 } }
         );
       revalidatePath("/dashboard/booking");
       return { success: "Booking cancel successfully" };

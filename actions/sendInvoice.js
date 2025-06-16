@@ -1,13 +1,19 @@
 // app/actions/sendInvoice.js
 "use server";
 
+import { auth } from "@/auth";
 import { Booking } from "@/models/Booking";
 import { mongoDb } from "@/utils/connectDB";
 import { generateInvoicePdf } from "@/utils/generateInvoicePdf";
 import { sendInvoiceToTelegram } from "@/utils/sendTelegramMessage";
+import { revalidatePath } from "next/cache";
 
 export async function sendInvoice(bookingId) {
   await mongoDb();
+ const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied! you are not admin");
+  }
 
   if (!bookingId) return { error: "Booking ID required." };
 
@@ -19,17 +25,25 @@ export async function sendInvoice(bookingId) {
   }
   try {
 
-    if (!booking || !booking.userId || !booking.userId.telegramChatId) {
-      return { error: "Booking or Telegram chat ID not found." };
+    if (!booking || !booking.userId ) {
+      return { error: "Booking or Telegram not found." };
     }
 
     const { telegramChatId } = booking.userId;
-    console.log(telegramChatId)
+    if (!telegramChatId) {
+      return { error: "User does not connect telegram." };
+    }
     const filePath = await generateInvoicePdf(booking);
-  const result = await sendInvoiceToTelegram(telegramChatId, filePath, booking);
-   
+    const result = await sendInvoiceToTelegram(telegramChatId, filePath, booking);
+    if (result.error) {
+      return { error: result.error };
+    }
+    // Update booking status
+    // await Booking.findByIdAndUpdate(bookingId, {
+    //   invoiceSent: true,
+    // });
 
-
+    revalidatePath(`/dashboard/booking`);
     return { success: true, message: "Invoice sent successfully via Telegram." };
 
   } catch (err) {

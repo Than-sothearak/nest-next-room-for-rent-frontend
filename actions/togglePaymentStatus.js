@@ -1,4 +1,5 @@
 "use server";
+import { auth } from "@/auth";
 import { Booking } from "@/models/Booking";
 import { Payment } from "@/models/Payment";
 import { mongoDb } from "@/utils/connectDB";
@@ -6,7 +7,10 @@ import { revalidatePath } from "next/cache";
 
 export async function togglePaymentStatus(id) {
   await mongoDb();
-
+const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied! you are not admin");
+  }
   try {
     if (!id) {
       return { error: "ID is required" };

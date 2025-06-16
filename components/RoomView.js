@@ -12,7 +12,7 @@ import {
   FaStairs,
   FaWifi,
 } from "react-icons/fa6";
-import { GrStatusGood } from "react-icons/gr";
+import { GrStatusDisabled, GrStatusGood, GrStatusUnknown } from "react-icons/gr";
 import { IoPersonAdd } from "react-icons/io5";
 import { MdOutlineSmokeFree } from "react-icons/md";
 
@@ -95,8 +95,8 @@ export const RoomView = ({ data }) => {
                     room?.status === 1 ? "text-green-500" : "text-red-500"
                   }`}
                 >
-                  <GrStatusGood />
-                  {room?.status === 1 ? "available" : "unavailable"}
+                 
+                  {room?.status === 1 ?  <div className="flex items-center gap-1"><GrStatusGood /><p>available</p></div> :  <div className="flex items-center gap-1"><GrStatusDisabled/><p>unavailable</p></div>}
                 </div>
                <div className="flex gap-2">
                    <div className="flex gap-1 items-center" title="Floor">

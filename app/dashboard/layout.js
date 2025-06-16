@@ -38,6 +38,7 @@ export default async function DashboardLayout({ children }) {
             <Sidebar
               session={session}
             />
+            This is not an admin account.
           </div>
           <div className="w-full overflow-x-auto lg:mx-4">
             <Navbar session={session} user={JSON.parse(JSON.stringify(user))} />

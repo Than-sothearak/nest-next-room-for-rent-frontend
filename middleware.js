@@ -16,18 +16,11 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  // 🔐 Block user dashboard if not logged in
-  if (isUserDashboard && !token) {
-    console.log("Unauthorized: User dashboard access denied.");
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
   // 🚫 Prevent logged-in users from accessing login page
   if (isLogin && token) {
-    const redirectTo = token.isAdmin ? "/dashboard/admin" : "/dashboard/users";
-    return NextResponse.redirect(new URL(redirectTo, req.url));
+    console.log("Redirecting logged-in user from login page.");
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
-
   // ✅ Allow all other requests
   return NextResponse.next();
 }

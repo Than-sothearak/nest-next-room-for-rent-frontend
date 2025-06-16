@@ -5,16 +5,18 @@ import { formatDate } from "./formatDate";
 
 export async function sendInvoiceToTelegram(chatId, pdfBuffer, booking) {
   try {
+   // Extract data
+    const { rent, dueDate } = booking;
+    const customer = booking.userId.username;
+    const filename = `${formatDate(dueDate)}_Invoice.pdf`;
     // Convert buffer to InputFile with filename
-    const inputFile = new InputFile(pdfBuffer, "Invoice");
-       const chatId = booking.userId.telegramChatId;
+    const inputFile = new InputFile(pdfBuffer, filename);
+
     if (!chatId) {
       throw new Error("User does not have a Telegram chat ID.");
     }
 
-    // Extract data
-    const { rent, dueDate } = booking;
-    const customer = booking.userId.username;
+ 
 
     const message = `
 <b>📢 Invoice Notification</b>

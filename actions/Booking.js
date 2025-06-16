@@ -13,7 +13,7 @@ export async function createBooking(prevState, formData) {
 
   const session = await auth();
   if (!session?.user?.isAdmin) {
-    return console.log("Access denied!");
+    return console.log("Access denied! you are not admin");
   }
 
   try {

@@ -4,12 +4,12 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { formatDate } from "@/utils/formatDate";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import ButtonViewAndDelete from "./ButtonViewAndDelete";
 import ToggleToPaid from "./ToggleToPaid";
 import ButtonEditAndCancel from "./ButtonEditAndCancel";
 import ConnectTelegram from "./ConnectTelegram";
 import ProcessBilling from "./ProcessBilling";
 import SendInvoiceButton from "./SendInvoiceButton";
+import { BsTelegram } from "react-icons/bs";
 
 // Your helper function to get next payment due date
 
@@ -53,13 +53,19 @@ const BookingList = ({
 
     setLoading(false);
   }
-
+  if (!booking || booking.length === 0) {
+    return (
+      <div>
+        <p className="text-center text-gray-500 mt-4">No bookings found.</p>
+      </div>
+    );
+  }
   return (
-    <div className="mt-4 z-50 max-sm:overflow-x-auto max-sm:h-screen">
+    <div className="mt-4 z-50 overflow-x-auto">
       <div className="">
         <ProcessBilling />
       </div>
-      <table className="w-full bg-slate-100">
+      <table className="w-full bg-slate-100 max-lg:hidden">
         <thead className="bg-primary text-tertiary">
           <tr className="p-4">
             <th className="text-start py-4">No</th>
@@ -91,7 +97,7 @@ const BookingList = ({
             </th>
             <th className="text-start">Due date</th>
             <th className="text-center">Payment Status</th>
-            <th className="text-center">Invoice Status</th>
+           
             <th className="">
               <Link
                 href={`/dashboard/${pathname}?page=${currentPage}${
@@ -104,6 +110,7 @@ const BookingList = ({
                 {getSortIcon("status")}
               </Link>
             </th>
+             <th className="text-center">Invoice Status</th>
             <th className="text-start">Action</th>
           </tr>
         </thead>
@@ -131,11 +138,12 @@ const BookingList = ({
 
               <td className="text-center">
                 <ToggleToPaid item={item} />
+       
               </td>
 
               <td className="">{item.status}</td>
-              <td className="">
-                <SendInvoiceButton bookingId={item?._id}/>
+              <td className="text-center">
+                <SendInvoiceButton bookingId={item?._id} booking={item}/>
               </td>
               <td className="">
                 <ButtonEditAndCancel
@@ -148,7 +156,59 @@ const BookingList = ({
           ))}
         </tbody>
       </table>
-      <ConnectTelegram userId={session.user?._id} />
+
+      <div className="lg:hidden">
+      
+        {booking.map((item, index) => (
+          <div
+            key={item._id}
+            className="bg-white border mt-4 dark:bg-slate-200 p-4 mb-4 rounded-lg shadow-md"
+          >
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-lg">
+                <p className="text-xl">
+              <strong>Room:</strong> {item.roomId.roomName}
+            </p>
+              </h3>
+              <ButtonEditAndCancel
+                session={session}
+                link={`/dashboard/${pathname}/${item._id}`}
+                id={item._id}
+              />
+            </div>
+           
+            <div className="flex item-center gap-2 font-bold text-xl">
+              <p>Guest:</p> <h2>{item.userId.phone}</h2>
+            </div>
+            <p>
+              <strong>Price/m:</strong> ${item.rent}
+            </p>
+            <p>
+              <strong>Date:</strong> {formatDate(item.startDate)}
+            </p>
+            <p>
+              <strong>Due Date:</strong> {formatDate(item.dueDate)}
+            </p>
+           <div className="flex justify-between items-center">
+            <div className={`${item?.userId?.telegramChatId ? 'text-blue-500' : 'opacity-40'} flex items-center gap-1`}>
+              <BsTelegram size={24}/>
+               <div>
+                {item?.userId?.telegramChatId ?  <h2>Connected</h2> :  <h2>Unconnect</h2>  }
+             
+            </div></div>
+            <div className="flex gap-2">
+               
+                <SendInvoiceButton bookingId={item?._id} booking={item}/>
+                <ToggleToPaid item={item} />
+            </div>
+           </div>
+          </div>
+        )
+        )}
+      </div>
+     <div className="my-11">
+       <ConnectTelegram userId={session.user?._id} />
+     </div>
     </div>
   );
 };
