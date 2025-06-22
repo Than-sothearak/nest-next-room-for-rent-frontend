@@ -1,0 +1,16 @@
+"use client";
+
+import { PDFViewer } from "@react-pdf/renderer";
+import InvoicePDF from "./InvoiceDocument"; // Your PDF document component
+
+const InvoicePreview = ({ payment }) => {
+  return (
+    <div className="mt-2">
+      <PDFViewer width="100%" height={300}>
+        <InvoicePDF data={payment} />
+      </PDFViewer>
+    </div>
+  );
+};
+
+export default InvoicePreview;
