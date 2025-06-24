@@ -18,10 +18,10 @@ const SendInvoiceButton = ({ bookingId, booking }) => {
     }
   }, [state]);
   return (
-    <form action={action} className="relative group inline-block z-0">
+    <form action={action} className="relative group inline-block">
       <button
-        disabled={isPending || booking?.invoiceSent}
-        className={`px-3 py-1 rounded-md relative lg:mx-4 lg:my-2 ${
+        
+        className={`z-0 px-3 py-1 rounded-md relative lg:mx-4 lg:my-2 ${
           isPending
             ? "bg-gray-400 cursor-wait opacity-50"
             : "bg-blue-600 text-white hover:bg-blue-300 hover:text-blue-900"
@@ -36,7 +36,7 @@ const SendInvoiceButton = ({ bookingId, booking }) => {
         )}
       </button>
       {state?.error && showTooltip && (
-        <p className={`absolute left-0 bg-red-100 text-red-800 border border-red-400 px-3 py-2 rounded shadow-lg w-full text-sm z-50  ${state.error ? "opacity-100" : "opacity-0"}`}>
+        <p className={`z-20 absolute left-0 bg-red-100 text-red-800 border border-red-400 px-3 py-2 rounded shadow-lg w-full text-sm  ${state.error ? "opacity-100" : "opacity-0"}`}>
         {state.error}
         </p>
       )}
