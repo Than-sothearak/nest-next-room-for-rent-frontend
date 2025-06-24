@@ -124,12 +124,40 @@ export async function updateBooking(bookId, prevState, formData) {
     const removedFiles = formData.getAll("removedFiles")
     const properties = propertiesFormData(formData);
 
-  
- 
-     const updatedFileUrls = booking.files.filter(
+   const updatedFileUrls = booking.files.filter(
           (file) => ! removedFiles.includes(file) // Remove only matching URLs
         );
         let fileUrls = updatedFileUrls || [];
+
+      const bookingData = {
+       userId: userId,
+      roomId: roomId,
+      startDate,
+      dueDate,
+      rent,
+      deposit,
+      notes,
+      contract,
+      files: fileUrls,
+      status: status || "active",
+      paymentStatus: paymentStatus || 'unpaid',
+      properties,
+    };
+
+
+            const errors = validateProductFields(bookingData);
+    if (Object.keys(errors).length > 0) return { errors };
+
+   const existingName = await Booking.findOne({
+      roomId: formData.get("roomId"),
+    });
+    if (existingName) {
+      errors.roomId = "This room is already booked";
+      console.log("XX This room is already booked XX");
+      return { errors };
+    }
+ 
+  
     
         try {
           if (removedFiles && removedFiles.length > 0) {
@@ -163,28 +191,11 @@ export async function updateBooking(bookId, prevState, formData) {
         }
     
         console.log("Files URLs after processing:", fileUrls);
- 
-   
-       const bookingData = {
-       userId: userId,
-      roomId: roomId,
-      startDate,
-      dueDate,
-      rent,
-      deposit,
-      notes,
-      contract,
-      files: fileUrls,
-      status: status || "active",
-      paymentStatus: paymentStatus || 'unpaid',
-      properties,
-    };
 
-        const errors = validateProductFields(bookingData);
-    if (Object.keys(errors).length > 0) return { errors };
    
     await Booking.updateOne({ _id: bookId }, bookingData);
     revalidatePath(`/dashboard/booking/${bookId}`);
+    redirect(`/dashboard/booking/${bookId}`);
     console.log("Booking updated!");
     return { success: true, message: "Booking update successfully!" };
   } catch (err) {

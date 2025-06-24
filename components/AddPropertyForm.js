@@ -64,7 +64,7 @@ const AddPropertyForm = ({ formData, setFormData }) => {
           formData.properties.map((part, index) => (
             <div
               key={index}
-              className={`bg-primary p-2 rounded-md max-lg:w-full text-sm relative ${
+              className={`bg-primary p-2 rounded-md max-lg:w-full text-md relative ${
                 !checkIsPropertyEmpty[index] ? "" : ""
               }`}
             >
@@ -101,7 +101,7 @@ const AddPropertyForm = ({ formData, setFormData }) => {
 
               <button
                 type="button"
-                className="text-red-500 hover:text-primarytext hover:underline text-sm absolute right-0 top-0 p-2 rounded-full"
+                className="text-red-500 hover:text-primarytext hover:underline text-md absolute right-0 top-0 p-2 rounded-full"
                 onClick={() => handleRemovePart(index)}
               >
                 <BiTrash size={18}/>

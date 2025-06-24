@@ -36,7 +36,7 @@ export default function LoginForm() {
         <h1 className="text-4xl font-extrabold text-tertiary leading-tight tracking-tight">
           ManageEase
         </h1>
-        <p className="text-sm text-gray-500 tracking-wide">All-in-One Management System</p>
+        <p className="text-md text-gray-500 tracking-wide">All-in-One Management System</p>
       </div>
     </div>
       <div className="bg-primary w-full m-2 sm:max-w-md max-sm:p-4 space-y-6 rounded-xl p-8 shadow-lg">
@@ -47,25 +47,25 @@ export default function LoginForm() {
         <form action={formAction} className="space-y-6">
           <div className="space-y-4">
             <div className="flex flex-col">
-              <label>Email</label>
+              <label className="font-bold">Email</label>
               <input
                 onKeyDown={(e) => e.key === " " && e.preventDefault()}
                 type="email"
                 name="email"
                 placeholder="Enter your email"
-                className="w-full p-4 rounded-md bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                className="w-full p-4 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                 required
               />
             </div>
 
             <div className="flex flex-col">
-              <label>Password</label>
+              <label className="font-bold">Password</label>
               <input
                 onKeyDown={(e) => e.key === " " && e.preventDefault()}
                 type="password"
                 name="password"
                 placeholder="Enter your password"
-                className="w-full p-4 rounded-md bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                className="w-full p-4 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                 required
                 minLength={6}
               />

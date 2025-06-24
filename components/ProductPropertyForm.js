@@ -88,13 +88,13 @@ export default function ProductPropertyForm({
               type="text"
               defaultValue={items.part}
               placeholder="Enter value..."
-              className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none hidden"
+              className="w-full p-2 rounded-md bg-secondary text-lg focus:ring-0 focus:outline-none hidden"
             />
 
             {inputValues[index]?.length <= 0 && (
               <select
                 name="value"
-                className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none mt-2"
+                className="w-full p-2 rounded-md bg-secondary text-lg focus:ring-0 focus:outline-none mt-2"
                 onChange={(e) => handleSelectChange(index, e.target.value)}
               >
                 <option value="">Select</option>
@@ -115,11 +115,11 @@ export default function ProductPropertyForm({
               defaultValue={items.value}
               type="text"
               placeholder="Enter value..."
-              className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none"
+              className="w-full p-2 rounded-md bg-secondary text-lg focus:ring-0 focus:outline-none"
             />
           )}
 
-          <span className="text-xs italic">
+          <span className="text-lg italic">
             Note: Select value or Enter value above
           </span>
         </div>
@@ -138,7 +138,7 @@ export default function ProductPropertyForm({
             key={index}
           >
             <div className="flex gap-2 justify-between">
-              <label className="text-xs">Part {index + 1}</label>
+              <label className="text-lg">Part {index + 1}</label>
               <button
                 title="Remove"
                 className=""

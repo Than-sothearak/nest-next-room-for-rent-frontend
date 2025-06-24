@@ -97,16 +97,16 @@ export default function RoomForm({
 
   return (
     <div className="mt-4 rounded-lg text-black relative">
-      <form action={action} className="text-sm">
+      <form action={action} className="te">
         <div className="flex max-lg:flex-wrap gap-4">
           <div className="space-y-4 w-full bg-primary rounded-lg">
             {state?.success && (
-              <div className="text-sm flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-green-500 text-primary">
+              <div className="te flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-green-500 text-primary">
                 <MdSmsFailed size={20} /> {state?.message}
               </div>
             )}
             {state?.errors && (
-              <div className="text-sm flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-red-500 text-primary">
+              <div className="te flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-red-500 text-primary">
                 <MdSmsFailed size={20} /> Failed to add room!
               </div>
             )}
@@ -121,7 +121,7 @@ export default function RoomForm({
                     type="text"
                     name="roomName"
                     placeholder="Enter room name or number..."
-                    className="w-full p-2 rounded-md mt-2 bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                    className="w-full p-2 rounded-md mt-2 bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                   />
                   {state?.errors?.roomName && (
                     <p className="text-red-500 mt-2">{state.errors.roomName}</p>
@@ -136,7 +136,7 @@ export default function RoomForm({
                     type="text"
                     name="floor"
                     placeholder="Enter room name or number..."
-                    className="w-full p-2 rounded-md mt-2 bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                    className="w-full p-2 rounded-md mt-2 bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                   />
                   {state?.errors?.floor && (
                     <p className="text-red-500 mt-2">{state.errors.roomName}</p>
@@ -149,7 +149,7 @@ export default function RoomForm({
                       name="category"
                       value={formData?.category}
                       onChange={handleCategoryChange}
-                      className="w-full p-2 rounded-md bg-secondary border-none text-xs focus:ring-0 focus:outline-none"
+                      className="w-full p-2 rounded-md bg-secondary border-none text-md focus:ring-0 focus:outline-none"
                     >
                       {room?.category && (
                         <option value={room?.category._id}>
@@ -169,14 +169,14 @@ export default function RoomForm({
                   </div>
 
                   <div>
-                    <label className="block font-medium">Price (per month)</label>
+                    <label className="block font-medium">Price/month</label>
                     <input
                       name="price"
                       onChange={handleChange}
                       placeholder="Enter price"
                       type="number"
                       defaultValue={formData?.price}
-                      className="w-full p-2 rounded-md mt-2 bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                      className="w-full p-2 rounded-md mt-2 bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                     />
                     {state?.errors?.price && (
                       <p className="text-red-500 mt-2">{state.errors.price}</p>
@@ -192,7 +192,7 @@ export default function RoomForm({
                     placeholder="Enter capacity (e.g., number of guests)"
                     name="capacity"
                     type="number"
-                    className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                    className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                   />
                   {state?.errors?.capacity && (
                     <p className="text-red-500 mt-2">{state.errors.capacity}</p>
@@ -214,7 +214,7 @@ export default function RoomForm({
                     });
                   }}
                   placeholder="Write a room description"
-                  className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                  className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                   rows="4"
                 ></textarea>
               </div>
@@ -224,7 +224,7 @@ export default function RoomForm({
                 <h1 className="text-lg font-bold">Parent Category</h1>
               </div>
               <select
-                className=" w-full p-2 rounded-md bg-secondary border-none border-white text-xs focus:ring-0 focus:outline-none"
+                className=" w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
                 name="parentCategory"
                 value={formData?.parentCategory ? formData.parentCategory : ""}
                 onChange={handleParentCategoryChange}
@@ -242,7 +242,7 @@ export default function RoomForm({
                 ))}
               </select>
           
-              <p className="text-xs text-slate-500">
+              <p className="text-md text-slate-500">
                 Select a category that will be the parent of the current one.
               </p>
                   {state?.errors?.parentCategory && (
@@ -289,7 +289,7 @@ export default function RoomForm({
                   <label>Unavailable</label>
                 </div>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-md text-slate-500">
                 The room will be affected by the visibility choice.
               </p>
             </div>
@@ -301,7 +301,7 @@ export default function RoomForm({
                       name="removeImages"
                       type="text"
                       defaultValue={item}
-                      className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none hidden"
+                      className="w-full p-2 rounded-md bg-secondary text-md focus:ring-0 focus:outline-none hidden"
                     />
                   ))}
                 {room?.imageUrls && room?.imageUrls.length > 0 ? (
@@ -345,7 +345,7 @@ export default function RoomForm({
                   </div>
                 )}
               </div>
-              <p className="text-xs text-slate-500">Product images.</p>
+              <p className="text-md text-slate-500">Product images.</p>
             </div>
         </div>
 
