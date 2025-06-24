@@ -80,7 +80,7 @@ if(!booking) {
                   <PiInvoiceBold size={28}/>
                 </div>
                 <div className="flex flex-col gap-4">
-                  <h2>Total spaned</h2>
+                  <h2>Total spened</h2>
                   <h1 className="text-2xl font-bold">
       
                     {payments.reduce((sum, item) => {return sum + item.amount}, 0).toLocaleString('en')}$</h1>

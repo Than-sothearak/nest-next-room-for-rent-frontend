@@ -10,7 +10,6 @@ import { BsTelegram } from 'react-icons/bs'
 import { Payment } from '@/models/Payment'
 import Link from 'next/link'
 import dayjs from 'dayjs'
-import { PiInvoiceBold } from 'react-icons/pi'
 
 
 // Output: "2025-06-23 20:51:16" (in your local time)
@@ -34,10 +33,14 @@ export const ClientDashboard = async ({ session }) => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   }
-if(!booking) {
+if(data && data.length < 0) {
   return (
-       <div>
-           <div className="mt-4 rounded-lg flex max-sm:flex-wrap gap-4">
+  <div>No Data</div>
+  )
+}
+  return (
+  <div>
+      <div className="mt-4 rounded-lg flex max-sm:flex-wrap gap-4">
         <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
           <div>
             <FaEarthAfrica />
@@ -50,45 +53,6 @@ if(!booking) {
             </p>
           </div>
         </div>
-
-        <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
-          <div>
-            <FaEarthAfrica />
-          </div>
-          <div className="flex flex-col gap-4">
-            <h2>Total Users</h2>
-            <h1 className="text-2xl font-bold">10,928</h1>
-            <p className="text-green-500 text-xs">
-              12% <span className="text-primarytext">more than previus week</span>
-            </p>
-          </div>
-        </div>
-
-
-      </div>
-
-        <div className='mt-4 w-1/2 max-lg:w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg'>No Data</div>
-       </div>
-
-  )
-}
-  return (
-  <div>
-      <div className="mt-4 rounded-lg flex max-sm:flex-wrap gap-4">
-         <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
-                <div>
-                  <PiInvoiceBold size={28}/>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <h2>Total spaned</h2>
-                  <h1 className="text-2xl font-bold">
-      
-                    {payments.reduce((sum, item) => {return sum + item.amount}, 0).toLocaleString('en')}$</h1>
-                  <p className="text-green-500 text-xs">
-                    12% <span className="text-primarytext">more than previus week</span>
-                  </p>
-                </div>
-              </div>
 
         <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
           <div>
