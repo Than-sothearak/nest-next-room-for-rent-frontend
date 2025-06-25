@@ -127,7 +127,7 @@ const InvoicePayment = ({ data }) => {
       <Page style={styles.page} size="A4">
         {/* Header */}
         <View style={styles.header}>
-          <Image style={styles.logo} src="http://192.168.100.4:3000/images/logo.jpg"/>
+          <Image style={styles.logo} src="http://localhost:3000/images/logo.jpg"/>
           <View>
             <Text style={styles.text}>WBC LOGEMENT</Text>
           

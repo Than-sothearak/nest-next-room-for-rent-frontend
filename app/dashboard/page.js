@@ -9,21 +9,29 @@ import { Payment } from "@/models/Payment";
 import { User } from "@/models/User";
 const dashboardPage = async () => {
   const session = await auth();
+  {
+    if (!session) {
+      return <div>Please log in to access the dashboard.</div>;
+    }
+  }
 
-  const latestPayment = await Payment.find().populate('userId').sort({ date: -1 }).limit(10).lean();
+  {
+    if (session?.user?.isAdmin) {
+      const latestPayment = await Payment.find()
+        .populate("userId")
+        .sort({ date: -1 })
+        .limit(10)
+        .lean();
+      const users = await User.find();
+      const payments = await Payment.find().populate("userId");
+      const booking = await Booking.find();
 
-  const users = await User.find();
-  const payments = await Payment.find().populate('userId');
-  const booking = await Booking.find()
-
-  const formatted =  latestPayment.map((payment) => ({
-    name: payment.userId ? payment.userId?.username : "Unknown",
-    date: new Date(payment.paidAt).toLocaleDateString(),
-    amount: payment.amount,
-    status: payment.status === 'paid' ? 'Completed' : 'Padding'
-  }));
-  
-
+      const formatted = latestPayment.map((payment) => ({
+        name: payment.userId ? payment.userId?.username : "Unknown",
+        date: new Date(payment.paidAt).toLocaleDateString(),
+        amount: payment.amount,
+        status: payment.status === "paid" ? "Completed" : "Padding",
+      }));
   const data = await Order.find();
   const monthlyDataMap = {};
 
@@ -47,19 +55,46 @@ const dashboardPage = async () => {
   const result = Object.values(monthlyDataMap).sort((a, b) =>
     a.dateFormat.localeCompare(b.dateFormat)
   );
+
   return (
     <>
-      {session?.user?.isAdmin ? (
+      <AdminDashboard users={users} payments={payments} booking={booking} />
+      <LastTransactionComponent data={formatted} />
+      <LineChartComponent data={result} />
+       </>
+  )
+    }
+} 
+{if (!session?.user?.isAdmin) {
+  const user = await User.findById(session.user._id);
+      const clientData = await Booking.findOne({ userId: user._id })
+        .populate("userId") // First populate userId
+        .populate("roomId"); // Then roomId
+
+      const clientBooking = JSON.parse(JSON.stringify(clientData));
+
+      const clientPayments = JSON.parse(
+        JSON.stringify(
+          await Payment.find({ userId: user._id })
+            .populate("userId")
+            .populate("roomId")
+            .populate("bookingId")
+            .sort({ startDate: -1 })
+        )
+      );
+
+      return (
         <div>
-          <AdminDashboard  users={users} payments={payments} booking={booking} />
-          <LastTransactionComponent data={formatted} />
-          <LineChartComponent data={result} />
+          <ClientDashboard
+         session={session}
+            user={JSON.parse(JSON.stringify(user))}
+            payments={clientPayments}
+            booking={clientBooking}
+          />
         </div>
-      ) : (
-        <div><ClientDashboard session={session}/></div>
-      )}
-    </>
-  );
-};
+      );
+}
+}
+}
 
 export default dashboardPage;
