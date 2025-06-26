@@ -7,7 +7,7 @@ import { mongoDb } from "@/utils/connectDB";
 import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
- 
+
 export async function createBooking(prevState, formData) {
   await mongoDb();
   const session = await auth();
@@ -22,14 +22,14 @@ export async function createBooking(prevState, formData) {
     }
 
     const userId = formData.get("userId");
-    const contract = formData.get("contract")
+    const contract = formData.get("contract");
     const roomId = formData.get("roomId");
     const startDate = formData.get("startDate");
     const dueDate = formData.get("dueDate");
     const rent = formData.get("rent");
     const deposit = formData.get("deposit");
     const status = formData.get("status");
-   const paymentStatus = formData.get("paymentStatus")
+    const paymentStatus = formData.get("paymentStatus");
     const notes = formData.get("notes");
     const files = formData.getAll("files");
     const properties = propertiesFormData(formData);
@@ -45,8 +45,8 @@ export async function createBooking(prevState, formData) {
       contract,
       files,
       status: status || "active",
-      paymentStatus: paymentStatus || 'unpaid',
-      properties
+      paymentStatus: paymentStatus || "unpaid",
+      properties,
     };
 
     const errors = validateProductFields(bookingData);
@@ -82,8 +82,7 @@ export async function createBooking(prevState, formData) {
 
     await Room.findByIdAndUpdate(
       roomId,
-      { status: 0 }, // Assuming 0 means booked
-     
+      { status: 0 } // Assuming 0 means booked
     );
 
     console.log("Booking created successfully");
@@ -97,39 +96,40 @@ export async function createBooking(prevState, formData) {
 }
 
 export async function updateBooking(bookId, prevState, formData) {
- await mongoDb();
   const booking = await Booking.findById(bookId);
-   const session = await auth();
-    if (!session?.user?.isAdmin) {
-      return console.log("Access denied! you are not admin");
-    }
-  
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied! you are not admin");
+  }
+
   if (!booking) {
     return { error: "Booking not found" };
   }
 
+  const oldRoomId = booking.roomId?.toString();
+
   try {
-      const userId = formData.get("userId");
-    const contract = formData.get("contract")
+    const userId = formData.get("userId");
+    const contract = formData.get("contract");
     const roomId = formData.get("roomId");
     const startDate = formData.get("startDate");
     const dueDate = formData.get("dueDate");
     const rent = formData.get("rent");
     const deposit = formData.get("deposit");
     const status = formData.get("status");
-    const paymentStatus = formData.get("paymentStatus")
+    const paymentStatus = formData.get("paymentStatus");
     const notes = formData.get("notes");
     const files = formData.getAll("files");
-    const removedFiles = formData.getAll("removedFiles")
+    const removedFiles = formData.getAll("removedFiles");
     const properties = propertiesFormData(formData);
 
-   const updatedFileUrls = booking.files.filter(
-          (file) => ! removedFiles.includes(file) // Remove only matching URLs
-        );
-        let fileUrls = updatedFileUrls || [];
+    const updatedFileUrls = booking.files.filter(
+      (file) => !removedFiles.includes(file) // Remove only matching URLs
+    );
+    let fileUrls = updatedFileUrls || [];
 
-      const bookingData = {
-       userId: userId,
+    const bookingData = {
+      userId: userId,
       roomId: roomId,
       startDate,
       dueDate,
@@ -139,70 +139,86 @@ export async function updateBooking(bookId, prevState, formData) {
       contract,
       files: fileUrls,
       status: status || "active",
-      paymentStatus: paymentStatus || 'unpaid',
+      paymentStatus: paymentStatus || "unpaid",
       properties,
     };
 
-
-            const errors = validateProductFields(bookingData);
+    const errors = validateProductFields(bookingData);
     if (Object.keys(errors).length > 0) return { errors };
 
-   const existingName = await Booking.findOne({
-      roomId: formData.get("roomId"),
-    });
-    if (existingName) {
-      errors.roomId = "This room is already booked";
-      console.log("XX This room is already booked XX");
-      return { errors };
-    }
- 
-  
-    
-        try {
-          if (removedFiles && removedFiles.length > 0) {
-            for (const removedFile of removedFiles) {
-              const oldkey = removedFile.split("/").pop();
-              if (oldkey) {
-                await deleteFileFromS3(oldkey);
-              }
-            }
-          } else {
-            console.log("No file remove!");
-          }
-        } catch (err) {
-          console.log(err);
-        }
-    
-        if (files && files.length > 0 && files[0].size > 0) {
-          for (const file of files) {
-            if (file.size > 0) {
-              const fileUrl = await uploadFileToS3(file);
-              fileUrls.push(fileUrl);
-              console.log("File uploaded to S3:", fileUrl);
-            }
-          }
-          console.log(
-            "-----------------------------------------------------------------------------------------------------------------------------"
-          );
-          console.log(
-            `Total file ${files.length} uploaded to S3 successfully`
-          );
-        }
-    
-        console.log("Files URLs after processing:", fileUrls);
+    //  const existingName = await Booking.findOne({
+    //     roomId: formData.get("roomId"),
+    //   });
+    //   if (existingName) {
+    //     errors.roomId = "This room is already booked";
+    //     console.log("XX This room is already booked XX");
+    //     return { errors };
+    //   }
 
-   
+    try {
+      if (removedFiles && removedFiles.length > 0) {
+        for (const removedFile of removedFiles) {
+          const oldkey = removedFile.split("/").pop();
+          if (oldkey) {
+            await deleteFileFromS3(oldkey);
+          }
+        }
+      } else {
+        console.log("No file remove!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    if (files && files.length > 0 && files[0].size > 0) {
+      for (const file of files) {
+        if (file.size > 0) {
+          const fileUrl = await uploadFileToS3(file);
+          fileUrls.push(fileUrl);
+          console.log("File uploaded to S3:", fileUrl);
+        }
+      }
+      console.log(
+        "-----------------------------------------------------------------------------------------------------------------------------"
+      );
+      console.log(`Total file ${files.length} uploaded to S3 successfully`);
+    }
+
+    console.log("Files URLs after processing:", fileUrls);
+
     await Booking.updateOne({ _id: bookId }, bookingData);
-    revalidatePath(`/dashboard/booking/${bookId}`);
-    redirect(`/dashboard/booking/${bookId}`);
-    console.log("Booking updated!");
-    return { success: true, message: "Booking update successfully!" };
+
+    // Update room status accordingly
+    await syncRoomStatuses({
+      oldRoomId,
+      newRoomId: roomId?.toString(),
+      bookingStatus: status,
+    });
+
+    async function syncRoomStatuses({ oldRoomId, newRoomId, bookingStatus }) {
+      // Free old room if changed
+      if (oldRoomId && oldRoomId !== newRoomId) {
+        await Room.findByIdAndUpdate(oldRoomId, { status: 1 });
+      }
+
+      // Mark new room as occupied if booking is active
+      if (newRoomId) {
+        const shouldBeOccupied = bookingStatus === "active";
+        await Room.findByIdAndUpdate(newRoomId, {
+          status: shouldBeOccupied ? 0 : 1,
+        });
+      }
+    }
+
+    // console.log("Booking updated!");
+    // return { success: true, message: "Booking update successfully!" };
   } catch (err) {
     console.error("Error updating room:", err);
     return { error: "Failed to update booking due to a server error" };
   }
+  revalidatePath(`/dashboard/booking/${bookId}`);
+  redirect(`/dashboard/booking/${bookId}`);
 }
-
 
 export async function getBooking(query, page) {
   const session = await auth();
@@ -216,24 +232,21 @@ export async function getBooking(query, page) {
 
   try {
     if (query) {
-
       const matchedRooms = await Room.find({
-        roomName: { $regex: query, $options: "i"}
-      })
+        roomName: { $regex: query, $options: "i" },
+      });
       const matchedRoomIds = matchedRooms.map((room) => room._id);
 
       const matchedUsers = await User.find({
-      $or: [
-        { phone: { $regex: query, $options: "i" } },
-      ],
-    });
-    const matchedUserIds = matchedUsers.map((user) => user._id);
+        $or: [{ phone: { $regex: query, $options: "i" } }],
+      });
+      const matchedUserIds = matchedUsers.map((user) => user._id);
 
       const booking = await Booking.find({
         $or: [
-        { userId: { $in: matchedUserIds } },
-        { roomId: { $in: matchedRoomIds } },
-      ],
+          { userId: { $in: matchedUserIds } },
+          { roomId: { $in: matchedRoomIds } },
+        ],
       })
         .populate("userId")
         .populate("roomId");
@@ -247,8 +260,6 @@ export async function getBooking(query, page) {
       .populate("roomId")
       .limit(ITEM_PER_PAGE)
       .skip(ITEM_PER_PAGE * (page - 1));
-  
-
 
     return { booking, count };
   } catch (err) {
@@ -256,7 +267,6 @@ export async function getBooking(query, page) {
     throw new Error("Failed to fetch booking!");
   }
 }
-
 
 function validateProductFields({
   userId,
@@ -268,7 +278,7 @@ function validateProductFields({
   contract,
 }) {
   const errors = {};
-  if (!contract) errors.contract = "Contract is required"
+  if (!contract) errors.contract = "Contract is required";
   if (!userId) errors.userId = "User name is required";
   if (!roomId) errors.roomId = "Room number is required";
   if (!startDate) errors.startDate = "Start date is required";

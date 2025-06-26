@@ -10,7 +10,7 @@ const ServiceSchema = new Schema({
   startTime: { type: String, required: true },
   price: { type: Number, required: true },
   status: { type: String, default: "padding" },
-  notes: { type: String },
+  note: { type: String },
 }, {
   timestamps: true,
 });

@@ -22,6 +22,8 @@ export async function requestService(booking, prevState, formData) {
     const startTime = formData.get("startTime");
     const note = formData.get("note");
      const price= formData.get("price");
+
+     console.log(note)
     
     const serviceData = {
         userId: booking.userId._id,
@@ -34,7 +36,7 @@ export async function requestService(booking, prevState, formData) {
         status: 'pending'
     }
     await Service.create(serviceData)
-    revalidatePath('dashboard/services')
+    revalidatePath('/dashboard/services')
     console.log("Request sent successfully!")
         return { success: true, message: "Request sent successfully!" };
 

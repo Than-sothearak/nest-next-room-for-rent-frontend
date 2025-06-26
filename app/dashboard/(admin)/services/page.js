@@ -1,8 +1,6 @@
-import { getBooking } from '@/actions/Booking';
-import { getRoom } from '@/actions/rooms';
-import { getUsers } from '@/actions/users'
+import { getServices } from '@/actions/services';
 import { auth } from '@/auth';
-import BookingList from '@/components/BookingList';
+import Pagination from '@/components/Pagination';
 import SearchCompoenent from '@/components/SearchComponent';
 import ServiceList from '@/components/ServiceList';
 import Link from 'next/link';
@@ -10,18 +8,27 @@ import React from 'react'
 
 const servicePage = async ({searchParams}) => {
    const session = await auth();
+
+   if (!session || !session.user?.isAdmin) {
+    return (
+      <div className='p-4 bg-primary mt-4 rounded-lg'>
+        <h1 className='text-2xl font-bold'>Access Denied</h1>
+        <p className='text-lg'>You do not have permission to view this page.</p>
+      </div>
+    );
+  } 
    const { query } = await searchParams;
+   const ITEM_PER_PAGE = 20;
     const { page } = (await searchParams) || 1;
-    const {sortKey} = (await searchParams) || "date";
+    const {sortKey} = (await searchParams) || "requesting";
     const {sortDirection }= await searchParams || "descending";
-    const { booking, count } = await getBooking(
+    const { services, count } = await getServices(
       query,
       page,
+      sortKey,
     );
-    const ITEM_PER_PAGE = 20;
+   
     const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
-    const {users} = await getUsers();
-    const { rooms } = await getRoom()
 
   return (
     <div className='p-4 bg-primary mt-4 rounded-lg'>
@@ -29,7 +36,7 @@ const servicePage = async ({searchParams}) => {
         <div>
           <SearchCompoenent
             placeHolder="Search for product..."
-            linkPage="/dashboard/booking"
+            linkPage="/dashboard/services"
           />
         </div>
         <Link
@@ -40,7 +47,19 @@ const servicePage = async ({searchParams}) => {
         </Link>
       </div>
       <ServiceList
+      services={JSON.parse(JSON.stringify(services))}
+        currentPage={page ||1}
+        itemPerPage={ITEM_PER_PAGE}
+        sortKey={sortKey}
+        sortDirection={sortDirection}   
       />
+
+           <Pagination 
+            totalPages={countPage} 
+            pathname={'/services'}
+            itemPerPage={ITEM_PER_PAGE}
+            currentPage={page} query={query} />
+     
      
     </div>
   )

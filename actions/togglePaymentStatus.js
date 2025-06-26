@@ -39,9 +39,7 @@ const session = await auth();
         userId: booking.userId,
         startDate: booking.startDate,
         dueDate: booking.dueDate,
-        amount: booking.rent + booking.properties.reduce((sum, service) => {
-  return sum + Number(service.price);
-}, 0),
+        amount: booking.rent,
         services: booking.properties,
         method: "manual",
         note: "Paid by admin",

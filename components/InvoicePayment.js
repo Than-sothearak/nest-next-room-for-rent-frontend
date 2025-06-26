@@ -97,10 +97,10 @@ const InvoicePayment = ({ data }) => {
       type: `${getData?.category} (${formatDate(getData.startDate)} - ${formatDate(getData.dueDate)})`,
       room: getData?.roomId?.roomName || '',  // Or get from populated room data
       level: getData?.roomId?.floor || '',
-      price: Number(getData.bookingId?.rent),
+      price: Number(getData.amount),
       qty: 1,
       off: 0,
-      amt: Number(getData.bookingId?.rent),
+      amt: Number(getData.amount),
     },
     ...(Array.isArray(getData?.services)
   ? getData?.services.map((item, index) => ({

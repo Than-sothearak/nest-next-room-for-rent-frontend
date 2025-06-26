@@ -117,7 +117,7 @@ export default function BookingForm({
       </div>
 
       <div className="grid gap-2">
-        <label className="font-bold">Room</label>
+        <label className="font-bold">Room available</label>
         <select
           name="roomId"
           value={selectedRoom}
@@ -131,13 +131,15 @@ export default function BookingForm({
           {oneRoom ? (
             <option value={oneRoom._id}>{oneRoom.roomName}</option>
           ) : (
-            booking === "undefined" < 0 ? rooms
+            booking === "undefined" ? rooms
               .filter((r) => r.status === 1)
               .map((r) => (
                 <option key={r._id} value={r._id}>
                   {r.name || r.roomName}
                 </option>
-              )) : rooms.map(r => (
+              )) : rooms
+              .filter((r) => r.status === 1)
+              .map((r) => (
                 <option key={r._id} value={r._id}>
                   {r.name || r.roomName}
                 </option>

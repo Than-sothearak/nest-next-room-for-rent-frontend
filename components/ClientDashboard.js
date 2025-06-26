@@ -214,7 +214,9 @@ export const ClientDashboard = ({ services, booking, payments, user }) => {
             </div>
 
             <div className="flex items-center justify-between">
-              <p>Amount</p> <p>$ {payment.amount}</p>
+              <p>Amount</p> <p>$ {payment.amount + (payment.properties?.reduce((sum, item) => {
+      return sum + Number(item.price);
+    }, 0) || 0)}</p>
             </div>
           </div>
         ))}
