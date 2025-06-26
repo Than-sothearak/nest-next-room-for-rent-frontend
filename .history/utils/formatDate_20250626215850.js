@@ -20,26 +20,3 @@ export function formatDateTime(dateString) {
 
   return date.toLocaleString("en-US", options).replace(",", "");
 }
-
-export function formatDateOnly(dateString) {
-  const date = new Date(dateString);
-
-  const options = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-
-  return date.toLocaleString("en-US", options).replace(",", "");
-}
-
-export function formatTo12Hour(time24) {
-  const [hourStr, minuteStr] = time24.split(":");
-  let hour = parseInt(hourStr, 10);
-  const minute = minuteStr;
-  const ampm = hour >= 12 ? "PM" : "AM";
-
-  hour = hour % 12 || 12; // convert 0 -> 12, 13 -> 1, etc.
-
-  return `${hour}:${minute} ${ampm}`;
-}

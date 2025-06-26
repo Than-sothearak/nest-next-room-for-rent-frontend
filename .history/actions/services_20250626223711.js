@@ -22,7 +22,7 @@ export async function getServices(query, page, sortKey) {
       key = { status: "accepted" };
     }
     if (sortKey === "completed") {
-      key = { status: "completed" };
+      key = { status: "cancelled" };
     }
 
     // if (query) {
@@ -112,26 +112,5 @@ export async function cancelService(serviceId) {
   } catch (err) {
     console.error("Error cancelling service:", err);
     return { error: "Failed to cancel service" };
-  }
-}
-
-export async function markAsCompleted(serviceId) {
-  try {
-    const service = await Service.findById(serviceId);
-    if (!service) {
-      return { error: "Service not found" };
-    }
-
-    const date = new Date();          
-    service.status = "completed";
-    service.completedDate = date;
- 
-    await service.save();
-    revalidatePath("/dashboard/services");
-
-    return { success: true, message: "Service successfully completed!" };
-  } catch (err) {
-    console.error("Error cancelling service:", err);
-    return { error: "Failed to complete service" };
   }
 }

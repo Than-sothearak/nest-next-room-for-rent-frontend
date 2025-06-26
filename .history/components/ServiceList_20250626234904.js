@@ -28,7 +28,7 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
     }
   }
 
-  const handleCompleted = async (serviceId) => {
+       const handleCompleted = async (serviceId) => {
     const response = await markAsCompleted(serviceId);
     if (response.error) {
       console.error("Error mark as completed service:", response.error);
@@ -92,7 +92,7 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
                     {service.status}
                   </p>
                 </td>
-                <td className="">{service.status === 'cancelled' ? formatDateTime(service.startDate) : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
+                <td className="">{service.status === 'cancelled' ? service.startTime : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
                 <td className="">
                   {service.status === 'pending' ? <div className="flex gap-2">
                     <button
@@ -153,7 +153,7 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
                     In process
                   </p>
                 </td>
-                <td className="">{formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
+                <td className="">{service.status === 'cancelled' ? service.startTime : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
                 <td className="">
                   {service.status === 'accepted' ? <div className="flex gap-2">
                     <button
@@ -182,54 +182,35 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
               <th className="text-start">Room</th>
               <th className="text-start">Guest</th>
               <th className="text-start">Completed</th>
-              <th className="text-start">Schedule</th>
               <th className="text-start">Status</th>
-
-              <th className="text-start">CompletedAt</th>
-
+              <th className="text-start">Date/Time</th>
               <th className="text-start">Action</th>
             </tr>
           </thead>
           <tbody>
-            {services?.map((service, index) => (
-              <tr
-                title={service.note}
-                key={service._id || index}
-                className=" odd:bg-green-100 even:bg-green-200 text-gray-900 dark:odd:bg-slate-200 dark:even:bg-gray-100 dark:text-tertiary"
-              >
-                <td className="p-2">
-                  <p>{Number(currentPage - 1) * itemPerPage + index + 1}</p>
-                </td>
+            <tr className=" odd:bg-green-100 even:bg-green-200 text-gray-900 dark:odd:bg-slate-200 dark:even:bg-gray-100 dark:text-tertiary">
+              <td className="p-2">
+                <p>1</p>
+              </td>
 
-                <td className="font-bold">{service.roomId.roomName}</td>
+              <td className="font-bold">123E</td>
 
-                <td className="font-bold">{service.userId.phone}</td>
-                <td className="font-bold">{service.serviceType}</td>
-                <td className="">{service.status === 'completed' ? formatDateOnly(service.startDate) : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
-                <td className={``}>
-                  <p className={` 
-                   bg-green-300 text-green-700 capitalize w-max px-4 rounded-full `}>
-                    Completed
-                  </p>
-                </td>
-                <td>
-                  {formatDateTime(service.
-                    completedDate)}
-                </td>
-                <td className="">
-                  {service.status === 'accepted' ? <div className="flex gap-2">
-                    <button
-                      onClick={() => handleCompleted(service._id)}
-                      type="button"
-                      className="bg-green-400 hover:bg-green-500 px-4 rounded-full text-white">
-                      Mark as completed
-                    </button>
-
-                  </div> : <></>}
-                </td>
-
-              </tr>
-            ))}
+              <td className="font-bold">086643205</td>
+              <td className="font-bold">Cleaning room</td>
+              <td className={``}>
+                <p className="bg-green-200 w-max px-4 rounded-full text-green-700">
+                  Completed
+                </p>
+              </td>
+              <td>12-07-2025 12:00</td>
+              <td className="">
+                <div className="flex gap-2">
+                  <button className="bg-red-400 px-4 rounded-full text-white">
+                    Cancel
+                  </button>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
       )}

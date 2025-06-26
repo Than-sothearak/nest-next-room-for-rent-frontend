@@ -28,7 +28,7 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
     }
   }
 
-  const handleCompleted = async (serviceId) => {
+       const handleCompleted = async (serviceId) => {
     const response = await markAsCompleted(serviceId);
     if (response.error) {
       console.error("Error mark as completed service:", response.error);
@@ -92,7 +92,7 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
                     {service.status}
                   </p>
                 </td>
-                <td className="">{service.status === 'cancelled' ? formatDateTime(service.startDate) : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
+                <td className="">{service.status === 'cancelled' ? service.startTime : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
                 <td className="">
                   {service.status === 'pending' ? <div className="flex gap-2">
                     <button
@@ -153,7 +153,7 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
                     In process
                   </p>
                 </td>
-                <td className="">{formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
+                <td className="">{service.status === 'cancelled' ? service.startTime : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
                 <td className="">
                   {service.status === 'accepted' ? <div className="flex gap-2">
                     <button
@@ -182,11 +182,8 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
               <th className="text-start">Room</th>
               <th className="text-start">Guest</th>
               <th className="text-start">Completed</th>
-              <th className="text-start">Schedule</th>
               <th className="text-start">Status</th>
-
-              <th className="text-start">CompletedAt</th>
-
+              <th className="text-start">Date/Time</th>
               <th className="text-start">Action</th>
             </tr>
           </thead>
@@ -195,7 +192,7 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
               <tr
                 title={service.note}
                 key={service._id || index}
-                className=" odd:bg-green-100 even:bg-green-200 text-gray-900 dark:odd:bg-slate-200 dark:even:bg-gray-100 dark:text-tertiary"
+                className=" odd:bg-green-100 even:bg-gray-100 text-gray-900 dark:odd:bg-green-200 dark:even:bg-gray-100 dark:text-tertiary"
               >
                 <td className="p-2">
                   <p>{Number(currentPage - 1) * itemPerPage + index + 1}</p>
@@ -205,17 +202,13 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
 
                 <td className="font-bold">{service.userId.phone}</td>
                 <td className="font-bold">{service.serviceType}</td>
-                <td className="">{service.status === 'completed' ? formatDateOnly(service.startDate) : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
                 <td className={``}>
                   <p className={` 
-                   bg-green-300 text-green-700 capitalize w-max px-4 rounded-full `}>
-                    Completed
+                   bg-amber-200 text-amber-700 capitalize w-max px-4 rounded-full `}>
+                    In process
                   </p>
                 </td>
-                <td>
-                  {formatDateTime(service.
-                    completedDate)}
-                </td>
+                <td className="">{service.status === 'cancelled' ? service.startTime : formatDateOnly(service.startDate) + "-Time: " + formatTo12Hour(service.startTime)}</td>
                 <td className="">
                   {service.status === 'accepted' ? <div className="flex gap-2">
                     <button
@@ -227,7 +220,9 @@ const ServiceList = ({ services, currentPage, itemPerPage, sortKey }) => {
 
                   </div> : <></>}
                 </td>
-
+                <td>
+                  {formatDate(service.createdAt)}
+                </td>
               </tr>
             ))}
           </tbody>

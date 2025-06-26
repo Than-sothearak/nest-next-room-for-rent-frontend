@@ -112,7 +112,7 @@ const ClientService = ({
                     {item.icon}
                   </div>
                   <p className="animate-bounce p-2 rounded-md">Pending...</p>
-                  <p className="absolute top-1 left-2 text-xs">{formatDateOnly(formatDate(services.filter(service => service.serviceType === item.service && service.status === 'pending')[0].startDate)) + '-' + formatTo12Hour(services.filter(service => service.serviceType === item.service && service.status === 'pending')[0].startTime)}</p>
+                  <p className="absolute top-1 left-2 text-xs">{formatDateOnly(formatDate(services.filter(service => service.serviceType === item.service && service.status === 'pending')[0].startDate)) + 'sdd' + ormatTo12Hour(formatDate(services.filter(service => service.serviceType === item.service && service.status === 'pending')[0].startTime))}</p>
                   {services
                     .filter((s) => s.serviceType === item.service)
                     .map((service) => (
@@ -150,7 +150,7 @@ const ClientService = ({
                       You can request again after admin complete your service
                     </span>
                   </div>
-                   <p className="absolute top-1 left-2 text-xs">{formatDateOnly(services.filter(service => service.serviceType === item.service && service.status === 'accepted')[0].startDate) + '-' + formatTo12Hour(services.filter(service => service.serviceType === item.service && service.status === 'accepted')[0].startTime)}</p>
+                  <p className="absolute top-1 left-2 text-xs">{formatDateOnly(formatDate(services.filter(service => service.serviceType === item.service && service.status === 'accepted')[0].startDate))}</p>
 
                 </div>
               )}

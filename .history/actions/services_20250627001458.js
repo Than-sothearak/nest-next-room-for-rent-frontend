@@ -123,7 +123,7 @@ export async function markAsCompleted(serviceId) {
     }
 
     const date = new Date();          
-    service.status = "completed";
+    service.status = "cancelled";
     service.completedDate = date;
  
     await service.save();

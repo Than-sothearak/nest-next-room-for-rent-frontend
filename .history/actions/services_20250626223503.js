@@ -22,7 +22,7 @@ export async function getServices(query, page, sortKey) {
       key = { status: "accepted" };
     }
     if (sortKey === "completed") {
-      key = { status: "completed" };
+      key = { status: "cancelled" };
     }
 
     // if (query) {
@@ -58,16 +58,16 @@ export async function acceptService(serviceId) {
   if (!session?.user?.isAdmin) {
     return { error: "Access denied!" };
   }
-  const date = new Date();           // any Date you want to display
-  const readable = date.toLocaleString("en-US", {
-    timeZone: "Asia/Jakarta",        // Jakarta = WIB (UTC+7)
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,                   // force 24-hour clock
-    // hourCycle: "h23"              // optional, but explicit
-  });
+const date = new Date();           // any Date you want to display
+const readable = date.toLocaleString("en-US", {
+  timeZone: "Asia/Jakarta",        // Jakarta = WIB (UTC+7)
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,                   // force 24-hour clock
+  // hourCycle: "h23"              // optional, but explicit
+});
 
-  console.log(readable); // e.g. "22:26
+console.log(readable); // e.g. "22:26
 
   try {
     const service = await Service.findById(serviceId);
@@ -76,7 +76,8 @@ export async function acceptService(serviceId) {
     }
 
     service.status = "accepted";
-  
+    service.startDate = new Date();
+    service.startTime = readable;
     await service.save();
     revalidatePath("/dashboard/services");
     return { message: "Service accepted successfully!" };
@@ -93,18 +94,19 @@ export async function cancelService(serviceId) {
       return { error: "Service not found" };
     }
 
-    const date = new Date();           // any Date you want to display
-    const readable = date.toLocaleString("en-US", {
-      timeZone: "Asia/Jakarta",        // Jakarta = WIB (UTC+7)
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,                   // force 24-hour clock
-      // hourCycle: "h23"              // optional, but explicit
-    });
+const date = new Date();           // any Date you want to display
+const readable = date.toLocaleString("en-US", {
+  timeZone: "Asia/Jakarta",        // Jakarta = WIB (UTC+7)
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,                   // force 24-hour clock
+  // hourCycle: "h23"              // optional, but explicit
+});
 
-    console.log(readable); // e.g. "22:26
+console.log(readable); // e.g. "22:26
     service.status = "cancelled";
- 
+    service.startDate = new Date();
+    service.startTime = readable;
     await service.save();
     revalidatePath("/dashboard/services");
 
@@ -112,26 +114,5 @@ export async function cancelService(serviceId) {
   } catch (err) {
     console.error("Error cancelling service:", err);
     return { error: "Failed to cancel service" };
-  }
-}
-
-export async function markAsCompleted(serviceId) {
-  try {
-    const service = await Service.findById(serviceId);
-    if (!service) {
-      return { error: "Service not found" };
-    }
-
-    const date = new Date();          
-    service.status = "completed";
-    service.completedDate = date;
- 
-    await service.save();
-    revalidatePath("/dashboard/services");
-
-    return { success: true, message: "Service successfully completed!" };
-  } catch (err) {
-    console.error("Error cancelling service:", err);
-    return { error: "Failed to complete service" };
   }
 }

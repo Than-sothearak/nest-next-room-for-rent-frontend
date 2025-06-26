@@ -22,7 +22,7 @@ export async function getServices(query, page, sortKey) {
       key = { status: "accepted" };
     }
     if (sortKey === "completed") {
-      key = { status: "completed" };
+      key = { status: "cancelled" };
     }
 
     // if (query) {
@@ -123,8 +123,17 @@ export async function markAsCompleted(serviceId) {
     }
 
     const date = new Date();          
-    service.status = "completed";
-    service.completedDate = date;
+    const readable = date.toLocaleString("en-US", {
+      timeZone: "Asia/Jakarta",       
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,              
+     
+    });
+
+    console.log(readable); // e.g. "22:26
+    service.status = "cancelled";
+    service.completedDate = readable;
  
     await service.save();
     revalidatePath("/dashboard/services");

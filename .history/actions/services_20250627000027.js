@@ -22,7 +22,7 @@ export async function getServices(query, page, sortKey) {
       key = { status: "accepted" };
     }
     if (sortKey === "completed") {
-      key = { status: "completed" };
+      key = { status: "cancelled" };
     }
 
     // if (query) {
@@ -123,7 +123,7 @@ export async function markAsCompleted(serviceId) {
     }
 
     const date = new Date();          
-    service.status = "completed";
+    service.status = "cancelled";
     service.completedDate = date;
  
     await service.save();

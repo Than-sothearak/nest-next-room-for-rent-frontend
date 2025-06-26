@@ -8,7 +8,7 @@ import {
 import { TbAirConditioningDisabled } from "react-icons/tb";
 import ClientServiceForm from "./ClientServiceForm";
 import { cancelService } from "@/actions/services";
-import { formatDate, formatDateOnly, formatDateTime, formatTo12Hour } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatDate";
 
 const ClientService = ({
   services,
@@ -112,7 +112,7 @@ const ClientService = ({
                     {item.icon}
                   </div>
                   <p className="animate-bounce p-2 rounded-md">Pending...</p>
-                  <p className="absolute top-1 left-2 text-xs">{formatDateOnly(formatDate(services.filter(service => service.serviceType === item.service && service.status === 'pending')[0].startDate)) + '-' + formatTo12Hour(services.filter(service => service.serviceType === item.service && service.status === 'pending')[0].startTime)}</p>
+                   <p className="absolute bottom-0 left-2">Schedule: {services.filter(service => service.serviceType === item.service).map}</p>
                   {services
                     .filter((s) => s.serviceType === item.service)
                     .map((service) => (
@@ -138,7 +138,7 @@ const ClientService = ({
                     {item.icon}
                   </div>
                   <div className="absolute top-2 right-2">
-
+                   
                     <span className="relative flex size-3">
                       <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75"></span>
                       <span className="relative inline-flex size-3 rounded-full bg-green-600"></span>
@@ -150,8 +150,7 @@ const ClientService = ({
                       You can request again after admin complete your service
                     </span>
                   </div>
-                   <p className="absolute top-1 left-2 text-xs">{formatDateOnly(services.filter(service => service.serviceType === item.service && service.status === 'accepted')[0].startDate) + '-' + formatTo12Hour(services.filter(service => service.serviceType === item.service && service.status === 'accepted')[0].startTime)}</p>
-
+                  <p className="absolute bottom-0 left-2">Schedule: {services.map(service => formatDate(service.startDate))[0]}</p>
                 </div>
               )}
 

@@ -11,7 +11,7 @@ const ServiceSchema = new Schema({
   price: { type: Number, required: true },
   status: { type: String, default: "padding" },
   note: { type: String },
-  completedDate: { type: Date},
+   completedDate: { type: Date},
 }, {
   timestamps: true,
 });
