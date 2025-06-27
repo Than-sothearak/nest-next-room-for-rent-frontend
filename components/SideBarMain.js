@@ -14,6 +14,7 @@ import {
   pageNavigation,
   userNavigation,
 } from "@/lib/navLinks";
+import ConnectTelegram from "./ConnectTelegram";
 
 const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -53,7 +54,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) 
           <div className="">
             <h1 className="text-sm font-bold">{currentUser?.username}</h1>
             {session?.user?.isAdmin ? (
-              <p className="text-xs">Admin</p>
+              <p className="text-xs">Admin </p>
             ) : (
               <p className="text-xs">User</p>
             )}
@@ -103,6 +104,8 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) 
                 Edit your account information
               </Link>
             </div>
+
+            <ConnectTelegram userId={currentUser._id}/>
           </div>
         </div>
       </div>

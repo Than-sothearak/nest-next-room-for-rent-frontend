@@ -18,16 +18,16 @@ const servicePage = async ({searchParams}) => {
     );
   } 
    const { query } = await searchParams;
-   const ITEM_PER_PAGE = 20;
+ 
     const { page } = (await searchParams) || 1;
     const {sortKey} = (await searchParams) || "requesting";
     const {sortDirection }= await searchParams || "descending";
-    const { services, count } = await getServices(
+    const { services, count, ITEM_PER_PAGE, serviceCount } = await getServices(
       query,
       page,
       sortKey,
     );
-   
+
     const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
 
   return (
@@ -47,11 +47,13 @@ const servicePage = async ({searchParams}) => {
         </Link>
       </div>
       <ServiceList
+      
       services={JSON.parse(JSON.stringify(services))}
         currentPage={page ||1}
         itemPerPage={ITEM_PER_PAGE}
         sortKey={sortKey}
         sortDirection={sortDirection}   
+        serviceCount={serviceCount}
       />
 
            <Pagination 

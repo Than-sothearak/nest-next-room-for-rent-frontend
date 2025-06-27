@@ -2,6 +2,9 @@
 
 import { auth } from "@/auth";
 import { Service } from "@/models/Service";
+import { User } from "@/models/User";
+import { formatTo12Hour } from "@/utils/formatDate";
+import { sendMessageToTelegram } from "@/utils/sendTelegramMessage";
 import { revalidatePath } from "next/cache";
 
 export async function requestService(booking, prevState, formData) {
@@ -10,7 +13,7 @@ export async function requestService(booking, prevState, formData) {
     if (!session) {
         return console.log("Access denied! you are not login");
     }
-
+    const admin = await User.findOne({ isAdmin: true });
     try {
         if (!formData || typeof formData.get !== "function") {
             console.error("Invalid or missing formData:", formData);
@@ -23,8 +26,6 @@ export async function requestService(booking, prevState, formData) {
     const note = formData.get("note");
      const price= formData.get("price");
 
-     console.log(note)
-    
     const serviceData = {
         userId: booking.userId._id,
         roomId: booking.roomId._id,
@@ -35,8 +36,17 @@ export async function requestService(booking, prevState, formData) {
         note,
         status: 'pending'
     }
+   
     await Service.create(serviceData)
     revalidatePath('/dashboard/services')
+
+  await sendMessageToTelegram(
+  admin.telegramChatId,
+  `<b>📢 New Service Request</b>\n\n<b>👤 User:</b> ${booking.userId.username} (${booking.userId.phone})\n<b>🛠️ Service Type:</b> ${serviceType}\n<b>🏠 Room Number:</b> ${booking.roomId.roomName}\n<b>📅 Schedule:</b> ${startDate}\n<b>⏰ Time:</b> ${formatTo12Hour(startTime)}\n<b>📝 Note:</b> ${note || "None"}\n<b>💵 Price:</b> $${price}\n\nPlease review and take action.`
+);
+
+console.log("Service request notification sent to admin successfully!");
+
     console.log("Request sent successfully!")
         return { success: true, message: "Request sent successfully!" };
 

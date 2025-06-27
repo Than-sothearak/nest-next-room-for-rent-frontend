@@ -34,13 +34,32 @@ export async function sendInvoiceToTelegram(chatId, pdfBuffer, booking) {
       parse_mode: "HTML",
     });
 
-    await bot.api.sendDocument(chatId, inputFile, {
+   if (inputFile) {
+     await bot.api.sendDocument(chatId, inputFile, {
       caption: "🧾 Your invoice is attached.",
     });
+   }
 
     return { success: true };
   } catch (err) {
     console.error("Telegram send error:", err);
     return { error: "Failed to send invoice via Telegram." };
+  }
+}
+
+export async function sendMessageToTelegram(chatId, message) {
+  try {
+    if (!chatId) {
+      throw new Error("User does not have a Telegram chat ID.");
+    }
+
+    await bot.api.sendMessage(chatId, message, {
+      parse_mode: "HTML",
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error("Telegram send error:", err);
+    return { error: "Failed to send message via Telegram." };
   }
 }
