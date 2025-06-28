@@ -21,8 +21,21 @@ const ServiceList = ({
   currentPage,
   itemPerPage,
   sortKey,
+  sortDirection,
+  query
 }) => {
   const [isClick, setIsClick] = useState("Requesting");
+  const [direction, setDirection] = useState("ascending");
+
+  const handleSort = (key) => {
+    setDirection((prevDirection) =>
+      prevDirection === "ascending" ? "descending" : "ascending"
+    );
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("sortDirection", direction);
+   
+
+  };
 
   function handleClick(item) {
     setIsClick(item);
@@ -110,7 +123,15 @@ const ServiceList = ({
                 <th className="text-start px-2 whitespace-nowrap">
                   Requesting
                 </th>
-                <th className="text-start px-2 whitespace-nowrap">Status</th>
+                <th className="text-start px-2 whitespace-nowrap">
+          <Link
+                  href={`/dashboard/services?sortKey=${isClick.toLocaleLowerCase()}${query ? `&query=${query}` : ""}&sortDirection=${direction}`}
+                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
+                >
+                  <p>Status</p>
+                  
+                </Link>
+                </th>
                 <th className="text-start px-2 whitespace-nowrap">Schedule</th>
                 <th className="text-start px-2 whitespace-nowrap">Action</th>
                 <th className="text-start px-2 whitespace-nowrap">CreatedAt</th>

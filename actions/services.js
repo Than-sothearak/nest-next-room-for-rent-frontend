@@ -9,24 +9,44 @@ import { session } from "grammy";
 import { revalidatePath } from "next/cache";
 await mongoDb();
 
-export async function getServices(query, page, sortKey) {
+export async function getServices(query, page, sortKey, sortDirection) {
   const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied!");
   }
-
+console.log(sortDirection)
   try {
     const ITEM_PER_PAGE = 20;
 
     let key = {};
-    key.status = { $in: ["pending", "cancelled", "accepted"] };
+    let sort ={}
 
+    key.status = { $in: ["pending", "cancelled", "accepted"] };
+    if (sortDirection) {
+    sort = { status: sortDirection === "descending" ? -1 : 1 };
+
+    }
     if (sortKey === "processing") {
       key = { status: "accepted" };
+      
     }
     if (sortKey === "completed") {
       key.status = { $in: ["completed", "marked as read"] };
     }
+
+  sort = sortKey
+    ? { [sortKey]: sortDirection === "descending" ? -1 : 1 }
+    : { date: -1 };
+
+  if (sortKey === "date") {
+    sort = { createdAt: sortDirection === "descending" ? -1 : 1 };
+  }
+  if (sortKey === "price") {
+    sort = { totalAmount: sortDirection === "descending" ? -1 : 1 };
+  }
+  if (sortKey === "status") {
+    sort = { paymentStatus: sortDirection === "descending" ? -1 : 1 };
+  }
 
     // if (query) {
     //   const services = await Service.find({
@@ -64,7 +84,7 @@ export async function getServices(query, page, sortKey) {
     ];
 
     const services = await Service.find(key)
-      .sort({ createdAt: -1 })
+      .sort(sort)
       .populate("roomId")
       .populate("userId")
       .limit(ITEM_PER_PAGE)
