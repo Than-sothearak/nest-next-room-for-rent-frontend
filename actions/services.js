@@ -23,7 +23,7 @@ console.log(sortDirection)
 
     key.status = { $in: ["pending", "cancelled", "accepted"] };
     if (sortDirection) {
-    sort = { status: sortDirection === "descending" ? -1 : 1 };
+    sort = { status: sortDirection === "pending" ? -1 : 1 };
 
     }
     if (sortKey === "processing") {

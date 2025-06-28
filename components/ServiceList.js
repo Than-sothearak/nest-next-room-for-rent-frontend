@@ -27,15 +27,16 @@ const ServiceList = ({
   const [isClick, setIsClick] = useState("Requesting");
   const [direction, setDirection] = useState("ascending");
 
-  const handleSort = (key) => {
-    setDirection((prevDirection) =>
-      prevDirection === "ascending" ? "descending" : "ascending"
-    );
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("sortDirection", direction);
-   
+ const statuses = ["pending", "cancelled", "accepted"];
 
-  };
+const handleSort = (e, key) => {
+  const currentIndex = statuses.indexOf(key);
+  const nextIndex = (currentIndex + 1) % statuses.length;
+  const nextStatus = statuses[nextIndex];
+  console.log("Next status:", nextStatus); // Debug
+  setDirection(nextStatus);
+};
+
 
   function handleClick(item) {
     setIsClick(item);
@@ -48,6 +49,8 @@ const ServiceList = ({
       console.log("Service cancelled successfully:", response.message);
     }
   };
+
+  console.log(isClick)
 
   const handleAccept = async (serviceId, telegramChatId) => {
     const response = await acceptService(serviceId, telegramChatId);
@@ -127,6 +130,7 @@ const ServiceList = ({
           <Link
                   href={`/dashboard/services?sortKey=${isClick.toLocaleLowerCase()}${query ? `&query=${query}` : ""}&sortDirection=${direction}`}
                   className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
+                  onClick={(e) => handleSort(e, isClick.toLocaleLowerCase())}
                 >
                   <p>Status</p>
                   
