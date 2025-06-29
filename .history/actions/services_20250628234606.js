@@ -9,7 +9,7 @@ import { session } from "grammy";
 import { revalidatePath } from "next/cache";
 await mongoDb();
 
-export async function getServices(query, page, sortKey, sortDate, sortDirection, ) {
+export async function getServices(query, page, sortKey, sortDirection) {
   const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied!");
@@ -17,35 +17,28 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
 
   try {
     const ITEM_PER_PAGE = 20;
-    let sort = { createdAt: -1 }
+
     let key = {};
+    let sort ={}
 
     key.status = { $in: ["pending", "cancelled", "accepted"] };
 
-    if (sortKey) {
-      key = { status: sortKey };
+    if (sortDirection) {
+      let name = sortDirection
+      sort = { [name]: -1 };
+ 
 
-      if (sortKey === "completed") {
-        key.status = { $in: ["completed", "marked as read"] };
-      }
-
-      if (sortKey === "processing") {
-        key = { status: "accepted" };
-
-      }
-
+     if (sortKey === "cancelled") {
+      key.status = { $in: ["completed", "marked as read"] };
+    }
+    }
+   
+    if (sortKey === "completed") {
+      key.status = { $in: ["completed", "marked as read"] };
     }
 
-    if (sortDate === "date") {
-      sort = { startDate: sortDirection === "descending" ? -1 : 1 };
-    }
-    if (sortKey === "price") {
-      sort = { totalAmount: sortDirection === "descending" ? -1 : 1 };
-    }
-    if (sortKey === "status") {
-      sort = { paymentStatus: sortDirection === "descending" ? -1 : 1 };
-    }
 
+console.log(sort)
     // if (query) {
     //   const services = await Service.find({
     //     $or: [
@@ -81,12 +74,56 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
       },
     ];
 
-    const services = await Service.find(key)
-      .sort(sort)
-      .populate("roomId")
-      .populate("userId")
-      .limit(ITEM_PER_PAGE)
-      .skip(ITEM_PER_PAGE * (page - 1));
+    const services = await Service.aggregate([
+  // 1. Filter
+  { $match: key },
+
+  // 2. Add custom sort order
+  {
+    $addFields: {
+      statusPriority: {
+        $switch: {
+          branches: [
+            { case: { $eq: ["$status", "pending"] }, then: 1 },
+            { case: { $eq: ["$status", "accepted"] }, then: 2 },
+            { case: { $eq: ["$status", "cancelled"] }, then: 3 },
+            { case: { $eq: ["$status", "completed"] }, then: 4 },
+          ],
+          default: 99,
+        },
+      },
+    },
+  },
+
+  // 3. Sort by custom priority, then by date
+  { $sort: { statusPriority: 1, createdAt: -1 } },
+
+  // 4. Pagination
+  { $skip: (page - 1) * ITEM_PER_PAGE },
+  { $limit: ITEM_PER_PAGE },
+
+  // 5. Optional: populate roomId and userId (manually)
+  {
+    $lookup: {
+      from: "rooms",
+      localField: "roomId",
+      foreignField: "_id",
+      as: "roomId",
+    },
+  },
+  { $unwind: "$roomId" },
+
+  {
+    $lookup: {
+      from: "users",
+      localField: "userId",
+      foreignField: "_id",
+      as: "userId",
+    },
+  },
+  { $unwind: "$userId" },
+]);
+
 
     return { services, count, serviceCount, ITEM_PER_PAGE };
   } catch (err) {
@@ -124,8 +161,8 @@ export async function acceptService(serviceId, telegramChatId) {
 
     await service.save();
 
-
-    await sendMessageToTelegram(telegramChatId,
+  
+    await sendMessageToTelegram(telegramChatId, 
       `<b>✅ Service accepted</b>\n\n<b>👤 User:</b> ${service.userId.username} (${service.userId.phone})\n<b>🛠️ Service Type:</b> ${service.serviceType}\n<b>🏠 Room Number:</b> ${service.roomId.roomName}\n<b>📅 Scheduled Date:</b> ${formatDateOnly(service.startDate)}\n<b>⏰ Time:</b> ${formatTo12Hour(service.startTime)}\n<b>👉 Visit here to see your progress: http://192.168.100.4:3000/dashboard/</b>`
     )
     revalidatePath("/dashboard/services");

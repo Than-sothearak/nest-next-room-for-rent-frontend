@@ -30,7 +30,7 @@ const ServiceList = ({
   const [direction, setDirection] = useState("descending");
 
   const statuses = ["pending", "accepted", "cancelled"];
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("pending")
 
 const handleSort = (e) => {
 
@@ -154,7 +154,7 @@ useEffect(() => {
                 <th className="text-start px-2 whitespace-nowrap">
           <Link
                   href={`/dashboard/services?sortKey=${status}${query ? `&query=${query}` : ""}&sortDate=date&sortDirection=${direction}`}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
+                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
                   onClick={handleSort}
                 >
                   <p>Status</p>

@@ -12,8 +12,8 @@ import {
   formatTo12Hour,
 } from "@/utils/formatDate";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 import { BiCheckDouble } from "react-icons/bi";
 
 const ServiceList = ({
@@ -30,7 +30,7 @@ const ServiceList = ({
   const [direction, setDirection] = useState("descending");
 
   const statuses = ["pending", "accepted", "cancelled"];
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("pending")
 
 const handleSort = (e) => {
 
@@ -40,20 +40,10 @@ const handleSort = (e) => {
     const nextIndex = (currentIndex + 1) % statuses.length;
  const params = new URLSearchParams(searchParams.toString());
     params.set("sortDirection", direction);
-    params.set("sortKey", status)
-    return statuses[nextIndex];
+    params.set("sortKey", statuses[nextIndex])
+    return ;
   });
 };
-
-const router = useRouter();
-
-// Update router query when status changes
-useEffect(() => {
-  if (status) {
-    router.push(`/dashboard/services?sortKey=${status}&sortDate=date&sortDirection=descending`);
-  }
-}, [status]);
-
   const handleSortDate = (key) => {
     setDirection((prevDirection) =>
       prevDirection === "ascending" ? "descending" : "ascending"
@@ -63,6 +53,8 @@ useEffect(() => {
     // params.set("sortKey", status)
 
   };
+
+  console.log(status)
 
 
   function handleClick(item) {
@@ -154,7 +146,7 @@ useEffect(() => {
                 <th className="text-start px-2 whitespace-nowrap">
           <Link
                   href={`/dashboard/services?sortKey=${status}${query ? `&query=${query}` : ""}&sortDate=date&sortDirection=${direction}`}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
+                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
                   onClick={handleSort}
                 >
                   <p>Status</p>

@@ -30,7 +30,7 @@ const ServiceList = ({
   const [direction, setDirection] = useState("descending");
 
   const statuses = ["pending", "accepted", "cancelled"];
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("pending")
 
 const handleSort = (e) => {
 

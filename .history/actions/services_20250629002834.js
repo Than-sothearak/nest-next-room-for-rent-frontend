@@ -9,7 +9,7 @@ import { session } from "grammy";
 import { revalidatePath } from "next/cache";
 await mongoDb();
 
-export async function getServices(query, page, sortKey, sortDate, sortDirection, ) {
+export async function getServices(query, page, sortKey, sortDirection) {
   const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied!");
@@ -17,10 +17,10 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
 
   try {
     const ITEM_PER_PAGE = 20;
-    let sort = { createdAt: -1 }
+
     let key = {};
 
-    key.status = { $in: ["pending", "cancelled", "accepted"] };
+   
 
     if (sortKey) {
       key = { status: sortKey };
@@ -33,11 +33,15 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
         key = { status: "accepted" };
 
       }
-
+key.status = { $in: ["pending", "cancelled", "accepted"] };
     }
+ 
+    sortKey
+      ? { [sortKey]: sortDirection === "descending" ? -1 : 1 }
+      : { date: -1 };
 
-    if (sortDate === "date") {
-      sort = { startDate: sortDirection === "descending" ? -1 : 1 };
+    if (sortKey === "date") {
+      sort = { createdAt: sortDirection === "descending" ? -1 : 1 };
     }
     if (sortKey === "price") {
       sort = { totalAmount: sortDirection === "descending" ? -1 : 1 };
@@ -45,7 +49,7 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
     if (sortKey === "status") {
       sort = { paymentStatus: sortDirection === "descending" ? -1 : 1 };
     }
-
+    console.log(key)
     // if (query) {
     //   const services = await Service.find({
     //     $or: [
@@ -82,7 +86,7 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
     ];
 
     const services = await Service.find(key)
-      .sort(sort)
+      .sort({ createdAt: -1 })
       .populate("roomId")
       .populate("userId")
       .limit(ITEM_PER_PAGE)

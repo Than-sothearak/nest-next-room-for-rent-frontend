@@ -9,7 +9,7 @@ import { session } from "grammy";
 import { revalidatePath } from "next/cache";
 await mongoDb();
 
-export async function getServices(query, page, sortKey, sortDate, sortDirection, ) {
+export async function getServices(query, page, sortKey, sortDirection) {
   const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied!");
@@ -17,35 +17,40 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
 
   try {
     const ITEM_PER_PAGE = 20;
-    let sort = { createdAt: -1 }
+
     let key = {};
+    let sort ={}
 
     key.status = { $in: ["pending", "cancelled", "accepted"] };
 
-    if (sortKey) {
-      key = { status: sortKey };
+    if (sortDirection) {
+      let name = sortDirection
+      sort = { [name]: -1 };
+ 
 
-      if (sortKey === "completed") {
-        key.status = { $in: ["completed", "marked as read"] };
-      }
-
-      if (sortKey === "processing") {
-        key = { status: "accepted" };
-
-      }
-
+     if (sortKey === "cancelled") {
+      key.status = { $in: ["completed", "marked as read"] };
+    }
+    }
+   
+    if (sortKey === "completed") {
+      key.status = { $in: ["completed", "marked as read"] };
     }
 
-    if (sortDate === "date") {
-      sort = { startDate: sortDirection === "descending" ? -1 : 1 };
-    }
-    if (sortKey === "price") {
-      sort = { totalAmount: sortDirection === "descending" ? -1 : 1 };
-    }
-    if (sortKey === "status") {
-      sort = { paymentStatus: sortDirection === "descending" ? -1 : 1 };
-    }
+ sortKey
+    ? { [sortKey]: sortDirection === "descending" ? -1 : 1 }
+    : { date: -1 };
 
+  if (sortKey === "date") {
+    sort = { createdAt: sortDirection === "descending" ? -1 : 1 };
+  }
+  if (sortKey === "price") {
+    sort = { totalAmount: sortDirection === "descending" ? -1 : 1 };
+  }
+  if (sortKey === "status") {
+    sort = { paymentStatus: sortDirection === "descending" ? -1 : 1 };
+  }
+console.log(sort)
     // if (query) {
     //   const services = await Service.find({
     //     $or: [
@@ -124,8 +129,8 @@ export async function acceptService(serviceId, telegramChatId) {
 
     await service.save();
 
-
-    await sendMessageToTelegram(telegramChatId,
+  
+    await sendMessageToTelegram(telegramChatId, 
       `<b>✅ Service accepted</b>\n\n<b>👤 User:</b> ${service.userId.username} (${service.userId.phone})\n<b>🛠️ Service Type:</b> ${service.serviceType}\n<b>🏠 Room Number:</b> ${service.roomId.roomName}\n<b>📅 Scheduled Date:</b> ${formatDateOnly(service.startDate)}\n<b>⏰ Time:</b> ${formatTo12Hour(service.startTime)}\n<b>👉 Visit here to see your progress: http://192.168.100.4:3000/dashboard/</b>`
     )
     revalidatePath("/dashboard/services");

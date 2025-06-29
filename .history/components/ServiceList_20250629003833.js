@@ -12,8 +12,7 @@ import {
   formatTo12Hour,
 } from "@/utils/formatDate";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BiCheckDouble } from "react-icons/bi";
 
 const ServiceList = ({
@@ -25,44 +24,18 @@ const ServiceList = ({
   sortDirection,
   query
 }) => {
-    const searchParams = useSearchParams()
-  const [isClick, setIsClick] = useState("Requesting");
+  const [isClick, setIsClick] = useState("requesting");
   const [direction, setDirection] = useState("descending");
 
   const statuses = ["pending", "accepted", "cancelled"];
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("pending")
 
-const handleSort = (e) => {
-
-  setStatus((prev) => {
-  
-    const currentIndex = statuses.indexOf(prev);
+const handleSort = (e, key) => {
+   const currentIndex = statuses.indexOf(status);
     const nextIndex = (currentIndex + 1) % statuses.length;
- const params = new URLSearchParams(searchParams.toString());
-    params.set("sortDirection", direction);
-    params.set("sortKey", status)
-    return statuses[nextIndex];
-  });
+    setStatus(statuses[nextIndex]);
+ 
 };
-
-const router = useRouter();
-
-// Update router query when status changes
-useEffect(() => {
-  if (status) {
-    router.push(`/dashboard/services?sortKey=${status}&sortDate=date&sortDirection=descending`);
-  }
-}, [status]);
-
-  const handleSortDate = (key) => {
-    setDirection((prevDirection) =>
-      prevDirection === "ascending" ? "descending" : "ascending"
-    );
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("sortDirection", direction);
-    // params.set("sortKey", status)
-
-  };
 
 
   function handleClick(item) {
@@ -76,6 +49,8 @@ useEffect(() => {
       console.log("Service cancelled successfully:", response.message);
     }
   };
+
+  console.log(isClick)
 
   const handleAccept = async (serviceId, telegramChatId) => {
     const response = await acceptService(serviceId, telegramChatId);
@@ -153,8 +128,8 @@ useEffect(() => {
                 </th>
                 <th className="text-start px-2 whitespace-nowrap">
           <Link
-                  href={`/dashboard/services?sortKey=${status}${query ? `&query=${query}` : ""}&sortDate=date&sortDirection=${direction}`}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
+                  href={`/dashboard/services?sortKey=${status}${query ? `&query=${query}` : ""}&sortDirection=${direction}`}
+                  className="flex text-center items-center gap-2 px-2 py-1 border w-max rounded-md"
                   onClick={handleSort}
                 >
                   <p>Status</p>
@@ -162,15 +137,15 @@ useEffect(() => {
                 </Link>
                 </th>
                 <th className="text-start px-2 whitespace-nowrap">
-                    <Link
-                  href={`/dashboard/services?sortKey=${status}${query ? `&query=${query}` : ""}&sortDate=date&sortDirection=${direction}`}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
-                  onClick={() =>handleSortDate()}
+                
+                 <Link
+                  href={`/dashboard/services?sortKey=${status}${query ? `&query=${query}` : ""}&sortDirection=${direction}`}
+                  className="flex text-center items-center gap-2 px-2 py-1 border w-max rounded-md"
+                  onClick={() =>handleClick("date")}
                 >
-                  <p> Schedule</p>
+                  <p className="">Schedule</p>
                   
-                </Link>
-               </th>
+                </Link></th>
                 <th className="text-start px-2 whitespace-nowrap">Action</th>
                 <th className="text-start px-2 whitespace-nowrap">CreatedAt</th>
               </tr>

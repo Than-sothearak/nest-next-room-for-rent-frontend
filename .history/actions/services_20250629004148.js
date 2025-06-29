@@ -9,7 +9,7 @@ import { session } from "grammy";
 import { revalidatePath } from "next/cache";
 await mongoDb();
 
-export async function getServices(query, page, sortKey, sortDate, sortDirection, ) {
+export async function getServices(query, page, sortKey, sortDirection) {
   const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied!");
@@ -17,26 +17,30 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
 
   try {
     const ITEM_PER_PAGE = 20;
-    let sort = { createdAt: -1 }
-    let key = {};
 
-    key.status = { $in: ["pending", "cancelled", "accepted"] };
+    let sort = {};
+
+   sort.status = { $in: ["pending", "cancelled", "accepted"] };
 
     if (sortKey) {
-      key = { status: sortKey };
+      sort = { status: sortKey };
 
       if (sortKey === "completed") {
-        key.status = { $in: ["completed", "marked as read"] };
+        sort.status = { $in: ["completed", "marked as read"] };
       }
 
       if (sortKey === "processing") {
-        key = { status: "accepted" };
+        sort = { status: "accepted" };
 
       }
 
     }
+ 
+    sortKey
+      ? { [sortKey]: sortDirection === "descending" ? -1 : 1 }
+      : { date: -1 };
 
-    if (sortDate === "date") {
+    if (sortKey === "date") {
       sort = { startDate: sortDirection === "descending" ? -1 : 1 };
     }
     if (sortKey === "price") {
@@ -45,7 +49,7 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
     if (sortKey === "status") {
       sort = { paymentStatus: sortDirection === "descending" ? -1 : 1 };
     }
-
+  
     // if (query) {
     //   const services = await Service.find({
     //     $or: [
@@ -59,7 +63,7 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
     //   return { services, count };
     // }
 
-    const count = await Service.countDocuments(key);
+    const count = await Service.countDocuments(sort);
     const [pending, accepted, completed] = await Promise.all([
       Service.countDocuments({ status: "pending" }),
       Service.countDocuments({ status: "accepted" }),
@@ -81,8 +85,8 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
       },
     ];
 
-    const services = await Service.find(key)
-      .sort(sort)
+    const services = await Service.find(sort)
+      .sort({ createdAt: -1 })
       .populate("roomId")
       .populate("userId")
       .limit(ITEM_PER_PAGE)

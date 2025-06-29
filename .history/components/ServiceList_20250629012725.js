@@ -12,8 +12,8 @@ import {
   formatTo12Hour,
 } from "@/utils/formatDate";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 import { BiCheckDouble } from "react-icons/bi";
 
 const ServiceList = ({
@@ -33,27 +33,15 @@ const ServiceList = ({
   const [status, setStatus] = useState("")
 
 const handleSort = (e) => {
-
+  console.log("Clicked handleSort");
   setStatus((prev) => {
-  
+    console.log("Previous status:", prev);
     const currentIndex = statuses.indexOf(prev);
     const nextIndex = (currentIndex + 1) % statuses.length;
- const params = new URLSearchParams(searchParams.toString());
-    params.set("sortDirection", direction);
-    params.set("sortKey", status)
+    console.log("Next status:", statuses[nextIndex]);
     return statuses[nextIndex];
   });
 };
-
-const router = useRouter();
-
-// Update router query when status changes
-useEffect(() => {
-  if (status) {
-    router.push(`/dashboard/services?sortKey=${status}&sortDate=date&sortDirection=descending`);
-  }
-}, [status]);
-
   const handleSortDate = (key) => {
     setDirection((prevDirection) =>
       prevDirection === "ascending" ? "descending" : "ascending"
@@ -63,6 +51,8 @@ useEffect(() => {
     // params.set("sortKey", status)
 
   };
+
+  console.log(status)
 
 
   function handleClick(item) {
@@ -154,7 +144,7 @@ useEffect(() => {
                 <th className="text-start px-2 whitespace-nowrap">
           <Link
                   href={`/dashboard/services?sortKey=${status}${query ? `&query=${query}` : ""}&sortDate=date&sortDirection=${direction}`}
-                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
+                  className="flex text-center items-center gap-2 px-2 py-1 border rounded-md"
                   onClick={handleSort}
                 >
                   <p>Status</p>

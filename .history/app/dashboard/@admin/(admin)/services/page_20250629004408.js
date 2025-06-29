@@ -21,13 +21,11 @@ const servicePage = async ({searchParams}) => {
  
     const { page } = (await searchParams) || 1;
     const {sortKey} = (await searchParams) || "requesting";
-    const {sortDate} = (await searchParams) || "date";
     const {sortDirection }= await searchParams || "descending";
     const { services, count, ITEM_PER_PAGE, serviceCount } = await getServices(
       query,
       page,
       sortKey,
-      sortDate,
       sortDirection,
     );
 
