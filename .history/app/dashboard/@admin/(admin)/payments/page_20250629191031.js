@@ -1,4 +1,4 @@
-import { getServices } from '@/actions/services';
+import { getPayments } from '@/actions/payments';
 import { auth } from '@/auth';
 import Pagination from '@/components/Pagination';
 import SearchCompoenent from '@/components/SearchComponent';
@@ -6,7 +6,7 @@ import ServiceList from '@/components/ServiceList';
 import Link from 'next/link';
 import React from 'react'
 
-const servicePage = async ({searchParams}) => {
+const ServicePage = async ({searchParams}) => {
    const session = await auth();
 
    if (!session || !session.user?.isAdmin) {
@@ -21,11 +21,13 @@ const servicePage = async ({searchParams}) => {
  
     const { page } = (await searchParams) || 1;
     const {sortKey} = (await searchParams) || "requesting";
+    const {sortDate} = (await searchParams) || "date";
     const {sortDirection }= await searchParams || "descending";
-    const { services, count, ITEM_PER_PAGE, serviceCount } = await getServices(
+    const { services, count, ITEM_PER_PAGE, serviceCount } = await getPayments(
       query,
       page,
       sortKey,
+      sortDate,
       sortDirection,
     );
 
@@ -68,4 +70,4 @@ const servicePage = async ({searchParams}) => {
   )
 }
 
-export default servicePage
+export default ServicePage
