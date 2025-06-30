@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import SideBarMain from "./SideBarMain";
+import { SidebarListMobile } from "./SidebarListMobile";
+import { IoMdMenu } from "react-icons/io";
 
 
 const SideBarClient = ({ session, user, navigation}) => {
@@ -13,19 +15,6 @@ const SideBarClient = ({ session, user, navigation}) => {
   return (
     <>
       {/*small side */}
-      {/* <div className="lg:hidden  ml-1 mt-4 z-50 max-sm:hidden">
-        <div className="mt-2 flex justify-center items-center ">
-          <span className="text-primary text text-lg font-semibold"></span>
-          <button
-            onClick={handleClick}
-            aria-label="Open Sidebar"
-            title="Open Sidebar"
-          >
-            <IoMdMenu size={28} />
-          </button>
-        </div>
-        <SidebarListMobile navList={pageNavigation} />
-      </div> */}
 
       <SideBarMain
       navigation={navigation}

@@ -3,22 +3,26 @@ import { updateToNextBillingCycle } from "@/lib/billing";
 import { Booking } from "@/models/Booking";
 import { mongoDb } from "@/utils/connectDB";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import { revalidatePath } from "next/cache";
 
 export async function processBilling () {
-await new Promise((resolve) => setTimeout(resolve, 2000));
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
      try {
         await mongoDb();
-        const today = dayjs().startOf("day").toDate();
+        const today = dayjs().tz("Asia/Jakarta").startOf("day").toDate();
     
         const bookings = await Booking.find({
           paymentStatus: "paid",
           dueDate: { $lte: today },
           status: "active",
         });
-    
+
         let updatedCount = 0;
+
     
         for (const booking of bookings) {
           await updateToNextBillingCycle(booking);

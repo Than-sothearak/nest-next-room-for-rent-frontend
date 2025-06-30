@@ -2,7 +2,7 @@ import { getServices } from '@/actions/services';
 import { auth } from '@/auth';
 import Pagination from '@/components/Pagination';
 import SearchCompoenent from '@/components/SearchComponent';
-import ServiceList from '@/components/ServiceList';
+import ServiceList from '@/components/ServiceTable';
 import Link from 'next/link';
 import React from 'react'
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { BiUndo, BiUserCircle, BiUserPlus } from 'react-icons/bi'
 import { FaBookBible, FaBookBookmark, FaEarthAfrica, FaServicestack } from 'react-icons/fa6'
-import InvoicePayment from './InvoicePayment'
+import InvoicePayment from './InvoicePageView'
 import { PiInvoiceBold } from 'react-icons/pi'
 import { IoSettings } from 'react-icons/io5'
 

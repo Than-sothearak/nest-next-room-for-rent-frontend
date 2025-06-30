@@ -1,11 +1,15 @@
 import { auth } from "@/auth";
-import { Navbar } from "@/components/dashboard/navbar/navbar";
-import Sidebar from "@/components/dashboard/sidebar/sidebar";
+import { Navbar } from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
 import { pageNavigation, userNavigation } from "@/lib/navLinks";
 
-export default async function DashboardLayout({ children, admin, user }) {
+export default async function DashboardLayout({
+  children,
+  admin,
+  user,
+}) {
   await mongoDb();
   const session = await auth();
   const userId = await User.findOne({ _id: session?.user?._id });
@@ -23,33 +27,30 @@ export default async function DashboardLayout({ children, admin, user }) {
       {session?.user?.isAdmin ? (
         <div className="flex">
           <div className="bg-primary h-screen">
-            <Sidebar
-            navigation={pageNavigation}
-              session={session}
-           
-            />
+            <Sidebar navigation={pageNavigation} session={session} />
           </div>
           <div className="w-full overflow-x-auto lg:mx-4">
-            <Navbar 
-             navigation={pageNavigation}
-            session={session} user={JSON.parse(JSON.stringify(userId))} />
+            <Navbar
+              navigation={pageNavigation}
+              session={session}
+              user={JSON.parse(JSON.stringify(userId))}
+            />
             <div className="max-lg:mx-4 overflow-x-auto">{children}</div>
+
             <div className="max-lg:mx-4 overflow-x-auto">{admin}</div>
           </div>
         </div>
       ) : (
         <div className="flex">
           <div className="bg-primary h-screen">
-             <Sidebar
-             navigation={userNavigation}
-              session={session}
-           
-            />
+            <Sidebar navigation={userNavigation} session={session} />
           </div>
           <div className="w-full overflow-x-auto lg:mx-4">
-            <Navbar 
-             navigation={userNavigation}
-            session={session} user={JSON.parse(JSON.stringify(userId))} />
+            <Navbar
+              navigation={userNavigation}
+              session={session}
+              user={JSON.parse(JSON.stringify(userId))}
+            />
             <div className="max-lg:mx-4 overflow-x-auto">{children} </div>
             <div className="max-lg:mx-4 overflow-x-auto">{user}</div>
           </div>

@@ -16,7 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { BiCheckDouble } from "react-icons/bi";
 
-const ServiceList = ({
+const ServiceTable = ({
   services,
   serviceCount,
   currentPage,
@@ -175,7 +175,7 @@ const ServiceList = ({
                 </th>
                 <th className="text-start px-2 whitespace-nowrap">
                   <Link
-                    href={`/dashboard/services?query=${query}$sortKey=${status}&sortDate=date&sortDirection=${direction}`}
+                    href={`/dashboard/services?sortKey=${status}&sortDate=date&sortDirection=${direction}`}
                     className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
                     onClick={() => handleSortDate()}
                   >
@@ -470,4 +470,4 @@ const ServiceList = ({
   );
 };
 
-export default ServiceList;
+export default ServiceTable;

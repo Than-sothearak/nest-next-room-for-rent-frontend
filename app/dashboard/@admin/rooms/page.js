@@ -1,7 +1,7 @@
 import { getRoom } from "@/actions/rooms";
 import { auth } from "@/auth";
 import Pagination from "@/components/Pagination";
-import { RoomView } from "@/components/RoomView";
+import { RoomGrid } from "@/components/RoomGrid";
 import SearchComponent from "@/components/SearchComponent";
 import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
@@ -41,7 +41,7 @@ const roomPage = async ({ searchParams }) => {
           Add new
         </Link>
       </div>
-      <RoomView 
+      <RoomGrid
       data={JSON.parse(JSON.stringify(rooms))} 
       pageName="admin/rooms"/>
       {/* <TableComponent

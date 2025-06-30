@@ -4,16 +4,16 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { formatDate } from "@/utils/formatDate";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import ToggleToPaid from "./ToggleToPaid";
+import ToggleToPaid from "./ButtonToggleToPaid";
 import ButtonEditAndCancel from "./ButtonEditAndCancel";
-import ConnectTelegram from "./ConnectTelegram";
-import ProcessBilling from "./ProcessBilling";
-import SendInvoiceButton from "./SendInvoiceButton";
+import ConnectTelegram from "./ButtonConnectTelegram";
+import ProcessBilling from "./ButtonProcessBilling";
+import SendInvoiceButton from "./ButtonSendInvoice";
 import { BsTelegram } from "react-icons/bs";
 
 // Your helper function to get next payment due date
 
-const BookingList = ({
+const BookingTable = ({
   session,
   booking,
   currentPage,
@@ -61,11 +61,12 @@ const BookingList = ({
     );
   }
   return (
-    <div className="mt-8 overflow-x-auto">
+    <div className="mt-4 overflow-x-auto pb-10">
+      <div><h1 className="font-bold text-2xl pb-2">Booking</h1></div>
       <div className="">
         <ProcessBilling />
       </div>
-      <table className="mt-4 min-w-[800px] w-full table-auto border rounded-lg shadow max-lg:hidden">
+      <table className="mt-4 min-w-[800px] w-full table-auto border rounded shadow max-lg:hidden">
         <thead className="bg-primary text-tertiary">
           <tr className="bg-gray-100 text-left">
             <th className="text-start p-2 whitespace-nowrap">No</th>
@@ -83,7 +84,7 @@ const BookingList = ({
                 {getSortIcon("price")}
               </Link>
             </th>
-            <th className="">
+            <th className="p-2 whitespace-nowrap">
               <Link
                 href={`/dashboard/${pathname}?quary=${query}&page=${currentPage}&sortKey=date&sortDirection=${direction}`}
                 onClick={() => handleSort("date")}
@@ -210,4 +211,4 @@ const BookingList = ({
   );
 };
 
-export default BookingList;
+export default BookingTable;

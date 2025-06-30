@@ -1,14 +1,9 @@
 import { mongoDb } from "./utils/connectDB.js";
-
 import { User } from "./models/User.js";
 import { Bot } from "grammy";
 import 'dotenv/config';
 
-
-
-
 const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN); // ✅ Now using env variable
-
 
 bot.command("start", async (ctx) => {
   const userIdFromPayload = ctx.message.text.split(" ")[1]; // /start <userId>

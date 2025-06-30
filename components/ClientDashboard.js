@@ -9,7 +9,7 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import { PiInvoiceBold } from "react-icons/pi";
 
-import ClientService from "./ClientService";
+import ClientService from "./ClientServiceGrid";
 
 // Output: "2025-06-23 20:51:16" (in your local time)
 

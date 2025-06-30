@@ -13,35 +13,36 @@ const UserPage = async () => {
   }
 
   const user = await User.findById(session.user._id);
-      const clientData = await Booking.findOne({ userId: user._id })
-        .populate("userId") // First populate userId
-        .populate("roomId"); // Then roomId
-      const services = JSON.parse(JSON.stringify( await Service.find({userId: user._id})))
+  const clientData = await Booking.findOne({ userId: user._id })
+    .populate("userId") // First populate userId
+    .populate("roomId"); // Then roomId
+  const services = JSON.parse(
+    JSON.stringify(await Service.find({ userId: user._id }))
+  );
 
- 
-      const clientBooking = JSON.parse(JSON.stringify(clientData));
+  const clientBooking = JSON.parse(JSON.stringify(clientData));
 
-      const clientPayments = JSON.parse(
-        JSON.stringify(
-          await Payment.find({ userId: user._id })
-            .populate("userId")
-            .populate("roomId")
-            .populate("bookingId")
-            .sort({ startDate: -1 })
-        )
-      );
+  const clientPayments = JSON.parse(
+    JSON.stringify(
+      await Payment.find({ userId: user._id })
+        .populate("userId")
+        .populate("roomId")
+        .populate("bookingId")
+        .sort({ startDate: -1 })
+    )
+  );
 
-      return (
-        <div>
-          <ClientDashboard
-          services={services}
-         session={session}
-            user={JSON.parse(JSON.stringify(user))}
-            payments={clientPayments}
-            booking={clientBooking}
-          />
-        </div>
-      );
-}
+  return (
+    <div>
+      <ClientDashboard
+        services={services}
+        session={session}
+        user={JSON.parse(JSON.stringify(user))}
+        payments={clientPayments}
+        booking={clientBooking}
+      />
+    </div>
+  );
+};
 
 export default UserPage;

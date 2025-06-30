@@ -1,8 +1,6 @@
 import { getBooking } from '@/actions/Booking';
-import { getRoom } from '@/actions/rooms';
-import { getUsers } from '@/actions/users'
 import { auth } from '@/auth';
-import BookingList from '@/components/BookingList';
+import BookingTable from '@/components/BookingTable';
 import SearchCompoenent from '@/components/SearchComponent';
 import Link from 'next/link';
 import React from 'react'
@@ -19,8 +17,6 @@ const bookPage = async ({searchParams}) => {
     );
     const ITEM_PER_PAGE = 20;
     const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
-    const {users} = await getUsers();
-    const { rooms } = await getRoom()
 
   return (
     <div className='p-4 bg-primary mt-4 rounded-lg'>
@@ -38,7 +34,7 @@ const bookPage = async ({searchParams}) => {
           Add new
         </Link>
       </div>
-      <BookingList 
+      <BookingTable
       session={session}
         booking={JSON.parse(JSON.stringify(booking))}
         currentPage={page ||1}

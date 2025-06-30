@@ -16,7 +16,7 @@ import { GrStatusDisabled, GrStatusGood, GrStatusUnknown } from "react-icons/gr"
 import { IoPersonAdd } from "react-icons/io5";
 import { MdOutlineSmokeFree } from "react-icons/md";
 
-export const RoomView = ({ data }) => {
+export const RoomGrid = ({ data }) => {
   const iconMap = {
     Notes: FaStickyNote,
     "Air Conditioner": FaRegSnowflake,
@@ -47,7 +47,7 @@ export const RoomView = ({ data }) => {
                   sizes="100vw"
                   src={room.imageUrls[0]}
                 />
-                <div className="absolute z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-4 text-white font-bold text-lg">
+                <div className="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-4 text-white font-bold text-lg">
                   <Link
                    href={`/dashboard/booking/${room._id}`}
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100

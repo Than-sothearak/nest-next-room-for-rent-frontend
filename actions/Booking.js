@@ -210,8 +210,8 @@ export async function updateBooking(bookId, prevState, formData) {
       }
     }
 
-    // console.log("Booking updated!");
-    // return { success: true, message: "Booking update successfully!" };
+    console.log("Booking updated!");
+    return { success: true, message: "Booking update successfully!" };
   } catch (err) {
     console.error("Error updating room:", err);
     return { error: "Failed to update booking due to a server error" };

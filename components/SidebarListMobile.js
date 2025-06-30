@@ -5,16 +5,16 @@ import { usePathname } from 'next/navigation';
 export const SidebarListMobile = ({navList}) => {
     const pathName = usePathname();
   return (
-    <div className="mt-4 z-10">
+    <div className="z-10 mt-4">
     <ul className="flex flex-col gap-1 mt-2 cursor-pointer">
       {navList.links.map((item) => (
         <Link
         title={item.name}
           href={item.path}
           key={item.path}
-          className={` flex gap-2 justify-start items-center hover:bg-secondary ${
+          className={` flex gap-2 justify-center items-center hover:bg-secondary ${
             pathName === item.path ? "bg-slate-500 hover:bg-slate-500 text-secondarytext" : "bg-balck "
-          } rounded-xl px-4 py-4`}
+          } rounded-xl px-4 py-4 w-max`}
         >
           <div>{item.icon}</div>
       

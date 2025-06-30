@@ -1,7 +1,6 @@
 "use client";
 import { sendInvoice } from "@/actions/sendInvoice";
 import React, { useActionState, useEffect, useState } from "react";
-import { BiCheck } from "react-icons/bi";
 
 const SendInvoiceButton = ({ bookingId, booking }) => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -21,7 +20,7 @@ const SendInvoiceButton = ({ bookingId, booking }) => {
     <form action={action} className="relative group inline-block">
       <button
         
-        className={`z-0 px-3 py-1 rounded-md relative  ${
+        className={`z-0 px-3 w-full py-1 rounded-md relative  ${
           isPending
             ? "bg-gray-400 cursor-wait opacity-50"
             : "bg-blue-600 text-white hover:bg-blue-300 hover:text-blue-900"
@@ -36,12 +35,12 @@ const SendInvoiceButton = ({ bookingId, booking }) => {
         )}
       </button>
       {state?.error && showTooltip && (
-        <p className={`z-20 absolute left-0 bg-red-100 text-red-800 border border-red-400 px-3 py-2 rounded shadow-lg w-full text-sm  ${state.error ? "opacity-100" : "opacity-0"}`}>
+        <p className={`z-20 absolute right-0 bg-red-100 text-red-800 border border-red-400 px-3 py-2 rounded shadow-lg w-max text-sm mt-2  ${state.error ? "opacity-100" : "opacity-0"}`}>
         {state.error}
         </p>
       )}
       {state?.success && showTooltip && (
-        <p className="absolute left-0 bg-green-100 text-green-800 border border-green-400 px-3 py-2 rounded shadow-lg text-sm z-50 ">
+        <p className="absolute right-0 bg-green-100 text-green-800 border border-green-400 px-3 py-2 rounded shadow-lg text-sm z-50 mt-2 ">
           {state.message || "Invoice sent successfully!"}
         </p>
       )}

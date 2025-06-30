@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const InvoicePayment = ({ data }) => {
+const InvoicePageView = ({ data }) => {
   const getData = JSON.parse(JSON.stringify(data));
 
   const items = [
@@ -220,4 +220,4 @@ const InvoicePayment = ({ data }) => {
 };
 
 
-export default InvoicePayment;
+export default InvoicePageView;

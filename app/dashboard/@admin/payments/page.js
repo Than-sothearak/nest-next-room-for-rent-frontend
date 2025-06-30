@@ -8,9 +8,7 @@ import { BiPrinter, BiSortAlt2, BiUpArrowAlt, BiDownArrowAlt } from "react-icons
 import React from "react";
 
 export default async function ServicePage({ searchParams }) {
-  /* ─────────────────────────────────────────────────────
-     1. ACCESS CONTROL
-  ────────────────────────────────────────────────────── */
+
   const session = await auth();
   if (!session || !session.user?.isAdmin) {
     return (
@@ -20,19 +18,13 @@ export default async function ServicePage({ searchParams }) {
       </div>
     );
   }
+  const { query } = await searchParams;
+ 
+  const { page } = (await searchParams) || 1;
+    const {sortKey} = (await searchParams) || "requesting";
+    const {sortDate} = (await searchParams) || "date";
+    const {sortDirection }= await searchParams || "descending";
 
-  /* ─────────────────────────────────────────────────────
-     2. READ SEARCH PARAMS (with sensible defaults)
-  ────────────────────────────────────────────────────── */
-  const query         = searchParams?.query ?? "";
-  const page          = Number(searchParams?.page) || 1;
-  const sortKey       = searchParams?.sortKey ?? "requesting";
-  const sortDate      = searchParams?.sortDate ?? "paidAt";   // default sort is paidAt
-  const sortDirection = searchParams?.sortDirection ?? "descending";
-
-  /* ─────────────────────────────────────────────────────
-     3. FETCH DATA
-  ────────────────────────────────────────────────────── */
   const { payments, count, ITEM_PER_PAGE } = await getPayments(
     query,
     page,
@@ -42,16 +34,10 @@ export default async function ServicePage({ searchParams }) {
   );
   const totalPages = Math.max(1, Math.ceil(count / ITEM_PER_PAGE));
 
-  /* ─────────────────────────────────────────────────────
-     4. Helper to compute next direction for header toggle
-  ────────────────────────────────────────────────────── */
   const nextDirection = sortDirection === "descending" ? "ascending" : "descending";
   const sortIcon =
     sortDirection === "ascending" ? <BiUpArrowAlt size={16} /> : <BiDownArrowAlt size={16} />;
 
-  /* ─────────────────────────────────────────────────────
-     5. JSX
-  ────────────────────────────────────────────────────── */
   return (
     <div className="p-4 bg-primary mt-4 rounded-lg">
       {/* TOP BAR */}

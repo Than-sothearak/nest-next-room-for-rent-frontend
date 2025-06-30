@@ -1,6 +1,6 @@
 'use client';
 
-import InvoicePayment from './InvoicePayment';
+import InvoicePayment from './InvoicePageView';
 import dynamic from "next/dynamic";
 
 

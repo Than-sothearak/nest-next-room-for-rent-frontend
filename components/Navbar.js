@@ -7,7 +7,6 @@ import Link from "next/link";
 import { IoMdMenu } from "react-icons/io";
 import { useState } from "react";
 import SideBarMobile from "@/components/SideBarMain";
-import { userNavigation } from "@/lib/navLinks";
 
 
 export const Navbar = ({ session, user, navigation}) => {
