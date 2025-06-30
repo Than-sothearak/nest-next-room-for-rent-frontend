@@ -1,0 +1,14 @@
+import React from 'react'
+
+const UserLayoutPage = async ({children, userDashboard, requestingServices}) => {
+  return (
+   <>
+      <div>{requestingServices}</div>
+    <div>{children}</div>
+    <div>{userDashboard}</div>
+ 
+   </>
+  )
+}
+
+export default UserLayoutPage
