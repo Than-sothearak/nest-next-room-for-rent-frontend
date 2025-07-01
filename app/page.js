@@ -36,7 +36,9 @@ export default async function Home() {
         >
           Go to Dashboard
         </Link>
-        <Logout />
+        <div className="text-black">
+          <Logout />
+        </div>
       </div>
     );
   }
@@ -80,7 +82,9 @@ export default async function Home() {
         >
           Go to Dashboard
         </Link>
-         <Logout />
+         <div className="text-black">
+          <Logout />
+        </div>
     </div>
   );
 }

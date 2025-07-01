@@ -9,6 +9,12 @@ import { auth } from "@/auth";
 await mongoDb();
 
 export async function getRoom(query, page) {
+
+    const session = await auth();
+    if (!session?.user?.isAdmin) {
+        return console.log("Access denied!");
+    }
+
   const ITEM_PER_PAGE = 20;
 
   try {
@@ -119,12 +125,14 @@ export async function addRoom(prevState, formData) {
 }
 
 export async function updateRoom(roomId, prevState, formData) {
-  const room = await Room.findById(roomId);
-   const session = await auth();
+
+    const session = await auth();
     if (!session?.user?.isAdmin) {
       return console.log("Access denied! you are not admin");
     }
   
+  const room = await Room.findById(roomId);
+ 
   if (!room) {
     return { error: "Room not found" };
   }

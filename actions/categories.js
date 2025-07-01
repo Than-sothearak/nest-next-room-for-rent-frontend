@@ -4,9 +4,14 @@ import { Category } from "@/models/Category";
 import { mongoDb } from "@/utils/connectDB";
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { auth } from "@/auth";
 
 export async function getCategories (query) {
-  await mongoDb();
+    const session = await auth();
+    if (!session?.user?.isAdmin) {
+      return console.log("Access denied! you are not admin");
+    }
+  
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   try {
@@ -24,7 +29,11 @@ export async function getCategories (query) {
 }
 
 export async function getSingleCategory (catId) { 
-  await mongoDb();
+    const session = await auth();
+    if (!session?.user?.isAdmin) {
+      return console.log("Access denied! you are not admin");
+    }
+  
   try {
     if (!catId) {
       return { error: "No category ID provided" };
@@ -39,6 +48,12 @@ catch (err) {
 }
 
 export async function addCategory(prevState, formData) {
+
+     const session = await auth();
+    if (!session?.user?.isAdmin) {
+      return console.log("Access denied! you are not admin");
+    }
+  
 
   if (!formData || typeof formData.get !== "function") {
     console.error("Invalid or missing formData:", formData);
@@ -75,6 +90,10 @@ export async function addCategory(prevState, formData) {
 
 export async function updateCategory(catId, prevState, formData) {
   await new Promise((resolve) => setTimeout(resolve, 500));
+     const session = await auth();
+    if (!session?.user?.isAdmin) {
+      return console.log("Access denied! you are not admin");
+    }
   try {
     const parsedData = parseFormData(formData);
 

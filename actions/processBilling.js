@@ -6,8 +6,13 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
 export async function processBilling () {
+  const session = await auth();
+    if (!session?.user?.isAdmin) {
+        return console.log("Access denied!");
+    }
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

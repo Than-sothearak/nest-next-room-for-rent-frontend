@@ -96,12 +96,12 @@ export async function createBooking(prevState, formData) {
 }
 
 export async function updateBooking(bookId, prevState, formData) {
-  const booking = await Booking.findById(bookId);
+ 
   const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied! you are not admin");
   }
-
+ const booking = await Booking.findById(bookId);
   if (!booking) {
     return { error: "Booking not found" };
   }
