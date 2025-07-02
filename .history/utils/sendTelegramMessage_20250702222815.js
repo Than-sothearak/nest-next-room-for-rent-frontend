@@ -6,9 +6,9 @@ import { formatDate } from "./formatDate";
 export async function sendInvoiceToTelegram(chatId, pdfBuffer, booking) {
   try {
     // Extract data
-    const { rent, dueDate, startDate } = booking;
+    const { rent, dueDate } = booking;
     const customer = booking.userId.username;
-    const filename = `${formatDate(startDate)}_${formatDate(dueDate)}_Invoice.pdf`;
+    const filename = `${formatDate(dueDate)}_Invoice.pdf`;
     // Convert buffer to InputFile with filename
     const inputFile = new InputFile(pdfBuffer, filename);
 
@@ -21,7 +21,7 @@ export async function sendInvoiceToTelegram(chatId, pdfBuffer, booking) {
 
 👤 <b>Customer:</b> ${customer}
 💵 <b>Amount:</b> ${rent} $
-📅 <b>Date:</b> ${formatDate(startDate)}_${formatDate(dueDate)}
+📅 <b>Date:</b> ${formatDate(dueDate)}
 
 ✅ <i>Thank you for your payment</i>
     `.trim();

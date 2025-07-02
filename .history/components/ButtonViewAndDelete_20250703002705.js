@@ -22,7 +22,7 @@ const ButtonViewAndDelete = ({ link, id, setOptimisticData,pending, session }) =
 
   return (
     <form action={deleteUserById.bind(null, id)} 
-      className="relative z-10"
+      className="relative z-40"
       onMouseLeave={() => setIsClicked(false)} // Hide when mouse leaves entire area
     >
       <button

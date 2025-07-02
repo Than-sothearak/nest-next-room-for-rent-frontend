@@ -4,10 +4,10 @@ import { useState, useRef } from "react";
 import { BiPencil } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
 
-export default function ChooseSingleImageFile({ imageUrl }) {
+export default function ChooseSingleImageFile({imageUrl}) {
   const [file, setFile] = useState(null);
   const [editClicked, setEditClicked] = useState(false);
-  const fileInputRef = useRef(null)
+  const fileInputRef = useRef(null); // Ref for file input
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -17,6 +17,8 @@ export default function ChooseSingleImageFile({ imageUrl }) {
     }
   };
 
+  console.log(file)
+
   return (
     <div className="">
       {file ? (
@@ -24,8 +26,8 @@ export default function ChooseSingleImageFile({ imageUrl }) {
           {file.file.type.startsWith("image/") && (
             <>
               <Image
-                width={100}
-                height={100}
+              width={100}
+              height={100}
 
                 src={file.preview}
                 className="w-32 h-32 object-cover rounded-full bg-secondary p-1"
@@ -60,30 +62,29 @@ export default function ChooseSingleImageFile({ imageUrl }) {
         </div>
       )}
 
-
-      <div className={`${editClicked ? ' ' : 'hidden'}  w-full h-full absolute bg-white shadow-lg p-4 border rounded-lg top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}>
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={() => setEditClicked(false)}
-            className="hover:bg-slate-200 rounded-full p-2">
-            <CgClose />
-          </button>
-        </div>
-        <p className="text-xl">Choose file to upload</p>
-        <input
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          name="image"
-          type="file"
-          accept="image/*"
-          className="text-center w-full mt-4 p-2 rounded-md bg-secondary border-none text-xs focus:ring-0 focus:outline-none"
-        />
-        <p className="text-xs italic text-center mt-2">Choose file size below 1MB</p>
-      </div>
-
-
-
+      {editClicked && (
+           <div className="w-full h-full absolute bg-white shadow-lg p-4 border rounded-lg top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="flex justify-end">
+              <button
+              onClick={() => setEditClicked(false)} 
+              className="hover:bg-slate-200 rounded-full p-2">
+                <CgClose />
+              </button>
+              </div>
+              <p className="text-xl">Choose file to upload</p>
+             <input
+              ref={fileInputRef}
+              onChange={handleFileChange}
+               name="image"
+              type="file"
+              accept="image/*"
+              className="text-center w-full mt-4 p-2 rounded-md bg-secondary border-none text-xs focus:ring-0 focus:outline-none"
+            />
+          <p className="text-xs italic text-center mt-2">Choose file size below 1MB</p>
+           </div>
+        
+     
+      )}
 
     </div>
   );

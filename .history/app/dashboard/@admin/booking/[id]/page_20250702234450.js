@@ -3,10 +3,11 @@ import { getUsers } from "@/actions/users";
 import BookingForm from "@/components/BookingForm";
 import { Booking } from "@/models/Booking";
 import { Room } from "@/models/Room";
+import { mongoDb } from "@/utils/connectDB";
 import mongoose from "mongoose";
 
 export default async function singleBookingPage (props) {
-
+    await mongoDb();
   const params = await props.params;
   const id = await params.id;
 

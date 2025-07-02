@@ -143,7 +143,7 @@ const InvoicePDF = ({ data }) => {
               </View>
               <View>
                 <Text>No. {getData._id?.slice(-6)}</Text>
-                <Text>Date: {formatDate(getData.startDate)}</Text>
+                <Text>Date: {formatDate(getData.dueDate)}</Text>
               </View>
             </View>
     

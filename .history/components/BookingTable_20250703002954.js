@@ -166,7 +166,7 @@ const BookingTable = ({
           >
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">
-                <p className="text-lg">
+                <p className="text-xl">
                   <strong>Room:</strong> {item.roomId.roomName}
                 </p>
               </h3>
@@ -177,7 +177,7 @@ const BookingTable = ({
               />
             </div>
 
-            <div className="flex item-center gap-2 font-bold text-lg">
+            <div className="flex item-center gap-2 font-bold text-xl">
              <p>Guest:</p> <h2>{item.userId.username}</h2> <h2>({item.userId.phone})</h2>
             </div>
             <p>

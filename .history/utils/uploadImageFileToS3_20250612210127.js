@@ -34,7 +34,6 @@ export async function uploadFileToS3(file) {
           .toBuffer();
       }
       contentType = "image/jpeg";
-      console.log('Image has been coverted under 500KB')
     }
 
     const params = {

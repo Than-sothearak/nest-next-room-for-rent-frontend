@@ -3,10 +3,11 @@ import { getUsers } from "@/actions/users";
 import BookingForm from "@/components/BookingForm";
 import { Booking } from "@/models/Booking";
 import { Room } from "@/models/Room";
+import { mongoDb } from "@/utils/connectDB";
 import mongoose from "mongoose";
 
 export default async function singleBookingPage (props) {
-
+    await mongoDb();
   const params = await props.params;
   const id = await params.id;
 
@@ -17,12 +18,13 @@ export default async function singleBookingPage (props) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return <p className="text-red-500">Invalid room ID!</p>;
     }
-let oneRoom = {};
-if (booking) {
-  oneRoom = await Room.findOne({ _id: booking.roomId._id }).lean();
-} else {
-  oneRoom = await Room.findOne({ _id: id }).lean();
-}
+    if (booking) {
+        const oneRoom = await Room.findOne({ _id: booking.roomId._id})
+      .lean()
+    } else {
+           const oneRoom = await Room.findOne({ _id: id})
+      .lean()
+    }
   
 return (
 <>

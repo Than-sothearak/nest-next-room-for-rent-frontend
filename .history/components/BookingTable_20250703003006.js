@@ -166,7 +166,7 @@ const BookingTable = ({
           >
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">
-                <p className="text-lg">
+                <p className="text-xl">
                   <strong>Room:</strong> {item.roomId.roomName}
                 </p>
               </h3>

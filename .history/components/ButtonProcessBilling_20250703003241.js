@@ -14,7 +14,7 @@ const ProcessBilling = () => {
       <button
         type="submit"
         disabled={isPending}
-        className={`flex  justify-between items-center gap-1 p-2 text-primary bg-blue-600 hover:bg-blue-500 hover:text-slate-200 rounded-md ${
+        className={`flex  justify-between items-center gap-2 p-2 text-primary bg-blue-600 hover:bg-blue-500 hover:text-slate-200 rounded-md ${
           isPending ? "opacity-50 cursor-wait" : ""
         }`}
       >
