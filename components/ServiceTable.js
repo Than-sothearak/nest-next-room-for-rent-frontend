@@ -6,7 +6,6 @@ import {
   markAsRead,
 } from "@/actions/services";
 import {
-  formatDate,
   formatDateOnly,
   formatDateTime,
   formatTo12Hour,
@@ -14,15 +13,13 @@ import {
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { BiCheckDouble } from "react-icons/bi";
+import { BiCheckDouble, BiSortAlt2 } from "react-icons/bi";
 
 const ServiceTable = ({
   services,
   serviceCount,
   currentPage,
   itemPerPage,
-  sortKey,
-  sortDirection,
   query
 }) => {
   const searchParams = useSearchParams()
@@ -163,23 +160,23 @@ const ServiceTable = ({
                 <th className="text-start p-2 whitespace-nowrap">
                   Requesting
                 </th>
-                <th className="text-start px-2 whitespace-nowrap">
+                <th className="text-start whitespace-nowrap">
                   <Link
                     href={`/dashboard/services?query=${query}&sortKey=${status}&sortDate=date&sortDirection=${direction}`}
-                    className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
+                    className="flex text-center items-center gap-2 rounded-md w-max"
                     onClick={handleSort}
                   >
-                    <p>Status</p>
+                    <p className="capitalize">{status ? status : 'Status'}</p><BiSortAlt2 size={16} />
 
                   </Link>
                 </th>
                 <th className="text-start px-2 whitespace-nowrap">
                   <Link
                     href={`/dashboard/services?sortKey=${status}&sortDate=date&sortDirection=${direction}`}
-                    className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
+                    className="flex text-center items-center gap-2 rounded-md w-max"
                     onClick={() => handleSortDate()}
                   >
-                    <p> Schedule</p>
+                    <p> Schedule</p><BiSortAlt2 size={16} />
 
                   </Link>
                 </th>
@@ -211,10 +208,12 @@ const ServiceTable = ({
                           ? "bg-amber-200 text-amber-700 "
                           : service.status === "accepted"
                             ? "bg-green-200 text-green-700"
-                            : "bg-red-200 text-red-700"
+                          : service.status === "completed" 
+                            ? "bg-green-300 text-green-700"
+                          : service.status === "marked as read" ? "bg-green-300 text-green-700" : 'bg-red-200 text-red-700'
                         } capitalize px-2 w-max py-1 rounded `}
                     >
-                      {service.status}
+                      {service.status === "marked as read" ? "Completed" : service.status}
                     </p>
                   </td>
                   <td className="px-2 whitespace-nowrap">
@@ -288,7 +287,7 @@ const ServiceTable = ({
                     className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
                     onClick={() => handleSortDate()}
                   >
-                    <p> Schedule</p>
+                    <p>Schedule</p>
 
                   </Link>
                 </th>
