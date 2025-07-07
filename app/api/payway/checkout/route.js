@@ -61,7 +61,6 @@ export async function POST(req) {
     };
 
     const hash = generateHash(params, PAYWAY_API_KEY);
-    console.log("Generated hash:", hash);
 
     const formData = new FormData();
     for (const [key, val] of Object.entries(params)) {
@@ -75,7 +74,7 @@ export async function POST(req) {
     });
 
     const result = await response.json();
-    console.log("PayWay response:", result);
+
     if (!response.ok) {
       console.error("PayWay error:", result);
       return NextResponse.json({ error: result }, { status: 400 });

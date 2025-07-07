@@ -126,7 +126,9 @@ const BookingTable = ({
               <td className="px-2 whitespace-nowrap">{item.userId.username}</td>
               <td className="px-2 whitespace-nowrap">{item.userId.phone}</td>
 
-              <td className="px-2 whitespace-nowrap">{`$${item.rent}`}</td>
+              <td className="px-2 whitespace-nowrap">{`$${item.rent + item.properties?.reduce((sum, service) => {
+                return sum + Number(service.price);
+              }, 0)}`}</td>
 
               <td className="px-2 whitespace-nowrap">
                 {formatDate(item.startDate)}-{formatDate(item.dueDate)}
@@ -181,7 +183,9 @@ const BookingTable = ({
              <p>Guest:</p> <h2>{item.userId.username}</h2> <h2>({item.userId.phone})</h2>
             </div>
             <p>
-              <strong>Price/m:</strong> ${item.rent}
+              <strong>Price/m:</strong> ${item.rent + item.properties?.reduce((sum, service) => {
+                return sum + Number(service.price);
+              }, 0)}
             </p>
             <p>
               <strong>Date:</strong> {formatDate(item.startDate)}

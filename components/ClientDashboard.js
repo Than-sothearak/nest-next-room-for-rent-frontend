@@ -159,7 +159,7 @@ export const ClientDashboard = ({ booking, payments }) => {
               </p>
             </div>
           </div>
-          <div className="w-full mt-2 flex justify-between gap-4 items-center max-sm:flex-col">
+          <div className="w-full mt-2 text-start flex justify-between gap-4 items-start flex-col">
             <div>
               {booking?.userId?.telegramChatId ? (
                 <Link
