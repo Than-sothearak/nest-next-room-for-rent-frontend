@@ -6,9 +6,12 @@ import ProductPropertyForm from "./ProductPropertyForm"; // You can rename this 
 import { addRoom, updateRoom } from "@/actions/rooms"; // Adjust import paths & function names accordingly
 import Image from "next/image";
 import { MdSmsFailed } from "react-icons/md";
+import { TbAirConditioning } from "react-icons/tb";
+import { GrHostMaintenance } from "react-icons/gr";
+import { formatDate, getFormattedAgoText, getMonthsAgo } from "@/utils/formatDate";
 
 export default function RoomForm({
-  categories,      // e.g. Room Types, Buildings
+  categories, // e.g. Room Types, Buildings
   roomId,
   parentCategory,
   room,
@@ -18,19 +21,20 @@ export default function RoomForm({
 
   // Form state initialization with room properties
   const [formData, setFormData] = useState({
-    roomName: room?.roomName || "",            // Changed from brandName/c
+    roomName: room?.roomName || "", // Changed from brandName/c
     category: room?.category || "",
+    airConditionerCleanDate: room?.airConditionerCleanDate || "",
+    roomMaintenanceDate: room?.roomMaintenanceDate || '',
     floor: room?.floor || "",
     capacity: room?.capacity || "",
     description: description,
     parentCategory: room?.parentCategory || "",
-    capacity: room?.capacity || "",            // Instead of stock, number of people room can hold
-    price: room?.price || "",                  // e.g. rent price
-    status: room?.status ? 1 : 0,              // 1 = available, 0 = unavailable
+    capacity: room?.capacity || "", // Instead of stock, number of people room can hold
+    price: room?.price || "", // e.g. rent price
+    status: room?.status ? 1 : 0, // 1 = available, 0 = unavailable
     imageUrls: room?.imageUrls || [],
-    properties: room?.properties || [],       // Extra features or amenities
+    properties: room?.properties || [], // Extra features or amenities
   });
-
 
   const [currentProperties, setCurrentProperties] = useState([]);
   const [files, setFiles] = useState([] || null);
@@ -38,7 +42,7 @@ export default function RoomForm({
   // Remove variants block since rooms usually don’t have variants like products
   // If you want features or amenities you can use properties instead
 
-   const handleRemoveImage = (index) => {
+  const handleRemoveImage = (index) => {
     setFormData((prevFormData) => {
       const removedImage = prevFormData.imageUrls[index]; // Get the removed image URL
 
@@ -65,16 +69,18 @@ export default function RoomForm({
     });
   };
 
- const handleParentCategoryChange = (e) => {
-  const { name, value } = e.target;
-  setFormData({
-    ...formData,
-    [name]: value,
-  });
+  const handleParentCategoryChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
 
-  const selectedParent = parentCategory.find((category) => category._id === value);
-  setCurrentProperties(selectedParent?.properties || []);
-};
+    const selectedParent = parentCategory.find(
+      (category) => category._id === value
+    );
+    setCurrentProperties(selectedParent?.properties || []);
+  };
 
   const updateRoomWithId = updateRoom.bind(null, roomId);
   const [state, action, isPending] = useActionState(
@@ -128,7 +134,7 @@ export default function RoomForm({
                   )}
                 </div>
 
-                   <div>
+                <div>
                   <label className="block font-medium">Floor number</label>
                   <input
                     defaultValue={formData?.floor}
@@ -144,7 +150,9 @@ export default function RoomForm({
                 </div>
                 <div className="flex gap-4">
                   <div className="w-full">
-                    <label className="mb-2 block font-medium">Category (Room Type)</label>
+                    <label className="mb-2 block font-medium">
+                      Category (Room Type)
+                    </label>
                     <select
                       name="category"
                       value={formData?.category}
@@ -164,7 +172,9 @@ export default function RoomForm({
                       ))}
                     </select>
                     {state?.errors?.category && (
-                      <p className="text-red-500 mt-2">{state.errors.category}</p>
+                      <p className="text-red-500 mt-2">
+                        {state.errors.category}
+                      </p>
                     )}
                   </div>
 
@@ -221,34 +231,37 @@ export default function RoomForm({
 
               <div className="flex flex-col gap-2">
                 <div className="space-y-4 w-full bg-primary rounded-lg">
-                <h1 className="text-lg font-bold">Parent Category</h1>
-              </div>
-              <select
-                className=" w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
-                name="parentCategory"
-                value={formData?.parentCategory ? formData.parentCategory : ""}
-                onChange={handleParentCategoryChange}
-              >
-                {room?.parentCategory && (
-                  <option value={room.parentCategory._id}>
-                    {room?.parentCategory.category}
-                  </option>
-                )}
-                <option value="">Select a category</option>
-                {parentCategory?.map((category) => (
-                  <option key={category._id} value={category._id}>
-                    {category.category}
-                  </option>
-                ))}
-              </select>
-          
-              <p className="text-md text-slate-500">
-                Select a category that will be the parent of the current one.
-              </p>
-                  {state?.errors?.parentCategory && (
-                    <p className="text-red-500 mt-2">{state.errors.parentCategory}</p>
+                  <h1 className="text-lg font-bold">Parent Category</h1>
+                </div>
+                <select
+                  className=" w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
+                  name="parentCategory"
+                  value={
+                    formData?.parentCategory ? formData.parentCategory : ""
+                  }
+                  onChange={handleParentCategoryChange}
+                >
+                  {room?.parentCategory && (
+                    <option value={room.parentCategory._id}>
+                      {room?.parentCategory.category}
+                    </option>
                   )}
-          
+                  <option value="">Select a category</option>
+                  {parentCategory?.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.category}
+                    </option>
+                  ))}
+                </select>
+
+                <p className="text-md text-slate-500">
+                  Select a category that will be the parent of the current one.
+                </p>
+                {state?.errors?.parentCategory && (
+                  <p className="text-red-500 mt-2">
+                    {state.errors.parentCategory}
+                  </p>
+                )}
               </div>
 
               <ProductPropertyForm
@@ -261,7 +274,7 @@ export default function RoomForm({
             </div>
           </div>
           <div className="w-1/2 max-lg:w-full flex flex-col gap-4">
-            <div className="bg-primary p-4 w-full flex flex-col gap-4 rounded-lg">
+            <div className="bg-primary p-4 w-full flex flex-col gap-2 rounded-lg">
               <div className="space-y-4 w-full bg-primary rounded-lg">
                 <h1 className="text-lg font-bold">Visibility</h1>
               </div>
@@ -293,60 +306,102 @@ export default function RoomForm({
                 The room will be affected by the visibility choice.
               </p>
             </div>
-  <div className="grid gap-2 grid-cols-2">
-                {formData?.removedImages &&
-                  formData.removedImages.map((item, index) => (
-                    <input
-                      key={index}
-                      name="removeImages"
-                      type="text"
-                      defaultValue={item}
-                      className="w-full p-2 rounded-md bg-secondary text-md focus:ring-0 focus:outline-none hidden"
+
+            <div className="bg-primary p-4 w-full flex flex-col gap-4 rounded-lg">
+              <div className="flex flex-col gap-2">
+                <div className="w-full bg-primary rounded-lg">
+                  <h1 className="text-lg font-bold">Maintenance</h1>
+                </div>
+                <label className="font-medium flex gap-2 items-center">
+                  <TbAirConditioning size={24} />
+                  <span>Air conditioner last cleaned </span>
+                  {room?.airConditionerCleanDate ? (
+                    <span className="italic text-sm">({getFormattedAgoText(room?.airConditionerCleanDate)})</span>
+                  ): <span className="italic text-sm">{`(N/a)`}</span>}
+                </label>
+                <input
+                  onChange={handleChange}
+                  defaultValue={formatDate(room?.airConditionerCleanDate)}
+                  placeholder="Enter date)"
+                  name="airConditionerCleanDate"
+                  type="date"
+                  className="w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="font-medium flex gap-2 items-center">
+                  <GrHostMaintenance size={24} />
+                  <span>Room maintenance date</span>
+                   {room?.roomMaintenanceDate ? (
+                    <span className="italic text-sm">({getFormattedAgoText(room?.roomMaintenanceDate)})</span>
+                  ): <span className="italic text-sm">{`(N/a)`}</span>}
+                </label>
+                <input
+                  onChange={handleChange}
+                  defaultValue={formatDate(formData?.roomMaintenanceDate)}
+                  placeholder="Enter date)"
+                  name="roomMaintenanceDate"
+                  type="date"
+                  className="w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-2 grid-cols-2">
+              {formData?.removedImages &&
+                formData.removedImages.map((item, index) => (
+                  <input
+                    key={index}
+                    name="removeImages"
+                    type="text"
+                    defaultValue={item}
+                    className="w-full p-2 rounded-md bg-secondary text-md focus:ring-0 focus:outline-none hidden"
+                  />
+                ))}
+              {room?.imageUrls && room?.imageUrls.length > 0 ? (
+                formData?.imageUrls.map((image, index) => (
+                  <div
+                    className={`${
+                      index === 0 ? "col-span-2" : ""
+                    } overflow-hidden shadow-md relative aspect-square rounded-md bg-slate-500 group`}
+                    key={index}
+                  >
+                    <Image
+                      fill
+                      alt={`Image ${index}`}
+                      className="rounded-md object-cover transition-opacity duration-300 group-hover:opacity-25"
+                      src={`${image}`}
                     />
-                  ))}
-                {room?.imageUrls && room?.imageUrls.length > 0 ? (
-                  formData?.imageUrls.map((image, index) => (
-                    <div
-                      className={`${
-                        index === 0 ? "col-span-2" : ""
-                      } overflow-hidden shadow-md relative aspect-square rounded-md bg-slate-500 group`}
-                      key={index}
-                    >
-                      <Image
-                        fill
-                        alt={`Image ${index}`}
-                        className="rounded-md object-cover transition-opacity duration-300 group-hover:opacity-25"
-                        src={`${image}`}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveImage(index)}
-                        className="flex justify-center items-center absolute top-1/2 left-1/2  text-slate-200
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="flex justify-center items-center absolute top-1/2 left-1/2  text-slate-200
                opacity-0 group-hover:opacity-100 transition-opacity duration-300 
                transform -translate-x-1/2 -translate-y-1/2 "
-                      >
-                        <BiTrash
-                          className="duration-300 rounded-full p-2 w-9 h-9
+                    >
+                      <BiTrash
+                        className="duration-300 rounded-full p-2 w-9 h-9
                transform hover:scale-125 scale-100 bg-black opacity-50 hover:opacity-90 "
-                          size={20}
-                        />
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <div
-                    className={`col-span-2 rounded-md w-full min-h-32 bg-slate-500 relative aspect-square`}
-                  >
-                    <img
-                      alt={`Image`}
-                      className="opacity-20 rounded-md object-cover h-full w-full "
-                      src={`https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png`}
-                    />
+                        size={20}
+                      />
+                    </button>
                   </div>
-                )}
-              </div>
-              <p className="text-md text-slate-500">Product images.</p>
+                ))
+              ) : (
+                <div
+                  className={`col-span-2 rounded-md w-full min-h-32 bg-slate-500 relative aspect-square`}
+                >
+                  <img
+                    alt={`Image`}
+                    className="opacity-20 rounded-md object-cover h-full w-full "
+                    src={`https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png`}
+                  />
+                </div>
+              )}
             </div>
+            <p className="text-md text-slate-500">Product images.</p>
+          </div>
         </div>
 
         <button

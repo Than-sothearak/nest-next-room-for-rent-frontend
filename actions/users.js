@@ -6,6 +6,7 @@ import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
+import { resolve } from "styled-jsx/css";
 
 await mongoDb();
 
@@ -53,6 +54,8 @@ export async function addUsers(prevState, formData) {
   const email = formData.get("email");
   const phone = formData.get("phone");
   const address = formData.get("address");
+  const gender = formData.get("gender");
+  const dateOfBirth = formData.get("dateOfBirth");
   const password = formData.get("password");
   const role = formData.get("role");
   const imageFile = formData.get("image");
@@ -68,8 +71,9 @@ export async function addUsers(prevState, formData) {
     return { errors, success: false };
   }
 
-  if (!name || !email || !phone || !password || !address || !role) {
+  if (!name || !email || !phone || !password || !address || !role || !gender) {
     if (!name) errors.name = "Name is required";
+    if (!gender) errors.gender = "gender is required";
     if (!email) errors.email = "Email is required";
     if (!phone) errors.phone = "Phone is required";
     if (!password) errors.password = "Password is required";
@@ -108,6 +112,8 @@ export async function addUsers(prevState, formData) {
 
       const userData = {
         username: name,
+        gender,
+        dateOfBirth,
         email,
         phone,
         isAdmin,
@@ -142,6 +148,7 @@ export async function addUsers(prevState, formData) {
 }
 
 export async function updateUser(userId, prevState, formData) {
+  
   const session = await auth();
   if (!session?.user?.isAdmin && session?.user?._id !== userId) {
     return console.log("Access denied!");
@@ -161,6 +168,8 @@ export async function updateUser(userId, prevState, formData) {
     const name = formData.get("name");
     const email = formData.get("email");
     const phone = formData.get("phone");
+    const gender = formData.get("gender");
+    const dateOfBirth = formData.get("dateOfBirth");
     const address = formData.get("address");
     const password = formData.get("password");
     const role = session.user.isAdmin ? formData.get("role") : "user";
@@ -185,7 +194,7 @@ export async function updateUser(userId, prevState, formData) {
       if (user.imageUrl) {
         const oldKey = imageUrl?.split("/").pop();
         if (oldKey) {
-          console.log('New image replaced to S3')
+          console.log("New image replaced to S3");
           await deleteFileFromS3(oldKey);
         }
       }
@@ -199,19 +208,23 @@ export async function updateUser(userId, prevState, formData) {
     const userData = {
       username: name,
       email,
+      gender,
+      dateOfBirth,
       phone,
       isAdmin,
       address,
       imageUrl,
     };
-
     // Hash password only if provided
     if (password) {
       const salt = await bcrypt.genSalt(10);
       userData.password = await bcrypt.hash(password, salt);
     }
 
+ 
+
     await User.updateOne({ _id: userId }, userData);
+    return {success: "User successfully updated"}
   } catch (err) {
     console.error("Error updating user:", err);
     return {
@@ -220,6 +233,5 @@ export async function updateUser(userId, prevState, formData) {
     };
   }
 
-  revalidatePath(`/dashboard/`);
-  redirect(`/dashboard/users/${userId}`);
+
 }

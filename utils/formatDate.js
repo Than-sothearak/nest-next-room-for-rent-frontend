@@ -43,3 +43,26 @@ export function formatTo12Hour(time24) {
 
   return `${hour}:${minute} ${ampm}`;
 }
+
+import { parseISO, intervalToDuration, differenceInDays } from "date-fns";
+
+export function getFormattedAgoText(dateString) {
+  const date = parseISO(dateString);
+  const now = new Date();
+  const daysDiff = differenceInDays(now, date);
+
+  if (daysDiff < 30) {
+    return `${daysDiff} day${daysDiff !== 1 ? "s" : ""} ago`;
+  }
+
+  const duration = intervalToDuration({ start: date, end: now });
+  const { years, months, days } = duration;
+
+  let result = "";
+
+  if (years > 0) result += `${years} year${years > 1 ? "s" : ""} `;
+  if (months > 0) result += `${months} month${months > 1 ? "s" : ""} `;
+  if (days > 0) result += `${days} day${days > 1 ? "s" : ""}`;
+
+  return result.trim() + " ago";
+}

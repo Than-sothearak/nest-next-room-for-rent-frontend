@@ -95,8 +95,8 @@ const ServiceTable = ({
     }
   };
 
-  const handleCompleted = async (serviceId) => {
-    const response = await markAsCompleted(serviceId);
+  const handleCompleted = async (serviceId, roomId) => {
+    const response = await markAsCompleted(serviceId, roomId);
     if (response.error) {
       console.error("Error mark as completed service:", response.error);
     } else {
@@ -330,7 +330,7 @@ const ServiceTable = ({
                       {service.status === "accepted" ? (
                         <div className="flex gap-2">
                           <button
-                            onClick={() => handleCompleted(service._id)}
+                            onClick={() => handleCompleted(service._id, service.roomId._id)}
                             type="button"
                             className="bg-green-400 hover:bg-green-500 rounded-full text-white px-2 whitespace-nowrap"
                           >

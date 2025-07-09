@@ -24,7 +24,7 @@ const UserDashboardPage = async () => {
         .populate("userId")
         .populate("roomId")
         .populate("bookingId")
-        .sort({ startDate: -1 })
+        .sort({ startDate: -1 }).limit(6)
     )
   );
 

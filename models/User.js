@@ -18,7 +18,13 @@ const userSchema = new Schema({
     type: String,
     default: false, // Note: This sets it to "false" (string); use `default: ""` if you want an empty string
   },
+    dateOfBirth: 
+    { type: Date },
   address: {
+    type: String,
+    required: true,
+  },
+  gender : {
     type: String,
     required: true,
   },

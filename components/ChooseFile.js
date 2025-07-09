@@ -35,7 +35,7 @@ export default function ChooseFile({files ,setFiles}) {
           <div className=""> <BiUpload size={28} /></div>
           <div className="text-center w-full">
             <h1 className="font-bold text-lg">Choose a file to upload</h1>
-            <p className="font-light text-slate-400">JPEG, PNG, PDG, and JPG, file 1MB limited</p>
+            <p className="font-light text-slate-400">JPEG, PNG, PDF, and JPG, file 1MB limited</p>
           </div>
           <div className="flex justify-center w-full">
             <label

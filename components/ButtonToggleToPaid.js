@@ -24,13 +24,13 @@ const ToggleToPaid = ({ item }) => {
     <form action={action}>
       <button
         disabled={isPending || status === "paid"}
-        className={`${isPending ? 'cursor-not-allowed opacity-25 bg-green-200': ""} px-3 py-1 rounded-full lg:mx-4 lg:my-2 ${
+        className={`${isPending ? 'cursor-not-allowed opacity-25 bg-green-200': ""} px-3 py-1 rounded-md lg:mx-4 lg:my-2 ${
           status === "paid"
             ? "text-green-600 "
             : "bg-green-200 text-green-600 hover:bg-green-500 hover:text-green-100"
         }`}
       >
-        {status === "paid" ? <div className="flex items-center gap-1"><BiCheckCircle size={24}/> <p>Paid</p> </div>: "Pay"}
+        {status === "paid" ? <div className="flex items-center gap-1"><BiCheckCircle size={24}/> <p>Paid</p> </div>:  <p>Pay</p>}
       </button>
     </form>
   );

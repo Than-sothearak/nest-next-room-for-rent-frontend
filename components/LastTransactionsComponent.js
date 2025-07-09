@@ -13,22 +13,22 @@ export default function LastTransactionComponent({data}) {
   };
 
   return (
-    <div className="mt-4 rounded-lg bg-primary p-4">
+    <div className="mt-4 rounded-lg bg-primary p-4 w-full">
       <h1 className="text-2xl">Last Transactions</h1>
-      <div>
-        <table className="w-full rounded-lg overflow-hidden">
+      <div className='w-full overflow-x-auto'>
+        <table className="rounded-lg w-full">
           <thead className="text-sm">
             <tr>
-              <th className="p-3 text-left">Name</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Date</th>
-              <th className="p-3 text-left">Amount</th>
+              <th className="p-4 text-left">Name</th>
+              <th className="p-4 text-left">Status</th>
+              <th className="p-4 text-left">Date</th>
+              <th className="p-4 text-right">Amount</th>
             </tr>
           </thead>
           <tbody className="text-sm">
             {data.map((transaction, index) => (
               <tr key={index} className="transition-all">
-                <td className="p-2 flex gap-2 items-center">
+                <td className="pr-10 flex gap-2 items-center whitespace-nowrap">
                   <Image
                     width={36}
                     height={36}
@@ -39,7 +39,7 @@ export default function LastTransactionComponent({data}) {
                   />
                   {transaction.name}
                 </td>
-                <td className="p-3">
+                <td className="px-4 whitespace-nowrap">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
                       statusColors[transaction.status] || "bg-gray-100 text-gray-700"
@@ -49,7 +49,7 @@ export default function LastTransactionComponent({data}) {
                   </span>
                 </td>
                 <td className="p-3">{transaction.date}</td>
-                <td className="p-3 font-semibold">${transaction.amount?.toFixed(2) ?? '0.00'}</td>
+                <td className="p-3 font-semibold text-right">${transaction.amount?.toFixed(2) ?? '0.00'}</td>
               </tr>
             ))}
           </tbody>

@@ -20,7 +20,7 @@ const SendInvoiceButton = ({ bookingId, booking }) => {
     <form action={action} className="relative group inline-block">
       <button
         
-        className={`z-0 px-3 w-full py-1 rounded-md relative  ${
+        className={`whitespace-nowrap z-0 px-3 w-full py-1 rounded-md relative  ${
           isPending
             ? "bg-gray-400 cursor-wait opacity-50"
             : "bg-blue-600 text-white hover:bg-blue-300 hover:text-blue-900"

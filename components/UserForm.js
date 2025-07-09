@@ -3,11 +3,15 @@ import ChooseSingleImageFile from "@/components/ChooseSingleImage";
 import { addUsers, updateUser } from "@/actions/users"; // Import update function
 import { useActionState, useEffect, useState } from "react";
 import ChangPasswordForm from "./ChangPasswordForm";
+import { formatDate } from "@/utils/formatDate";
+import { useRouter } from "next/navigation";
 
 export default function UserForm({ userId, userData, session }) {
   const [formData, setFormData] = useState({
     name: userData?.username || "",
     email: userData?.email || "",
+    gender: userData?.gender || "male",
+    dateOfBirth: userData?.dateOfBirth || "",
     phone: userData?.phone || "",
     address: userData?.address || "",
     password: "",
@@ -21,7 +25,12 @@ export default function UserForm({ userId, userData, session }) {
     undefined,
     userId
   );
-
+const router = useRouter();
+  useEffect(() => {
+    if (state?.success) {
+      router.refresh()
+    }
+  }, [state]);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -35,20 +44,25 @@ export default function UserForm({ userId, userData, session }) {
         <p>You are not authorize to this page!</p>
       </div>
     );
+  
+    function generatePassword(username) {
+  const randomNumber = Math.floor(10000000 + Math.random() * 90000000); // 8 digit random number
+  return `${username}@${randomNumber}`;
+}
 
-  if (session?.user?.isAdmin || session?.user?._id === userId) 
+  if (session?.user?.isAdmin || session?.user?._id === userId)
     return (
-      <div
-     
-        className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary mt-4 border rounded-xl relative"
-      >
+      <div className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary mt-4 border rounded-xl relative">
         <div className="bg-primary text-center p-4 rounded-t-xl">
           <h1 className="font-bold text-lg">
             {userId ? "Edit user" : "Create new user"}
           </h1>
         </div>
         <div className="border-b border-secondary"></div>
-        <form action={action} className="flex w-full gap-6 max-md:flex-wrap justify-center p-4">
+        <form
+          action={action}
+          className="flex w-full gap-6 max-md:flex-wrap justify-center p-4"
+        >
           <div>
             <ChooseSingleImageFile
               imageUrl={
@@ -128,43 +142,106 @@ export default function UserForm({ userId, userData, session }) {
                   className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none border-secondary "
                 />
                 {state?.errors?.phone && (
-                  <p className="mt-1  text-red-600">
-                    {state.errors.phone}
-                  </p>
+                  <p className="mt-1  text-red-600">{state.errors.phone}</p>
                 )}
               </div>
 
               {/* Role Field */}
-             {session.user.isAdmin ?  <div>
-                <label
-                  htmlFor="role"
-                  className="block font-bold  text-lg mb-1"
-                >
-                  User Role
-                </label>
-                <select
+              {session.user.isAdmin ? (
+                <div>
+                  <label
+                    htmlFor="role"
+                    className="block font-bold  text-lg mb-1"
+                  >
+                    User Role
+                  </label>
+                  <select
+                    name="role"
+                    id="role"
+                    defaultValue={formData?.role}
+                    onChange={handleChange}
+                    className="text-lg bg-primaryw-full px-4 py-2.5 rounded-lg border border-secondary  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiAjdjQgdjRaIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hldnJvbi1kb3duIj48cGF0aCBkPSJtNiA5IDYgNiA2LTYiLz48L3N2Zz4=')] bg-no-repeat bg-[right_0.75rem_center]"
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Administrator</option>
+                  </select>
+                </div>
+              ) : (
+                <input
+                  type="text"
                   name="role"
-                  id="role"
+                  id="address"
                   defaultValue={formData?.role}
                   onChange={handleChange}
-                  className="text-lg bg-primaryw-full px-4 py-2.5 rounded-lg border border-secondary  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiAjdjQgdjRaIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hldnJvbi1kb3duIj48cGF0aCBkPSJtNiA5IDYgNiA2LTYiLz48L3N2Zz4=')] bg-no-repeat bg-[right_0.75rem_center]"
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Administrator</option>
-                </select>
-              </div> :  <input
-                type="text"
-                name="role"
-                id="address"
-                defaultValue={formData?.role}
-                onChange={handleChange}
-                placeholder="123 Main St, City, Country"
-                className="text-lg bg-secondary hidden border w-full border-secondary  px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none"
-              />}
+                  placeholder="123 Main St, City, Country"
+                  className="text-lg bg-secondary hidden border w-full border-secondary  px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none"
+                />
+              )}
             </div>
 
+            {session?.user?.isAdmin && (
+              <div className="flex items-center gap-4">
+                <div className="w-full">
+                  <label
+                    htmlFor="dateOfBirth"
+                    className="block text-lg font-bold text-primarytext mb-1"
+                  >
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    name="dateOfBirth"
+                    id="dateOfBirth"
+                    value={formatDate(formData?.dateOfBirth) || ""}
+                    onChange={handleChange}
+                    placeholder="123 Main St, City, Country"
+                    className="text-lg bg-secondary border w-full border-secondary  px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none"
+                  />
+                </div>
+
+                <div className="w-full">
+                  <label
+                    htmlFor="address"
+                    className="block text-lg font-bold text-primarytext mb-1"
+                  >
+                    Gender
+                  </label>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        id="male"
+                        name="gender"
+                        onChange={handleChange}
+                        value={"male"}
+                        checked={formData?.gender === "male"}
+                      />
+                      <label htmlFor="male">Male</label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        id="female"
+                        name="gender"
+                        onChange={handleChange}
+                        value={"female"}
+                        checked={formData?.gender === "female"}
+                      />
+                      <label htmlFor="female">Female</label>
+                    </div>
+                  </div>
+                  {state?.errors?.gender && (
+                    <p className="mt-1 text-lg text-red-600">
+                      {state.errors.gender}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Address Field */}
-            <div className="text-xs">
+            <div className="">
               <label
                 htmlFor="address"
                 className="block text-lg font-bold text-primarytext mb-1"
@@ -188,7 +265,7 @@ export default function UserForm({ userId, userData, session }) {
             </div>
 
             {!userId ? (
-              <div className="text-xs">
+              <div className="">
                 <label
                   htmlFor="password"
                   className="block text-lg font-bold text-primarytext mb-1"
@@ -219,7 +296,9 @@ export default function UserForm({ userId, userData, session }) {
                   </p>
                 )}
               </div>
-            ) : ''}
+            ) : (
+              ""
+            )}
 
             {/* Form Actions */}
             <div className="">
@@ -280,16 +359,18 @@ export default function UserForm({ userId, userData, session }) {
             )}
           </div>
         </form>
-       
-  
+
         {userId && (
-              (
-              <>
-                <div className="border-b border-secondary"></div>
-                <ChangPasswordForm userData={userData} formData={formData} handleChange={handleChange} userId={userId}/></>
-               )
-            )}
-     
+          <>
+            <div className="border-b border-secondary"></div>
+            <ChangPasswordForm
+              userData={userData}
+              formData={formData}
+              handleChange={handleChange}
+              userId={userId}
+            />
+          </>
+        )}
       </div>
     );
 }

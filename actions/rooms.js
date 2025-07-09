@@ -66,11 +66,15 @@ export async function addRoom(prevState, formData) {
     const price = formData.get("price");
     const status = formData.get("status");
     const description = formData.get("description");
+     const airConditionerCleanDate = formData.get("airConditionerCleanDate")
+    const roomMaintenanceDate = formData.get("roomMaintenanceDate")
     const parentCategory = formData.get("parentCategory");
     const imageFiles = formData.getAll("images");
     const properties = propertiesFormData(formData);
 
     const roomData = {
+      airConditionerCleanDate,
+      roomMaintenanceDate,
       roomName,
       capacity,
       category,
@@ -145,6 +149,8 @@ export async function updateRoom(roomId, prevState, formData) {
     const price = formData.get("price");
     const status = formData.get("status");
     const description = formData.get("description");
+    const airConditionerCleanDate = formData.get("airConditionerCleanDate")
+    const roomMaintenanceDate = formData.get("roomMaintenanceDate")
     const parentCategory = formData.get("parentCategory");
     const imageFiles = formData.getAll("images");
     const properties = propertiesFormData(formData);
@@ -191,6 +197,8 @@ export async function updateRoom(roomId, prevState, formData) {
 
     const roomData = {
       roomName,
+      airConditionerCleanDate,
+      roomMaintenanceDate,
       capacity,
       category,
       price,

@@ -1,3 +1,4 @@
+import { getFormattedAgoText } from "@/utils/formatDate";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -15,6 +16,7 @@ import {
 import { GrStatusDisabled, GrStatusGood, GrStatusUnknown } from "react-icons/gr";
 import { IoPersonAdd } from "react-icons/io5";
 import { MdOutlineSmokeFree } from "react-icons/md";
+import { TbAirConditioning } from "react-icons/tb";
 
 export const RoomGrid = ({ data }) => {
   const iconMap = {
@@ -34,7 +36,7 @@ export const RoomGrid = ({ data }) => {
         {data.map((room, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-md w-full flex flex-col justify-between"
+            className="bg-white rounded-lg shadow-md w-full flex flex-col justify-between relative"
           >
             <div className="w-full">
               <div className="relative w-full h-64 rounded-md group">
@@ -59,7 +61,7 @@ export const RoomGrid = ({ data }) => {
                   </Link>
 
                      <Link
-                      href={`/dashboard/booking/${room._id}`}
+                      href={`/dashboard/rooms/view/${room._id}`}
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
@@ -124,6 +126,15 @@ export const RoomGrid = ({ data }) => {
                   </div>
                 );
               })}
+            </div>
+
+            <div className="absolute bg-primary/50 w-full p-2 flex gap-2">
+              <TbAirConditioning size={24} />
+               {room?.airConditionerCleanDate ? (
+ <span className="italic text-sm">({getFormattedAgoText(room?.airConditionerCleanDate || '')})</span>
+               ) : 'N/A'}
+              
+                           
             </div>
           </div>
         ))}

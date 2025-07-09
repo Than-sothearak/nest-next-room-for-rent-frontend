@@ -1,5 +1,6 @@
 "use server";
 import { auth } from "@/auth";
+import { Room } from "@/models/Room";
 import { Service } from "@/models/Service";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
@@ -198,17 +199,18 @@ export async function cancelService(serviceId) {
   }
 }
 
-export async function markAsCompleted(serviceId) {
+export async function markAsCompleted(serviceId, roomId) {
   try {
     const service = await Service.findById(serviceId);
     if (!service) {
       return { error: "Service not found" };
     }
-
+    const room = await Room.findById(roomId)
     const date = new Date();
     service.status = "completed";
     service.completedDate = date;
-
+    room.airConditionerCleanDate = date
+    await room.save();
     await service.save();
     revalidatePath("/dashboard/services");
 

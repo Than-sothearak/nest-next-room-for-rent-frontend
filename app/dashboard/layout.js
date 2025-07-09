@@ -4,6 +4,7 @@ import Sidebar from "@/components/Sidebar";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
 import { pageNavigation, userNavigation } from "@/lib/navLinks";
+import Footer from "@/components/Footer";
 
 export default async function DashboardLayout({
   children,
@@ -26,7 +27,7 @@ export default async function DashboardLayout({
     <>
       {session?.user?.isAdmin ? (
         <div className="flex">
-          <div className="bg-primary h-screen">
+          <div className="bg-primary">
             <Sidebar navigation={pageNavigation} session={session} />
           </div>
           <div className="w-full overflow-x-auto lg:mx-4">
@@ -38,11 +39,12 @@ export default async function DashboardLayout({
             <div className="max-lg:mx-4 overflow-x-auto">{children}</div>
 
             <div className="max-lg:mx-4 overflow-x-auto">{admin}</div>
+              <Footer />
           </div>
         </div>
       ) : (
         <div className="flex">
-          <div className="bg-primary h-screen">
+          <div className="bg-primary">
             <Sidebar navigation={userNavigation} session={session} />
           </div>
           <div className="w-full overflow-x-auto lg:mx-4">
@@ -53,6 +55,7 @@ export default async function DashboardLayout({
             />
             <div className="max-lg:mx-4 overflow-x-auto">{children} </div>
             <div className="max-lg:mx-4 overflow-x-auto">{user}</div>
+             <Footer />
           </div>
         </div>
       )}

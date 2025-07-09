@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ToggleToPaid from "./ButtonToggleToPaid";
 import ButtonEditAndCancel from "./ButtonEditAndCancel";
-import ConnectTelegram from "./ButtonConnectTelegram";
 import ProcessBilling from "./ButtonProcessBilling";
 import SendInvoiceButton from "./ButtonSendInvoice";
 import { BsTelegram } from "react-icons/bs";
@@ -62,7 +61,9 @@ const BookingTable = ({
   }
   return (
     <div className="mt-4 overflow-x-auto pb-10">
-      <div><h1 className="font-bold text-2xl pb-2">Booking</h1></div>
+      <div>
+        <h1 className="font-bold text-2xl pb-2">Booking</h1>
+      </div>
       <div className="">
         <ProcessBilling />
       </div>
@@ -75,8 +76,9 @@ const BookingTable = ({
             <th className="text-start p-2 whitespace-nowrap">Phone</th>
             <th className="text-start p-2 whitespace-nowrap">
               <Link
-                href={`/dashboard/${pathname}?page=${currentPage}${query ? `&query=${query}` : ""
-                  }&sortKey=price&sortDirection=${direction}`}
+                href={`/dashboard/${pathname}?page=${currentPage}${
+                  query ? `&query=${query}` : ""
+                }&sortKey=price&sortDirection=${direction}`}
                 onClick={() => handleSort("price")}
                 className="flex items-center gap-2 rounded-md "
               >
@@ -99,13 +101,13 @@ const BookingTable = ({
 
             <th className="">
               <Link
-                href={`/dashboard/${pathname}?page=${currentPage}${query ? `&query=${query}` : ""
-                  }&sortKey=status&sortDirection=${direction}`}
+                href={`/dashboard/${pathname}?page=${currentPage}${
+                  query ? `&query=${query}` : ""
+                }&sortKey=status&sortDirection=${direction}`}
                 onClick={() => handleSort("status")}
                 className="flex text-center items-center gap-2 rounded-md"
               >
                 <p>Status</p>
-              
               </Link>
             </th>
             <th className="text-end p-2 whitespace-nowrap">Invoice Status</th>
@@ -114,21 +116,23 @@ const BookingTable = ({
         </thead>
         <tbody>
           {booking?.map((item, index) => (
-            <tr
-              key={item._id}
-              className="border-t"
-            >
+            <tr key={item._id} className="border-t">
               <td className="font-bold px-2 whitespace-nowrap">
                 <p>{Number(currentPage - 1) * itemPerPage + index + 1}</p>
               </td>
 
-              <td className="font-bold px-2 whitespace-nowrap">{item.roomId.roomName}</td>
+              <td className="font-bold px-2 whitespace-nowrap">
+                {item.roomId.roomName}
+              </td>
               <td className="px-2 whitespace-nowrap">{item.userId.username}</td>
               <td className="px-2 whitespace-nowrap">{item.userId.phone}</td>
 
-              <td className="px-2 whitespace-nowrap">{`$${item.rent + item.properties?.reduce((sum, service) => {
-                return sum + Number(service.price);
-              }, 0)}`}</td>
+              <td className="px-2 whitespace-nowrap">{`$${
+                item.rent +
+                item.properties?.reduce((sum, service) => {
+                  return sum + Number(service.price);
+                }, 0)
+              }`}</td>
 
               <td className="px-2 whitespace-nowrap">
                 {formatDate(item.startDate)}-{formatDate(item.dueDate)}
@@ -136,13 +140,19 @@ const BookingTable = ({
 
               <td className="text-center">
                 <ToggleToPaid item={item} />
-
               </td>
 
               <td className="text-center p-2 whitespace-nowrap">
-                <div className={`${item?.userId?.telegramChatId ? 'text-blue-500' : 'opacity-40'} flex items-center gap-1`}>
+                <div
+                  className={`${
+                    item?.userId?.telegramChatId
+                      ? "text-blue-500"
+                      : "opacity-40"
+                  } flex items-center gap-1`}
+                >
                   <BsTelegram size={24} />
-                </div></td>
+                </div>
+              </td>
               <td className="text-end whitespace-nowrap">
                 <SendInvoiceButton bookingId={item?._id} booking={item} />
               </td>
@@ -160,7 +170,6 @@ const BookingTable = ({
       </table>
 
       <div className="lg:hidden">
-
         {booking.map((item, index) => (
           <div
             key={item._id}
@@ -179,13 +188,16 @@ const BookingTable = ({
               />
             </div>
 
-            <div className="flex item-center gap-2 font-bold text-lg">
-             <p>Guest:</p> <h2>{item.userId.username}</h2> <h2>({item.userId.phone})</h2>
+            <div className="flex item-center gap-2 font-bold whitespace-nowrap">
+              <p>Guest:</p> <h2>{item.userId.username}</h2>{" "}
+              <h2>({item.userId.phone})</h2>
             </div>
             <p>
-              <strong>Price/m:</strong> ${item.rent + item.properties?.reduce((sum, service) => {
-                return sum + Number(service.price);
-              }, 0)}
+              <strong>Price/m:</strong> $
+              {item.rent +
+                item.properties?.reduce((sum, service) => {
+                  return sum + Number(service.price);
+                }, 0)}
             </p>
             <p>
               <strong>Date:</strong> {formatDate(item.startDate)}
@@ -193,24 +205,29 @@ const BookingTable = ({
             <p>
               <strong>Due Date:</strong> {formatDate(item.dueDate)}
             </p>
-            <div className="flex justify-between items-center">
-              <div className={`${item?.userId?.telegramChatId ? 'text-blue-500' : 'opacity-40'} flex items-center gap-1`}>
+            <div className="mt-2 flex justify-between items-center flex-wrap gap-4">
+              <div
+                className={`${
+                  item?.userId?.telegramChatId ? "text-blue-500" : "opacity-40"
+                } flex items-center gap-1`}
+              >
                 <BsTelegram size={24} />
                 <div>
-                  {item?.userId?.telegramChatId ? <h2>Connected</h2> : <h2>Unconnect</h2>}
-
-                </div></div>
+                  {item?.userId?.telegramChatId ? (
+                    <h2>Connected</h2>
+                  ) : (
+                    <h2>Unconnect</h2>
+                  )}
+                </div>
+              </div>
               <div className="flex gap-2">
-
                 <SendInvoiceButton bookingId={item?._id} booking={item} />
                 <ToggleToPaid item={item} />
               </div>
             </div>
           </div>
-        )
-        )}
+        ))}
       </div>
-
     </div>
   );
 };
