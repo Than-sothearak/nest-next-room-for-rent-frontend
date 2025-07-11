@@ -20,8 +20,10 @@ const userPage = async ({ searchParams }) => {
    
     { header: "Username", accessor: "username" },
     { header: "Email", accessor: "email" },
+     { header: "Status", accessor: "status" },
+      { header: "Role", accessor: "isAdmin" },
     { header: "Created At", accessor: "createdAt" },
-    { header: "Role", accessor: "isAdmin" },
+  ,
   ];
 
 

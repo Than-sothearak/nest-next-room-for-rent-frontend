@@ -51,7 +51,7 @@ const TableComponent = ({
                   <td key={colIndex} className="py-4 px-4">
                     <div className="flex gap-2 justify-start items-center">
                       {colIndex === 0 && (
-                        <div className="relative aspect-square h-10 w-10 ">
+                        <div className="relative aspect-square h-10 w-10  ">
                           {" "}
                           <Image
                             fill
@@ -82,10 +82,10 @@ const TableComponent = ({
                           "User"
                         )
                       ) : column.accessor === "status" ? (
-                        row[column.accessor] === 1 ? (
-                          "Available"
+                        row[column.accessor] === 'active' ? (
+                          "Avtive"
                         ) : (
-                          "Unavailable"
+                          "Deactivated"
                         )
                       ) : column.accessor ? (
                         row[column.accessor]

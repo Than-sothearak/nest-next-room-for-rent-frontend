@@ -10,6 +10,7 @@ export default function UserForm({ userId, userData, session }) {
   const [formData, setFormData] = useState({
     name: userData?.username || "",
     email: userData?.email || "",
+    status: userData?.status || "active",
     gender: userData?.gender || "male",
     dateOfBirth: userData?.dateOfBirth || "",
     phone: userData?.phone || "",
@@ -25,10 +26,10 @@ export default function UserForm({ userId, userData, session }) {
     undefined,
     userId
   );
-const router = useRouter();
+  const router = useRouter();
   useEffect(() => {
     if (state?.success) {
-      router.refresh()
+      router.refresh();
     }
   }, [state]);
   const handleChange = (e) => {
@@ -44,11 +45,11 @@ const router = useRouter();
         <p>You are not authorize to this page!</p>
       </div>
     );
-  
-    function generatePassword(username) {
-  const randomNumber = Math.floor(10000000 + Math.random() * 90000000); // 8 digit random number
-  return `${username}@${randomNumber}`;
-}
+
+  function generatePassword(username) {
+    const randomNumber = Math.floor(10000000 + Math.random() * 90000000); // 8 digit random number
+    return `${username}@${randomNumber}`;
+  }
 
   if (session?.user?.isAdmin || session?.user?._id === userId)
     return (
@@ -180,7 +181,8 @@ const router = useRouter();
             </div>
 
             {session?.user?.isAdmin && (
-              <div className="flex items-center gap-4">
+             <div className="flex flex-col gap-4">
+               <div className="flex items-center gap-4">
                 <div className="w-full">
                   <label
                     htmlFor="dateOfBirth"
@@ -237,7 +239,31 @@ const router = useRouter();
                     </p>
                   )}
                 </div>
+
+            
               </div>
+                  <div className="grid gap-2">
+                  <label className="font-bold">Account status</label>
+                  <select
+                    name="status"
+                    value={formData?.status}
+                    onChange={handleChange}
+                    required
+                    className={`border rounded p-2 ${
+                      formData?.status === "active"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    } `}
+                  >
+                    <option value="active" className="text-black">
+                      Active
+                    </option>
+                    <option value="deactivated" className="text-black">
+                      Deactivated
+                    </option>
+                  </select>
+                </div>
+             </div>
             )}
 
             {/* Address Field */}

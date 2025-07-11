@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { boolean } from "zod";
 const { model, Schema, models } = mongoose;
 
 const userSchema = new Schema({
@@ -28,6 +29,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+   note : {
+    type: String,
+  
+  },
+   status: { type: String, default: "active" },
   imageUrl: {
     type: String,
   },

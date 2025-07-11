@@ -53,6 +53,7 @@ export async function addUsers(prevState, formData) {
   const name = formData.get("name");
   const email = formData.get("email");
   const phone = formData.get("phone");
+   const status = formData.get("status")
   const address = formData.get("address");
   const gender = formData.get("gender");
   const dateOfBirth = formData.get("dateOfBirth");
@@ -117,6 +118,7 @@ export async function addUsers(prevState, formData) {
         email,
         phone,
         isAdmin,
+        status,
         address,
         password: hashPassword,
         imageUrl,
@@ -168,6 +170,7 @@ export async function updateUser(userId, prevState, formData) {
     const name = formData.get("name");
     const email = formData.get("email");
     const phone = formData.get("phone");
+    const status = formData.get("status")
     const gender = formData.get("gender");
     const dateOfBirth = formData.get("dateOfBirth");
     const address = formData.get("address");
@@ -208,6 +211,7 @@ export async function updateUser(userId, prevState, formData) {
     const userData = {
       username: name,
       email,
+      status,
       gender,
       dateOfBirth,
       phone,
