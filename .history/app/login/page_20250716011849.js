@@ -1,8 +1,7 @@
 'use client';
 
-import LoginForm from '@/components/LoginForm';
 import React, { Suspense } from 'react';
-
+import LoginForm from './LoginForm'; // separate client component with useSearchParams
 
 export default function LoginPage() {
   return (
