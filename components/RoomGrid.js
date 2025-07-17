@@ -1,7 +1,8 @@
+"use client";
 import { getFormattedAgoText } from "@/utils/formatDate";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { FaEdit, FaStickyNote } from "react-icons/fa";
 import {
   FaBed,
@@ -13,12 +14,13 @@ import {
   FaStairs,
   FaWifi,
 } from "react-icons/fa6";
-import { GrStatusDisabled, GrStatusGood, GrStatusUnknown } from "react-icons/gr";
+import { GrStatusDisabled, GrStatusGood } from "react-icons/gr";
 import { IoPersonAdd } from "react-icons/io5";
 import { MdOutlineSmokeFree } from "react-icons/md";
 import { TbAirConditioning } from "react-icons/tb";
+import ButtonDelete from "./ButtonDelete";
 
-export const RoomGrid = ({ data }) => {
+export const RoomGrid = ({ data, session }) => {
   const iconMap = {
     Notes: FaStickyNote,
     "Air Conditioner": FaRegSnowflake,
@@ -28,6 +30,7 @@ export const RoomGrid = ({ data }) => {
     Notes: MdOutlineSmokeFree,
     Size: FaRulerCombined,
   };
+
 
   return (
     <div className="my-4">
@@ -46,12 +49,13 @@ export const RoomGrid = ({ data }) => {
                   className="object-cover rounded-md transition-opacity duration-300 group-hover:opacity-80"
                   fill
                   alt="Example image"
-                  sizes="100vw"
+                
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   src={room.imageUrls[0]}
                 />
-                <div className="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-4 text-white font-bold text-lg">
+                <div className="p-4 absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-4 text-white font-bold text-lg w-full flex-wrap">
                   <Link
-                   href={`/dashboard/booking/${room._id}`}
+                    href={`/dashboard/booking/${room._id}`}
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
@@ -60,8 +64,8 @@ export const RoomGrid = ({ data }) => {
                     <FaBook />
                   </Link>
 
-                     <Link
-                      href={`/dashboard/rooms/view/${room._id}`}
+                  <Link
+                    href={`/dashboard/rooms/view/${room._id}`}
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
@@ -70,8 +74,8 @@ export const RoomGrid = ({ data }) => {
                     <FaEye />
                   </Link>
 
-                     <Link
-                     href={`/dashboard/rooms/${room._id}`}
+                  <Link
+                    href={`/dashboard/rooms/${room._id}`}
                     className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                 duration-300 
                transform  hover:scale-125 bg-black/70 p-4  rounded-full"
@@ -79,6 +83,10 @@ export const RoomGrid = ({ data }) => {
                   >
                     <FaEdit />
                   </Link>
+
+               
+                   <ButtonDelete session={session} id={room._id}/>
+                
                 </div>
               </div>
 
@@ -97,19 +105,28 @@ export const RoomGrid = ({ data }) => {
                     room?.status === 1 ? "text-green-500" : "text-red-500"
                   }`}
                 >
-                 
-                  {room?.status === 1 ?  <div className="flex items-center gap-1"><GrStatusGood /><p>available</p></div> :  <div className="flex items-center gap-1"><GrStatusDisabled/><p>unavailable</p></div>}
+                  {room?.status === 1 ? (
+                    <div className="flex items-center gap-1">
+                      <GrStatusGood />
+                      <p>available</p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      <GrStatusDisabled />
+                      <p>unavailable</p>
+                    </div>
+                  )}
                 </div>
-               <div className="flex gap-2">
-                   <div className="flex gap-1 items-center" title="Floor">
-                  <FaStairs />
-                  {room?.floor}
+                <div className="flex gap-2">
+                  <div className="flex gap-1 items-center" title="Floor">
+                    <FaStairs />
+                    {room?.floor}
+                  </div>
+                  <div className="flex gap-1 items-center" title="Capacity">
+                    <IoPersonAdd />
+                    {room?.capacity}
+                  </div>
                 </div>
-                <div className="flex gap-1 items-center" title="Capacity">
-                  <IoPersonAdd />
-                  {room?.capacity}
-                </div>
-               </div>
               </div>
             </div>
             <div className="flex flex-wrap items-center px-4 py-2">
@@ -130,12 +147,16 @@ export const RoomGrid = ({ data }) => {
 
             <div className="absolute bg-primary/50 w-full p-2 flex gap-2">
               <TbAirConditioning size={24} />
-               {room?.airConditionerCleanDate ? (
- <span className="italic text-sm">({getFormattedAgoText(room?.airConditionerCleanDate || '')})</span>
-               ) : 'N/A'}
-              
-                           
+              {room?.airConditionerCleanDate ? (
+                <span className="italic text-sm">
+                  ({getFormattedAgoText(room?.airConditionerCleanDate || "")})
+                </span>
+              ) : (
+                "N/A"
+              )}
             </div>
+
+            {/* Confirmation Modal */}
           </div>
         ))}
       </div>

@@ -9,6 +9,7 @@ import AddPropertyForm from "./AddPropertyForm";
 import { MdSmsFailed } from "react-icons/md";
 import { BiTrash } from "react-icons/bi";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function BookingForm({
   users,
@@ -78,6 +79,8 @@ export default function BookingForm({
 
   useEffect(() => {
     if (state?.errors || state?.success) {
+      const notify = () => toast(state.message);
+      notify();
       setFiles([]);
       router.refresh()
     }
@@ -89,14 +92,42 @@ export default function BookingForm({
       className="grid gap-4 max-w-2xl p-4 mt-4 bg-white shadow rounded-xl"
     >
       {state?.success && (
-        <div className="text-sm flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-green-500 text-primary">
-          <MdSmsFailed size={20} /> {state?.message}
-        </div>
+      <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(79.2% 0.209 151.711)",
+                    color: "#fff",
+                  },
+                }}
+              />
       )}
       {state?.errors && (
-        <div className="text-sm flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-red-500 text-primary">
-          <MdSmsFailed size={20} /> Failed to add room!
-        </div>
+        <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />
       )}
       <h2 className="text-xl font-semibold">Create Booking</h2>
 

@@ -1,8 +1,5 @@
 "use client";
-import { MdChat, MdNotifications } from "react-icons/md";
-import { FaEarthAmericas } from "react-icons/fa6";
 import { usePathname } from "next/navigation";
-import SearchCompoenent from "@/components/SearchComponent";
 import Link from "next/link";
 import { IoMdMenu } from "react-icons/io";
 import { useState } from "react";
@@ -24,7 +21,7 @@ export const Navbar = ({ session, user, navigation}) => {
   let name;
 
   return (
-    <div className="bg-primary py-4 px-4 w-full max-sm:block flex justify-between items-center max-md:sticky top-0 z-30">
+    <div className=" shadow-md bg-primary py-4 px-4 w-full max-sm:block flex justify-between items-center max-md:sticky top-0 z-30">
       <div className="max-sm:mb-2 flex gap-4 items-center">
         <button
           className="lg:hidden"
@@ -55,18 +52,7 @@ export const Navbar = ({ session, user, navigation}) => {
           })}
         </div>
       </div>
-      {/* <div className="flex gap-4 items-center ">
-        <SearchCompoenent placeHolder="Search..." linkPage={pathName} />
-        <div className="cursor-pointer">
-          <MdChat size={20} />
-        </div>
-        <div className="cursor-pointer">
-          <MdNotifications size={20} />
-        </div>
-        <div className="cursor-pointer">
-          <FaEarthAmericas size={18} />
-        </div>
-      </div> */}
+
       <div className="lg:hidden">
         <SideBarMobile
           navigation={navigation}

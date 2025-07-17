@@ -42,12 +42,14 @@ export default function RoomSingleView({ room }) {
               {room?.imageUrls && room?.imageUrls.length > 0 ? (
                 formData?.imageUrls.map((image, index) => (
                   <div
-                    className={`${index === 0 ? "col-span-2" : ""
-                      } overflow-hidden shadow-md relative aspect-square rounded-md bg-slate-500 group`}
+                    className={`${
+                      index === 0 ? "col-span-2" : ""
+                    } overflow-hidden shadow-md relative aspect-square rounded-md bg-slate-500 group`}
                     key={index}
                   >
                     <Image
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       alt={`Image ${index}`}
                       className="rounded-md object-cover transition-opacity duration-300 group-hover:opacity-25"
                       src={`${image}`}
@@ -78,11 +80,13 @@ export default function RoomSingleView({ room }) {
 
           {image && (
             <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
-              <div className="w-full max-w-full h-[80vh]">
+              <div className="w-full max-w-full h-[80vh] relative">
                 <Image
+                loading="lazy"
                   src={image}
                   alt="Image view"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-contain rounded-md relative w-full"
                 />
                 <button
@@ -98,76 +102,75 @@ export default function RoomSingleView({ room }) {
 
           <div className="space-y-4 w-full rounded-lg">
             <div className="space-y-4 w-full p-4 bg-primary rounded-lg shadow-lg">
-              <h1 className="font-bold text-lg">Room number: {formData?.roomName}</h1><div className="w-full flex gap-2">
-                            <TbAirConditioning size={24} />
-                             {room?.airConditionerCleanDate ? (
-               <span className="italic text-sm">({getFormattedAgoText(room?.airConditionerCleanDate || '')})</span>
-                             ) : 'N/A'}
-                            
-                                         
-                          </div>
+              <h1 className="font-bold text-lg">
+                Room number: {formData?.roomName}
+              </h1>
+              <div className="w-full flex gap-2">
+                <TbAirConditioning size={24} />
+                {room?.airConditionerCleanDate ? (
+                  <span className="italic text-sm">
+                    ({getFormattedAgoText(room?.airConditionerCleanDate || "")})
+                  </span>
+                ) : (
+                  "N/A"
+                )}
+              </div>
               <div className="space-y-4">
                 <div className="flex justify-between gap-4">
-
                   <div className="flex gap-1 items-center">
-                    <label className="block font-medium"><FaStairs /></label>
+                    <label className="block font-medium">
+                      <FaStairs />
+                    </label>
                     <p className="">{formData?.floor} floor</p>
                   </div>
 
                   <div className="flex gap-1 items-center">
-                    <label className="block font-medium"><BsDoorClosed /></label>
+                    <label className="block font-medium">
+                      <BsDoorClosed />
+                    </label>
                     <p className="">{formData?.category.category}</p>
                   </div>
-
-
                 </div>
 
                 <div className="flex justify-between gap-4">
-
-
-
                   <div className="flex gap-1 items-center">
-                    <label className="block font-medium"><MdOutlineReduceCapacity /></label>
+                    <label className="block font-medium">
+                      <MdOutlineReduceCapacity />
+                    </label>
                     <p className="">{formData?.capacity}</p>
                   </div>
 
                   <div className="flex gap-1 items-center">
-                    <label className="block font-medium"><IoMdPricetags /></label>
+                    <label className="block font-medium">
+                      <IoMdPricetags />
+                    </label>
                     <p className="">{formData?.price}$</p>
                   </div>
-
                 </div>
-
               </div>
-
-
             </div>
 
-             <div className="bg-primary w-full rounded-lg border p-4 border-secondary shadow-lg">
-            <h1 className="text-lg font-bold mb-2">Product Properties</h1>
-            <span className="xs italic">*Note: Room properties</span>
+            <div className="bg-primary w-full rounded-lg border p-4 border-secondary shadow-lg">
+              <h1 className="text-lg font-bold mb-2">Product Properties</h1>
+              <span className="xs italic">*Note: Room properties</span>
 
-            <div className="flex flex-wrap gap-4 mt-2">
-              {formData?.properties.map((item) => (
-                <div
-                  key={item.value}
-                  className="flex gap-2 border p-2 rounded-md"
-                >
-                  <h1 className="font-bold">{item.part}:</h1>
-                  <p>{item.value}</p>
-                </div>
-              ))}
+              <div className="flex flex-wrap gap-4 mt-2">
+                {formData?.properties.map((item) => (
+                  <div
+                    key={item.value}
+                    className="flex gap-2 border p-2 rounded-md"
+                  >
+                    <h1 className="font-bold">{item.part}:</h1>
+                    <p>{item.value}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-4 bg-primary w-full rounded-lg border p-4">
+              <label className="block font-bold ">About this room</label>
+              <p className="mt-4">{description}</p>
             </div>
           </div>
-             <div className="mt-4">
-            <label className="block font-bold ">About this room</label>
-            <p className="mt-4">{description}</p>
-          </div>
-
-         
-          </div>
-
-         
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { useActionState, useEffect, useState } from "react";
 import ChangPasswordForm from "./ChangPasswordForm";
 import { formatDate } from "@/utils/formatDate";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function UserForm({ userId, userData, session }) {
   const [formData, setFormData] = useState({
@@ -29,6 +30,8 @@ export default function UserForm({ userId, userData, session }) {
   const router = useRouter();
   useEffect(() => {
     if (state?.success) {
+      const notify = () => toast(state.message);
+      notify();
       router.refresh();
     }
   }, [state]);
@@ -369,19 +372,43 @@ export default function UserForm({ userId, userData, session }) {
 
             {/* Status Messages */}
             {state?.success && (
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-lg font-medium text-green-700 text-center">
-                  User {userId ? "updated" : "created"} successfully!
-                </p>
-              </div>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(79.2% 0.209 151.711)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
 
             {state?.error && !state?.errors && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-lg font-medium text-red-700 text-center">
-                  {state.error}
-                </p>
-              </div>
+             <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
           </div>
         </form>

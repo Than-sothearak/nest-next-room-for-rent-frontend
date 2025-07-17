@@ -20,27 +20,25 @@ const ServiceTable = ({
   serviceCount,
   currentPage,
   itemPerPage,
-  query
+  query,
 }) => {
-  const searchParams = useSearchParams()
-  const [loadingId, setLoadingId] = useState(null);        // holds service._id
+  const searchParams = useSearchParams();
+  const [loadingId, setLoadingId] = useState(null); // holds service._id
   const [loadingAction, setLoadingAction] = useState(null); // "accept" or "cancel"
 
   const [isClick, setIsClick] = useState("Requesting");
   const [direction, setDirection] = useState("descending");
 
   const statuses = ["pending", "accepted", "cancelled"];
-  const [status, setStatus] = useState("")
+  const [status, setStatus] = useState("");
 
   const handleSort = (e) => {
-
     setStatus((prev) => {
-
       const currentIndex = statuses.indexOf(prev);
       const nextIndex = (currentIndex + 1) % statuses.length;
       const params = new URLSearchParams(searchParams.toString());
       params.set("sortDirection", direction);
-      params.set("sortKey", status)
+      params.set("sortKey", status);
       return statuses[nextIndex];
     });
   };
@@ -50,7 +48,9 @@ const ServiceTable = ({
   // Update router query when status changes
   useEffect(() => {
     if (status) {
-      router.push(`/dashboard/services?sortKey=${status}&sortDate=date&sortDirection=descending`);
+      router.push(
+        `/dashboard/services?sortKey=${status}&sortDate=date&sortDirection=descending`
+      );
     }
   }, [status]);
 
@@ -61,9 +61,7 @@ const ServiceTable = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("sortDirection", direction);
     // params.set("sortKey", status)
-
   };
-
 
   function handleClick(item) {
     setIsClick(item);
@@ -88,7 +86,6 @@ const ServiceTable = ({
     if (response.error) {
       console.error("Error accepting service:", response.error);
     } else {
-
       console.log("Service accepted:", response.message);
       setLoadingId(null);
       setLoadingAction(null);
@@ -124,12 +121,13 @@ const ServiceTable = ({
         {buttonName.map((item) => (
           <div key={item.name} className="">
             <span
-              className={`${serviceCount?.find(
-                (service) => service.status?.toLowerCase() === item?.value
-              ).count > 0
-                ? "bg-red-500"
-                : "hidden"
-                } absolute -top-4 right-0  text-white text-xs rounded-full w-6 h-6 flex items-center justify-center z-10`}
+              className={`${
+                serviceCount?.find(
+                  (service) => service.status?.toLowerCase() === item?.value
+                ).count > 0
+                  ? "bg-red-500"
+                  : "hidden"
+              } absolute -top-4 right-0  text-white text-xs rounded-full w-6 h-6 flex items-center justify-center z-10`}
             >
               {serviceCount.find(
                 (service) =>
@@ -137,29 +135,36 @@ const ServiceTable = ({
               )?.count || 0}
             </span>
             <Link
-              href={`/dashboard/services?sortKey=${item.name === "Requesting" ? 'requesting' : item.value.toLowerCase()}`}
+              href={`/dashboard/services?sortKey=${
+                item.name === "Requesting"
+                  ? "requesting"
+                  : item.value.toLowerCase()
+              }`}
               value={item.name}
               onClick={() => handleClick(item.name)}
               className="group"
-
             >
-              <div className={`${item.name === isClick ? "bg-blue-500 text-primary" : ""
-                } rounded-3xl p-4 z-0 transition-all duration-300 group-hover:scale-105`}>{item.name}
-                  
-                </div>
-          
-
+              <div
+                className={`${
+                  item.name === isClick ? "bg-blue-500 text-primary" : ""
+                } rounded-3xl p-4 z-0 transition-all duration-300 `}
+              >
+                {item.name}
+              </div>
             </Link>
-
           </div>
         ))}
       </div>
+
+      
       <div className="mt-8 overflow-x-auto">
         {isClick === "Requesting" && (
           <table className="min-w-[800px] w-full table-auto border rounded-lg shadow">
             <thead className="bg-gray-100 text-left">
               <tr className="p-4 border-b">
-                <th className="text-start p-2 inline-flex items-center gap-1 hover:underline">No</th>
+                <th className="text-start p-2 inline-flex items-center gap-1 hover:underline">
+                  No
+                </th>
                 <th className="text-start p-2 whitespace-nowrap ">Room</th>
                 <th className="text-start whitespace-nowrap">
                   <Link
@@ -167,15 +172,13 @@ const ServiceTable = ({
                     className="flex text-center items-center gap-2 rounded-md w-max"
                     onClick={handleSort}
                   >
-                    <p className="capitalize">{status ? status : 'Status'}</p><BiSortAlt2 size={16} />
-
+                    <p className="capitalize">{status ? status : "Status"}</p>
+                    <BiSortAlt2 size={16} />
                   </Link>
                 </th>
                 <th className="text-start p-2 whitespace-nowrap">Guest name</th>
                 <th className="text-start p-2 whitespace-nowrap">Phone</th>
-                <th className="text-start p-2 whitespace-nowrap">
-                  Requesting
-                </th>
+                <th className="text-start p-2 whitespace-nowrap">Requesting</th>
 
                 <th className="text-start px-2 whitespace-nowrap">
                   <Link
@@ -183,8 +186,8 @@ const ServiceTable = ({
                     className="flex text-center items-center gap-2 rounded-md w-max"
                     onClick={() => handleSortDate()}
                   >
-                    <p> Schedule</p><BiSortAlt2 size={16} />
-
+                    <p> Schedule</p>
+                    <BiSortAlt2 size={16} />
                   </Link>
                 </th>
                 <th className="text-start px-2 whitespace-nowrap">Action</th>
@@ -202,23 +205,32 @@ const ServiceTable = ({
                     <p>{Number(currentPage - 1) * itemPerPage + index + 1}</p>
                   </td>
 
-                  <td className="font-bold px-2 whitespace-nowrap">{service.roomId.roomName}</td>
+                  <td className="font-bold px-2 whitespace-nowrap">
+                    {service.roomId.roomName}
+                  </td>
                   <td className={``}>
                     <p
                       className={` 
-                    ${service.status === "pending"
-                          ? "bg-amber-200 text-amber-700 "
-                          : service.status === "accepted"
-                            ? "bg-green-200 text-green-700"
-                            : service.status === "completed"
-                              ? "bg-green-300 text-green-700"
-                              : service.status === "marked as read" ? "bg-green-300 text-green-700" : 'bg-red-200 text-red-700'
-                        } capitalize px-2 w-max py-1 rounded `}
+                    ${
+                      service.status === "pending"
+                        ? "bg-amber-200 text-amber-700 "
+                        : service.status === "accepted"
+                        ? "bg-green-200 text-green-700"
+                        : service.status === "completed"
+                        ? "bg-green-300 text-green-700"
+                        : service.status === "marked as read"
+                        ? "bg-green-300 text-green-700"
+                        : "bg-red-200 text-red-700"
+                    } capitalize px-2 w-max py-1 rounded `}
                     >
-                      {service.status === "marked as read" ? "Completed" : service.status}
+                      {service.status === "marked as read"
+                        ? "Completed"
+                        : service.status}
                     </p>
                   </td>
-                  <td className="px-2 whitespace-nowrap">{service.userId.username}</td>
+                  <td className="px-2 whitespace-nowrap">
+                    {service.userId.username}
+                  </td>
                   <td className="px-2">{service.userId.phone}</td>
                   <td className="px-2 whitespace-nowrap">
                     {service.serviceType}
@@ -229,8 +241,8 @@ const ServiceTable = ({
                       {service.status === "cancelled"
                         ? formatDateTime(service.startDate)
                         : formatDateOnly(service.startDate) +
-                        "-Time: " +
-                        formatTo12Hour(service.startTime)}
+                          "-Time: " +
+                          formatTo12Hour(service.startTime)}
                     </p>
                   </td>
                   <td className="">
@@ -238,22 +250,31 @@ const ServiceTable = ({
                       <div className="flex gap-2">
                         <div className="flex gap-2 flex-wrap py-1">
                           <button
-                            onClick={() => handleAccept(service._id, service.userId.telegramChatId)}
+                            onClick={() =>
+                              handleAccept(
+                                service._id,
+                                service.userId.telegramChatId
+                              )
+                            }
                             type="button"
-                            className={`px-4 rounded-full text-white transition ${loadingId === service._id && loadingAction === "accept"
-                              ? "bg-green-400 opacity-50 cursor-wait"
-                              : "bg-green-400 hover:bg-green-500"
-                              }`}
+                            className={`px-4 rounded-full text-white transition ${
+                              loadingId === service._id &&
+                              loadingAction === "accept"
+                                ? "bg-green-400 opacity-50 cursor-wait"
+                                : "bg-green-400 hover:bg-green-500"
+                            }`}
                           >
                             Accept
                           </button>
                           <button
                             onClick={() => handleCancel(service._id)}
                             type="button"
-                            className={`px-4 rounded-full text-white transition ${loadingId === service._id && loadingAction === "cancel"
-                              ? "bg-red-400 opacity-50 cursor-wait"
-                              : "bg-red-400 hover:bg-red-500"
-                              }`}
+                            className={`px-4 rounded-full text-white transition ${
+                              loadingId === service._id &&
+                              loadingAction === "cancel"
+                                ? "bg-red-400 opacity-50 cursor-wait"
+                                : "bg-red-400 hover:bg-red-500"
+                            }`}
                           >
                             Cancel
                           </button>
@@ -280,23 +301,19 @@ const ServiceTable = ({
                 <th className="text-start p-2 whitespace-nowrap">Room</th>
                 <th className="text-start p-2 whitespace-nowrap">Guest name</th>
                 <th className="text-start p-2 whitespace-nowrap">Phone</th>
-                <th className="text-start p-2 whitespace-nowrap">
-                  Processing
-                </th>
+                <th className="text-start p-2 whitespace-nowrap">Processing</th>
                 <th className="text-start px-2 whitespace-nowrap">
-
                   <p>Status</p>
-
-
                 </th>
                 <th className="text-start px-2 whitespace-nowrap">
                   <Link
-                    href={`/dashboard/services?sortKey=accepted${query ? `&query=${query}` : ""}&sortDate=date&sortDirection=${direction}`}
+                    href={`/dashboard/services?sortKey=accepted${
+                      query ? `&query=${query}` : ""
+                    }&sortDate=date&sortDirection=${direction}`}
                     className="flex text-center items-center gap-2 px-2 py-1 border rounded-md w-max"
                     onClick={() => handleSortDate()}
                   >
                     <p>Schedule</p>
-
                   </Link>
                 </th>
                 <th className="text-start p-2 whitespace-nowrap">Action</th>
@@ -316,7 +333,9 @@ const ServiceTable = ({
                     </td>
 
                     <td className="font-bold">{service.roomId.roomName}</td>
-                    <td className="p-2 whitespace-nowrap">{service.userId.username}</td>
+                    <td className="p-2 whitespace-nowrap">
+                      {service.userId.username}
+                    </td>
                     <td className="">{service.userId.phone}</td>
                     <td className="font-bold px-2 whitespace-nowrap">
                       {service.serviceType}
@@ -338,7 +357,9 @@ const ServiceTable = ({
                       {service.status === "accepted" ? (
                         <div className="flex gap-2">
                           <button
-                            onClick={() => handleCompleted(service._id, service.roomId._id)}
+                            onClick={() =>
+                              handleCompleted(service._id, service.roomId._id)
+                            }
                             type="button"
                             className="bg-green-400 hover:bg-green-500 rounded-full text-white px-2 whitespace-nowrap"
                           >
@@ -346,32 +367,35 @@ const ServiceTable = ({
                           </button>
                         </div>
                       ) : (
-                        <></>
+            <></>
                       )}
                     </td>
                     <td className="px-2 whitespace-nowrap">
                       {formatDateTime(service.createdAt)}
                     </td>
                   </tr>
-                ))) : (<tr>
-                  <td colSpan="8" className="text-primary text-center py-4">
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-4">
                     No processing services found.
                   </td>
-                </tr>)}
+                </tr>
+              )}
             </tbody>
           </table>
         )}
 
         {isClick === "Completed" && (
-          <table className="w-full bg-slate-500">
-            <thead className="bg-primary text-tertiary">
+          <table className="min-w-[800px] w-full table-auto border rounded-lg shadow">
+            <thead className="bg-gray-100 text-left">
               <tr className="p-4 border-b">
-                <th className="text-start py-4">No</th>
-                <th className="text-start px-2 whitespace-nowrap">Room</th>
-                <th className="text-start px-2 whitespace-nowrap">Guest</th>
-                <th className="text-start px-2 whitespace-nowrap">Completed</th>
-                <th className="text-start px-2 whitespace-nowrap">Schedule</th>
-                <th className="text-start px-2 whitespace-nowrap">Status</th>
+                <th className="text-start p-2">No</th>
+                <th className="text-start p-2 whitespace-nowrap">Room</th>
+                <th className="text-start p-2 whitespace-nowrap">Guest</th>
+                <th className="text-start p-2 whitespace-nowrap">Completed</th>
+                <th className="text-start p-2 whitespace-nowrap">Schedule</th>
+                <th className="text-start p-2 whitespace-nowrap">Status</th>
 
                 <th className="text-start">CompletedAt</th>
 
@@ -384,7 +408,7 @@ const ServiceTable = ({
                   <tr
                     title={service.note}
                     key={service._id || index}
-                    className=" odd:bg-green-100 even:bg-green-200 text-gray-900 dark:odd:bg-slate-200 dark:even:bg-gray-100 dark:text-tertiary"
+                    className="border-b"
                   >
                     <td className="p-2">
                       <p>{Number(currentPage - 1) * itemPerPage + index + 1}</p>
@@ -446,7 +470,6 @@ const ServiceTable = ({
           </table>
         )}
       </div>
-
     </div>
   );
 };

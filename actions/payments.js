@@ -31,9 +31,9 @@ export async function getPayments(query, page, sortKey, sortDate, sortDirection,
 
         // }
 
-        // if (sortDate === "date") {
-        //     sort = { startDate: sortDirection === "descending" ? -1 : 1 };
-        // }
+        if (sortDate === "date") {
+            sort = { paidAt: sortDirection === "descending" ? -1 : 1 };
+        }
         // if (sortKey === "price") {
         //     sort = { totalAmount: sortDirection === "descending" ? -1 : 1 };
         // }

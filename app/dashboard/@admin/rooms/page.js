@@ -42,6 +42,7 @@ const roomPage = async ({ searchParams }) => {
         </Link>
       </div>
       <RoomGrid
+      session={session}
       data={JSON.parse(JSON.stringify(rooms))} 
       pageName="admin/rooms"/>
       {/* <TableComponent

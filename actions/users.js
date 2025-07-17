@@ -6,7 +6,6 @@ import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { resolve } from "styled-jsx/css";
 
 await mongoDb();
 
@@ -162,6 +161,7 @@ export async function updateUser(userId, prevState, formData) {
   }
 
   try {
+
     const user = await User.findById(userId);
     if (!user) {
       return { error: "User not found", success: false };
@@ -225,16 +225,10 @@ export async function updateUser(userId, prevState, formData) {
       userData.password = await bcrypt.hash(password, salt);
     }
 
- 
-
     await User.updateOne({ _id: userId }, userData);
-    return {success: "User successfully updated"}
+    return {success: "User successfully updated", message:  "User successfully updated"}
   } catch (err) {
-    console.error("Error updating user:", err);
-    return {
-      error: "Failed to update user due to a server error",
-      success: false,
-    };
+    console.log("Error updating user:", err);
   }
 
 

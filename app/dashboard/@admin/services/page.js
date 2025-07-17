@@ -36,18 +36,13 @@ const servicePage = async ({searchParams}) => {
   return (
     <div className='p-4 bg-primary mt-4 rounded-lg'>
          <div className="flex justify-between items-center gap-4">
-        <div>
+        <div className='max-sm:w-full'>
           <SearchCompoenent
             placeHolder="Search for service type..."
             linkPage="/dashboard/services"
           />
         </div>
-        <Link
-          href="/dashboard/booking/add"
-          className="bg-blue-500 text-secondarytext px-2 py-1 text-center rounded-md hover:bg-blue-900 text-sm"
-        >
-          Add new
-        </Link>
+   
       </div>
       <ServiceList
       

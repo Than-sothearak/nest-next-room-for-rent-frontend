@@ -211,17 +211,17 @@ export async function updateRoom(roomId, prevState, formData) {
     };
 
     const errors = validateProductFields(roomData);
-    if (Object.keys(errors).length > 0) return { errors };
+    if (Object.keys(errors).length > 0) return { errors: errors, message: "Failed to update room please try again" };
 
     // Update the product
     await Room.updateOne({ _id: roomId }, roomData);
 
     revalidatePath(`/dashboard/rooms/${roomId}`);
         console.log("Room updated!");
-    return { success: true, message: "Product update successfully!" };
+    return { success: true, message: "Room update successfully!" };
   } catch (err) {
     console.error("Error updating room:", err);
-    return { error: "Failed to update product due to a server error" };
+    return { error: "Failed to update room due to a server error" };
   }
 }
 
@@ -258,5 +258,5 @@ function validateProductFields({
   if (!category) errors.category = "Category is required";
   if (!price) errors.price = "Price is required";
 
-  return errors;
+  return errors ;
 }

@@ -31,7 +31,7 @@ const session = await auth();
         let errors = {};
         if (!oldPassword) errors.oldPassword = "Old password is required";
         if (!newPassword) errors.newPassword = "New password is required";
-        if (!newPassword.trim() || newPassword.length < 6) {
+        if (newPassword.length < 6) {
           errors.newPassword = "Your password is too short. Please use at least 6 characters.";
       }
       
@@ -48,10 +48,17 @@ const session = await auth();
         const newPasswordHash = await hashPassowrd(newPassword)
         await User.updateOne({email: user.email}, {$set: {password: newPasswordHash}})
         
+        return {success: "Password successfully updated", message:  "Password successfully updated"}
+
 
   } catch (err) {
   console.log(err)
+  return {
+      errors: "Failed to update password due to a server error",
+      success: false,
+      message:  "Failed to update password due to a server errorr"
+    };
   }
-  redirect("/dashboard/users/"+userId);
+
      
 }

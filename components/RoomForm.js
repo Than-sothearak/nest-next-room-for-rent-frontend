@@ -1,14 +1,18 @@
 "use client";
-import { BiCheck, BiTrash } from "react-icons/bi";
+import { BiTrash } from "react-icons/bi";
 import ChooseImageFile from "./ChooseImageFile";
 import { useActionState, useEffect, useState } from "react";
 import ProductPropertyForm from "./ProductPropertyForm"; // You can rename this later if desired
 import { addRoom, updateRoom } from "@/actions/rooms"; // Adjust import paths & function names accordingly
 import Image from "next/image";
-import { MdSmsFailed } from "react-icons/md";
 import { TbAirConditioning } from "react-icons/tb";
 import { GrHostMaintenance } from "react-icons/gr";
-import { formatDate, getFormattedAgoText, getMonthsAgo } from "@/utils/formatDate";
+import {
+  formatDate,
+  getFormattedAgoText,
+
+} from "@/utils/formatDate";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function RoomForm({
   categories, // e.g. Room Types, Buildings
@@ -24,7 +28,7 @@ export default function RoomForm({
     roomName: room?.roomName || "", // Changed from brandName/c
     category: room?.category || "",
     airConditionerCleanDate: room?.airConditionerCleanDate || "",
-    roomMaintenanceDate: room?.roomMaintenanceDate || '',
+    roomMaintenanceDate: room?.roomMaintenanceDate || "",
     floor: room?.floor || "",
     capacity: room?.capacity || "",
     description: description,
@@ -97,6 +101,8 @@ export default function RoomForm({
 
   useEffect(() => {
     if (state?.errors || state?.success) {
+      const notify = () => toast(state.message);
+      notify();
       setFiles([]);
     }
   }, [state]);
@@ -107,14 +113,45 @@ export default function RoomForm({
         <div className="flex max-lg:flex-wrap gap-4">
           <div className="space-y-4 w-full bg-primary rounded-lg">
             {state?.success && (
-              <div className="te flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-green-500 text-primary">
-                <MdSmsFailed size={20} /> {state?.message}
-              </div>
+              // <div className="te flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-green-500 text-primary">
+              //   <MdSmsFailed size={20} /> {state?.message}
+              // </div>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(79.2% 0.209 151.711)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
             {state?.errors && (
-              <div className="te flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-red-500 text-primary">
-                <MdSmsFailed size={20} /> Failed to add room!
-              </div>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
             <div className="space-y-4 w-full p-4 bg-primary rounded-lg">
               <h1 className="font-bold text-lg">Basic Information</h1>
@@ -316,8 +353,12 @@ export default function RoomForm({
                   <TbAirConditioning size={24} />
                   <span>Air conditioner last cleaned </span>
                   {room?.airConditionerCleanDate ? (
-                    <span className="italic text-sm">({getFormattedAgoText(room?.airConditionerCleanDate)})</span>
-                  ): <span className="italic text-sm">{`(N/a)`}</span>}
+                    <span className="italic text-sm">
+                      ({getFormattedAgoText(room?.airConditionerCleanDate)})
+                    </span>
+                  ) : (
+                    <span className="italic text-sm">{`(N/a)`}</span>
+                  )}
                 </label>
                 <input
                   onChange={handleChange}
@@ -333,9 +374,13 @@ export default function RoomForm({
                 <label className="font-medium flex gap-2 items-center">
                   <GrHostMaintenance size={24} />
                   <span>Room maintenance date</span>
-                   {room?.roomMaintenanceDate ? (
-                    <span className="italic text-sm">({getFormattedAgoText(room?.roomMaintenanceDate)})</span>
-                  ): <span className="italic text-sm">{`(N/a)`}</span>}
+                  {room?.roomMaintenanceDate ? (
+                    <span className="italic text-sm">
+                      ({getFormattedAgoText(room?.roomMaintenanceDate)})
+                    </span>
+                  ) : (
+                    <span className="italic text-sm">{`(N/a)`}</span>
+                  )}
                 </label>
                 <input
                   onChange={handleChange}
@@ -369,6 +414,7 @@ export default function RoomForm({
                   >
                     <Image
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       alt={`Image ${index}`}
                       className="rounded-md object-cover transition-opacity duration-300 group-hover:opacity-25"
                       src={`${image}`}

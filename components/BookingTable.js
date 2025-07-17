@@ -97,7 +97,7 @@ const BookingTable = ({
               </Link>
             </th>
 
-            <th className="text-center">Paid</th>
+            <th className="text-start px-4">Paid</th>
 
             <th className="">
               <Link
@@ -138,7 +138,7 @@ const BookingTable = ({
                 {formatDate(item.startDate)}-{formatDate(item.dueDate)}
               </td>
 
-              <td className="text-center">
+              <td className="p-0">
                 <ToggleToPaid item={item} />
               </td>
 

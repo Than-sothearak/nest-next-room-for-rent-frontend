@@ -62,12 +62,12 @@ export default async function ServicePage({ searchParams }) {
               <th className="p-2">
                 <Link
                   href={{
-                    pathname: "/dashboard/services",
+                    pathname: "/dashboard/payments",
                     query: {
                       query,
                       page,
                       sortKey,
-                      sortDate: "paidAt",
+                      sortDate: "date",
                       sortDirection: nextDirection,
                     },
                   }}
@@ -85,8 +85,8 @@ export default async function ServicePage({ searchParams }) {
           </thead>
           <tbody>
             {payments.map((p) => {
-              const extra = Array.isArray(p.properties)
-                ? p.properties.reduce((sum, it) => sum + Number(it.price), 0)
+              const extra = Array.isArray(p.services)
+                ? p.services.reduce((sum, it) => sum + Number(it.price), 0)
                 : 0;
               const total = p.amount + extra;
 
@@ -95,7 +95,7 @@ export default async function ServicePage({ searchParams }) {
                   <td className="p-2 whitespace-nowrap">
                     {formatDate(p.startDate)} – {formatDate(p.dueDate)}
                   </td>
-                  <td className="p-2">
+                  <td className="p-2" title={`${p.note}: ${p.method}`}>
                     <span
                       className={`px-2 py-1 rounded ${
                         p.status === "paid"

@@ -18,7 +18,7 @@ export default async function categoryPage ({ searchParams }) {
     { header: "Created At", accessor: "createdAt" },
   ];
 
-    return <div className="overflow-x-auto p-4 bg-primary mt-4 rounded-lg">
+    return <div className="max-lg:h-screen overflow-x-auto p-4 bg-primary mt-4 rounded-lg">
     <div className="flex justify-between items-center gap-4">
     <div> <SearchCompoenent placeHolder="Search for category..." linkPage="/dashboard/categories"/></div>
     <Link href="/dashboard/categories/add" className="bg-blue-500 px-2 py-1 rounded-md hover:bg-blue-900 text-sm text-center text-secondarytext">Add new</Link>

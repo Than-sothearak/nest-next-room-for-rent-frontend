@@ -3,7 +3,6 @@
 import { auth } from "@/auth";
 import { Booking } from "@/models/Booking";
 import { Category } from "@/models/Category";
-import { Product } from "@/models/Product";
 import { Room } from "@/models/Room";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
@@ -12,6 +11,8 @@ import { revalidatePath } from "next/cache";
 
 export async function deleteById(id) {
   await mongoDb();
+
+
 const session = await auth();
   if (!session?.user?.isAdmin) {
     return console.log("Access denied! you are not admin");
@@ -21,11 +22,11 @@ const session = await auth();
       return { error: "ID is required" };
     }
 
-    const [user, category, product, booking] = await Promise.all([
+    const [user, category, booking, room] = await Promise.all([
       User.findById(id),
       Category.findById(id),
-      Product.findById(id),
-       Booking.findById(id),
+      Booking.findById(id),
+      Room.findById(id)
     ]);
 
     if (user) {
@@ -46,11 +47,11 @@ const session = await auth();
       return { success: "Category deleted successfully" };
     }
 
-    if (product) {
-      let productImages = product.imageUrls
+    if (room) {
+      let roomImages = room.imageUrls
     
-      if (productImages && productImages.length > 0) {
-        for ( const image of productImages) {
+      if (roomImages && roomImages.length > 0) {
+        for ( const image of roomImages) {
            const oldKey = image.split("/").pop()
            if (oldKey) {
             await deleteFileFromS3(oldKey)
@@ -58,9 +59,9 @@ const session = await auth();
            }
         }
       }
-      await Product.deleteOne({ _id: id });
-      revalidatePath("/dashboard/products");
-      return { success: "Product deleted successfully" };
+      await Room.deleteOne({ _id: id });
+      revalidatePath("/dashboard/rooms");
+      return { success: "room deleted successfully" };
     }
 
       if (booking) {

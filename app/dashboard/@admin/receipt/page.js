@@ -12,7 +12,7 @@ export default function ReceiptPage() {
   if (!receipt) return <p>Loading receipt...</p>;
 
   return (
-    <div className="max-w-md mx-auto my-10 bg-white p-6 rounded shadow text-sm font-mono">
+    <div className="max-lg:h-screen max-w-md mx-auto my-10 bg-white p-6 rounded shadow text-sm font-mono">
       <div className="text-center border-b pb-4 mb-4">
         <h2>Welcome to my shop</h2>
         <h1 className="text-xl font-bold">Receipt</h1>

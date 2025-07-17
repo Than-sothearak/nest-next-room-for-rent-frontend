@@ -53,7 +53,7 @@ const ButtonEditAndCancel = ({ link, id,pending, session }) => {
           onClick={() => setShowConfirmation(true)}
           className="bg-red-500 text-secondarytext px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
         >
-          Cancel
+          Delete
         </button>
       </div>
 
