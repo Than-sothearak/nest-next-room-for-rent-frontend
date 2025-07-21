@@ -2,7 +2,7 @@
 import { useState } from "react";
 import SideBarMain from "./SideBarMain";
 
-const SideBarClient = ({ session, user, navigation}) => {
+const SideBarClient = ({ session, user, navigation, servicesCount}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   function handleClick() {
@@ -14,6 +14,7 @@ const SideBarClient = ({ session, user, navigation}) => {
       {/*small side */}
 
       <SideBarMain
+      servicesCount={servicesCount}
       navigation={navigation}
         currentUser={user}
         handleClick={handleClick}
@@ -21,13 +22,7 @@ const SideBarClient = ({ session, user, navigation}) => {
         isOpen={isOpen}
       />
 
-      {/* Overlay (closes sidebar when clicked) */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 lg:hidden z-20"
-          onClick={() => setIsOpen(false)}
-        />
-      )}
+
     </>
   );
 };

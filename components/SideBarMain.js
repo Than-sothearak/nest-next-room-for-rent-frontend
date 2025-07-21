@@ -13,7 +13,7 @@ import Image from "next/image";
 import ConnectTelegram from "./ButtonConnectTelegram";
 import { SidebarListMobile } from "./SidebarListMobile";
 
-const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) => {
+const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation,servicesCount }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -124,6 +124,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) 
 
       <div className={`mt-4 ${isCollapsed ? 'hidden' : 'w-full'}`}>
         <SidebarList
+        servicesCount={servicesCount}
           navList={navigation}
           handleClick={handleClick}
           isCollapsed={isCollapsed}

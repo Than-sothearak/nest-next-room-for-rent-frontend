@@ -3,10 +3,10 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { IoMdMenu } from "react-icons/io";
 import { useState } from "react";
-import SideBarMobile from "@/components/SideBarMain";
+import SideBarMain from "@/components/SideBarMain";
 
 
-export const Navbar = ({ session, user, navigation}) => {
+export const Navbar = ({ session, user, navigation, servicesCount}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   function handleClick() {
@@ -54,7 +54,8 @@ export const Navbar = ({ session, user, navigation}) => {
       </div>
 
       <div className="lg:hidden">
-        <SideBarMobile
+        <SideBarMain
+         servicesCount={servicesCount}
           navigation={navigation}
           currentUser={user}
           handleClick={handleClick}
