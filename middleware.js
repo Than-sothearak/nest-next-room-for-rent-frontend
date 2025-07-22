@@ -13,6 +13,7 @@ export async function middleware(req) {
     console.log("Login first.");
     return NextResponse.redirect(new URL("/login", req.url));
   }
+  console.log(pathname)
 
   // 🔐 Block admin access if not an admin
   if (!token?.isAdmin && pathname === "/dashboard/users") {
