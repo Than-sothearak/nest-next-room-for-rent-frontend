@@ -9,12 +9,12 @@ export const authConfig = {
   secret: process.env.AUTH_SECRET,
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-     const isLoggedIn = !!auth?.user;
-    const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-    const isOnLogin = nextUrl.pathname === '/login';
+    //  const isLoggedIn = !!auth?.user;
+    // const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+    // const isOnLogin = nextUrl.pathname === '/login';
 
-    if (!isLoggedIn && isOnDashboard) return false; // Redirect to /login
-    if (isLoggedIn && isOnLogin) return false; // Redirect to /dashboard or home
+    // if (!isLoggedIn && isOnDashboard) return false; // Redirect to /login
+    // if (isLoggedIn && isOnLogin) return false; // Redirect to /dashboard or home
 
       // // Allow access to all other pages (like home `/`) regardless of login
       return true;

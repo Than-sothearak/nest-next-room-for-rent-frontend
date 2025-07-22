@@ -6,36 +6,19 @@ export async function middleware(req) {
 
   const { pathname } = req.nextUrl;
 
-  const isAdminDashboard = pathname.startsWith("/dashboard/admin");
-  const isUserDashboard = pathname.startsWith("/dashboard/users");
-   const isOnDashboard = pathname.startsWith('/dashboard');
-  const isLogin = pathname === "/login";
+  const isOnDashboard = pathname.startsWith("/dashboard");
+  const isLogin = pathname === !token;
 
   if (!token && isOnDashboard) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
   
-      return NextResponse.redirect(new URL("/login", req.url));
-  }
-    
+  console.log("Token:", token);
   // 🔐 Block admin access if not an admin
-  if (isAdminDashboard && !token?.isAdmin) {
+  if (isLogin && !token?.isAdmin) {
     console.log("Unauthorized: Admin dashboard access denied.");
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (isUserDashboard) {
-  const pathParts = pathname.split("/"); // ['/dashboard', 'users', '12345']
-  const userIdInPath = pathParts[3];     // '12345'
-
-  // If it's /dashboard/users only (no ID), or ID is not the same as token.id, block it
-  const isOwnPage = userIdInPath === token?._id;
-
-  const isDetailPage = pathParts.length === 4; // Means it's /dashboard/users/:id
-
-  if (!token?.isAdmin && (!isDetailPage || !isOwnPage)) {
-    console.log("Unauthorized.");
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
-}
 
   // 🚫 Prevent logged-in users from accessing login page
   if (isLogin && token) {
@@ -43,7 +26,6 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  
   // ✅ Allow all other requests
   return NextResponse.next();
 }
