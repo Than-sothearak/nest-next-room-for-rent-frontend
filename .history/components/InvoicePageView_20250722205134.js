@@ -19,10 +19,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+     borderBottom: 1,
+  },
+  text: {
+   fontSize: 25,
+  
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 90,
+    height: 90,
+  },
+  signature: {
+    position: 'absolute',
+    width: 90,
+    height: 90,
+    top: -30,
+    left: 50,
+  
   },
   title: {
     textAlign: 'center',
@@ -74,7 +87,8 @@ const styles = StyleSheet.create({
   signatureSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 30,
+    marginTop: 90,
+    position: 'relative',
   },
   footer: {
     marginTop: 20,
@@ -83,30 +97,33 @@ const styles = StyleSheet.create({
   },
 });
 
-const InvoicePDF = ({ data }) => {
+const InvoicePageView = ({ data }) => {
   const getData = JSON.parse(JSON.stringify(data));
-  console.log(data)
+
   const items = [
     {
       no: 1,
-      type: `${getData.roomId?.category?.category} (${formatDate(getData.startDate)} - ${formatDate(getData.dueDate)})`,
-      room: getData.roomId?.roomName || '',  // Or get from populated room data
-      level: getData.roomId?.floor || '',
-      price: Number(getData.rent),
+      type: `${getData?.category} (${formatDate(getData.startDate)} - ${formatDate(getData.dueDate)})`,
+      room: getData?.roomId?.roomName || '',  // Or get from populated room data
+      level: getData?.roomId?.floor || '',
+      price: Number(getData.amount),
       qty: 1,
-      dff: 0,
-      amt: Number(getData.rent),
+      off: 0,
+      amt: Number(getData.amount),
     },
-    ...getData.properties.map((item, index) => ({
+    ...(Array.isArray(getData?.services)
+  ? getData?.services.map((item, index) => ({
       no: index + 2,
-      type: item.service,
+      type: item?.service,
       room: '',
       level: '',
-      price: Number(item.price),
+      price: Number(item?.price),
       qty: 1,
-      dff: 0,
-      amt: Number(item.price),
+      off: 0,
+      amt: Number(item?.price),
     }))
+  : [])
+
   ];
 
   const subtotal = items.reduce((sum, item) => sum + item.amt, 0);
@@ -119,18 +136,22 @@ const InvoicePDF = ({ data }) => {
       <Page style={styles.page} size="A4">
         {/* Header */}
         <View style={styles.header}>
-          <Image style={styles.logo} src="http://localhost:3000/images/logo.jpg"/>
+          <Image style={styles.logo} src="https://next-room-for-rent.vercel.app/images/logo.jpg"/>
           <View>
-            <Text>WBC LOGEMENT</Text>
-            <Text>Building Lot #1317, St. 2014, Phnom Penh, Cambodia</Text>
-            <Text>Tel: (855) 12 30 99 30</Text>
-            <Text>Email: wbc.logement@gmail.com</Text>
-            <Text>Website: www.wbclogement.com</Text>
+            <Text style={styles.text}>WBC LOGEMENT</Text>
+          
           </View>
           <View>
             <Text>No. {getData._id?.slice(-6)}</Text>
-            <Text>Date: {formatDate(getData.dueDate)}</Text>
+            <Text>Date: {formatDate(getData.startDate)}</Text>
           </View>
+        </View>
+
+        <View>
+  <Text>Building Lot #1317, St. 2014, Phnom Penh, Cambodia</Text>
+            <Text>Tel: (855) 12 30 99 30</Text>
+            <Text>Email: wbc.logement@gmail.com</Text>
+            <Text>Website: www.wbclogement.com</Text>
         </View>
 
         {/* Title */}
@@ -138,7 +159,7 @@ const InvoicePDF = ({ data }) => {
 
         {/* To Section */}
         <View style={styles.section}>
-          <Text>To: Atn {getData.userId?.username|| 'Tenant'}</Text>
+          <Text>To: {getData.userId?.username|| 'Tenant'}</Text>
           <Text>Tel: {getData.userId?.phone || '-'}</Text>
         </View>
 
@@ -151,7 +172,7 @@ const InvoicePDF = ({ data }) => {
             <Text style={[styles.tableCell, styles.level]}>Level</Text>
             <Text style={[styles.tableCell, styles.price]}>Unit Price</Text>
             <Text style={[styles.tableCell, styles.qty]}>Qty</Text>
-            <Text style={[styles.tableCell, styles.dff]}>DFF (%)</Text>
+            <Text style={[styles.tableCell, styles.dff]}>OFF (%)</Text>
             <Text style={[styles.tableCell, styles.amount]}>Amount</Text>
           </View>
 
@@ -163,7 +184,7 @@ const InvoicePDF = ({ data }) => {
               <Text style={[styles.tableCell, styles.level]}>{item.level}</Text>
               <Text style={[styles.tableCell, styles.price]}>${item.price.toFixed(2)}</Text>
               <Text style={[styles.tableCell, styles.qty]}>{item.qty}</Text>
-              <Text style={[styles.tableCell, styles.dff]}>{item.dff}</Text>
+              <Text style={[styles.tableCell, styles.dff]}>{item.off}</Text>
               <Text style={[styles.tableCell, styles.amount]}>${item.amt.toFixed(2)}</Text>
             </View>
           ))}
@@ -186,8 +207,9 @@ const InvoicePDF = ({ data }) => {
 
         {/* Signatures */}
         <View style={styles.signatureSection}>
-          <Text>Authorized Signature: __________________</Text>
-          <Text>Tenant's Signature: __________________</Text>
+          <View style={styles.signature}> <Image style={styles.signature} src="http://localhost:3000/images/signature.png"/></View>
+          <Text>Authorized Signature: _______Owner_name</Text>
+          <Text>Tenant' Signature: __________________</Text>
         </View>
 
         {/* Footer */}
@@ -198,4 +220,4 @@ const InvoicePDF = ({ data }) => {
 };
 
 
-export default InvoicePDF;
+export default InvoicePageView;
