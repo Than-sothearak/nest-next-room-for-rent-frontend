@@ -5,19 +5,12 @@ export const authConfig = {
    trustHost: true,
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      const isOnLogin = nextUrl.pathname === '/login';
+     const isLoggedIn = !!auth?.user;
+    const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+    const isOnLogin = nextUrl.pathname === '/login';
 
-      if (isOnDashboard) {
-        // Only allow access to /dashboard if logged in
-        return Response.redirect(new URL('/login', nextUrl));
-      }
-
-      if (isLoggedIn) {
-        // If already logged in, redirect away from login page (e.g., to /dashboard)
-        return Response.redirect(new URL('/dashboard', nextUrl));
-      }
+    if (!isLoggedIn && isOnDashboard) return false; // Redirect to /login
+    if (isLoggedIn && isOnLogin) return false; // Redirect to /dashboard or home
 
       // // Allow access to all other pages (like home `/`) regardless of login
       return true;
