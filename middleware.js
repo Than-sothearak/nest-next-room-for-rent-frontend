@@ -10,10 +10,11 @@ export async function middleware(req) {
   const isLogin = pathname.startsWith("/login");
 
   if (!token && isOnDashboard) {
-    console.log("Login first.");
+    console.log("You need to login first.");
     return NextResponse.redirect(new URL("/login", req.url));
   }
-  console.log(token.email)
+  
+  console.log(token?.email)
 
   // 🔐 Block admin access if not an admin
   if (!token?.isAdmin && pathname === "/dashboard/users") {
