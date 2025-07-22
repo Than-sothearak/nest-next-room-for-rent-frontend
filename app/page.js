@@ -12,7 +12,7 @@ export default async function Home() {
         className={`w-full lg:w-96 gap-4 text-center transition-all duration-700 ease-out transform flex flex-col max-md:min-h-screen max-md:justify-around `}
       >
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          Welcome to Logment
+          Welcome to Manegement System
         </h1>
         <div className="w-full flex justify-center">
           <Image
