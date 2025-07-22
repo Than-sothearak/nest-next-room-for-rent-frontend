@@ -276,7 +276,7 @@ const ServiceTable = ({
                                 : "bg-red-400 hover:bg-red-500"
                             }`}
                           >
-                            Cancel
+                            Cancel {service?.userId.telegramChatId}
                           </button>
                         </div>
                       </div>

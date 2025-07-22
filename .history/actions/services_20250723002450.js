@@ -164,9 +164,7 @@ export async function acceptService(serviceId, telegramChatId) {
 export async function cancelService(serviceId, telegramChatId) {
   const session = await auth();
   const admin = await User.findOne({ isAdmin: true });
- if (!telegramChatId) {
-  console.log("No telegram id")
- }
+console.log(telegramChatId)
   try {
     const service = await Service.findById(serviceId).populate("userId").populate("roomId");
     if (!service) {

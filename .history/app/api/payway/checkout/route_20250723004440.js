@@ -40,6 +40,15 @@ export async function POST(req) {
       timeZone: "Asia/Phnom_Penh",
     });
 
+       if (body?.bookingId) {
+      const booking = await Booking.findOne({_id: body?.bookingId})
+
+      booking.tran_id = result.status.tran_id
+      booking.save();
+
+    }
+
+
     const params = {
       req_time,
       merchant_id: MERCHANT_ID,
@@ -81,13 +90,7 @@ export async function POST(req) {
 
     const result = await response.json();
 
-    if (body?.bookingId) {
-      const booking = await Booking.findOne({_id: body?.bookingId})
-      booking.tran_id = result.status.tran_id
-      booking.save();
-
-    }
-
+ 
     if (!response.ok) {
       console.error("PayWay error:", result);
       return NextResponse.json({ error: result }, { status: 400 });

@@ -82,7 +82,8 @@ export async function POST(req) {
     const result = await response.json();
 
     if (body?.bookingId) {
-      const booking = await Booking.findOne({_id: body?.bookingId})
+      const booking = await Booking.findById(body?.bookingId)
+
       booking.tran_id = result.status.tran_id
       booking.save();
 

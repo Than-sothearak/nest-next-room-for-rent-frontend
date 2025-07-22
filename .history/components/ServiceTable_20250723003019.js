@@ -66,10 +66,10 @@ const ServiceTable = ({
   function handleClick(item) {
     setIsClick(item);
   }
-  const handleCancel = async (serviceId, telegramChatId) => {
+  const handleCancel = async (serviceId) => {
     setLoadingId(serviceId);
     setLoadingAction("cancel");
-    const response = await cancelService(serviceId, telegramChatId);
+    const response = await cancelService(serviceId);
     if (response.error) {
       console.error("Error cancelling service:", response.error);
     } else {
@@ -272,11 +272,11 @@ const ServiceTable = ({
                             className={`px-4 rounded-full text-white transition ${
                               loadingId === service._id &&
                               loadingAction === "cancel"
-                                ? "bg-red-400 opacity-50 cursor-wait"
-                                : "bg-red-400 hover:bg-red-500"
+                                ? "bg-red-900 opacity-50 cursor-wait"
+                                : "bg-red-900 hover:bg-red-500"
                             }`}
                           >
-                            Cancel
+                            Cancel {service?.userId.username}
                           </button>
                         </div>
                       </div>

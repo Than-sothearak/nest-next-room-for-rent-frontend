@@ -164,9 +164,7 @@ export async function acceptService(serviceId, telegramChatId) {
 export async function cancelService(serviceId, telegramChatId) {
   const session = await auth();
   const admin = await User.findOne({ isAdmin: true });
- if (!telegramChatId) {
-  console.log("No telegram id")
- }
+
   try {
     const service = await Service.findById(serviceId).populate("userId").populate("roomId");
     if (!service) {
@@ -194,7 +192,7 @@ export async function cancelService(serviceId, telegramChatId) {
 
     } else {
          await sendMessageToTelegram(
-        telegramChatId,
+        admin?.telegramChatId,
         `<b>🚫 Your request has been cancelled</b>\n<b>Note:</b> ${service.note || "Sorry we are not available at that time!"}\n<b>Service Type:</b> ${service.serviceType}\n<b>Room Number:</b> ${service.roomId.roomName}\n<b>Scheduled Date:</b> ${formatDateOnly(service.startDate)}\n<b>Time:</b> ${formatTo12Hour(service.startTime)}\n\n<b>The service has been cancelled.</b>`
       );
     }
