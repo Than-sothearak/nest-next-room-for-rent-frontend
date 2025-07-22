@@ -2,7 +2,7 @@
 const bcrypt = require("bcryptjs");
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
-import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadFileToS3";
+import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
@@ -10,7 +10,10 @@ import { auth } from "@/auth";
 await mongoDb();
 
 export async function getUsers(query, page) {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!");
+  }
   const ITEM_PER_PAGE = 10;
 
   try {
@@ -40,7 +43,7 @@ export async function addUsers(prevState, formData) {
   if (!session?.user?.isAdmin) {
     return console.log("Access denied!");
   }
-  await new Promise((resolve) => setTimeout(resolve, 500));
+
   if (!formData || typeof formData.get !== "function") {
     console.error("Invalid or missing formData:", formData);
     return { error: "No valid form data received" };
@@ -49,10 +52,15 @@ export async function addUsers(prevState, formData) {
   const name = formData.get("name");
   const email = formData.get("email");
   const phone = formData.get("phone");
+   const status = formData.get("status")
   const address = formData.get("address");
+  const gender = formData.get("gender");
+  const dateOfBirth = formData.get("dateOfBirth");
   const password = formData.get("password");
   const role = formData.get("role");
   const imageFile = formData.get("image");
+
+
 
   let errors = {};
   if (name.length >= 21) {
@@ -65,8 +73,9 @@ export async function addUsers(prevState, formData) {
     return { errors, success: false };
   }
 
-  if (!name || !email || !phone || !password || !address || !role) {
+  if (!name || !email || !phone || !password || !address || !role || !gender) {
     if (!name) errors.name = "Name is required";
+    if (!gender) errors.gender = "gender is required";
     if (!email) errors.email = "Email is required";
     if (!phone) errors.phone = "Phone is required";
     if (!password) errors.password = "Password is required";
@@ -75,6 +84,8 @@ export async function addUsers(prevState, formData) {
     return { errors };
   }
   const isAdmin = role === "admin";
+
+  console.log(isAdmin)
   const salt = await bcrypt.genSalt(10);
   if (password.length < 6) {
     errors.password =
@@ -105,9 +116,12 @@ export async function addUsers(prevState, formData) {
 
       const userData = {
         username: name,
+        gender,
+        dateOfBirth,
         email,
         phone,
         isAdmin,
+        status,
         address,
         password: hashPassword,
         imageUrl,
@@ -139,17 +153,19 @@ export async function addUsers(prevState, formData) {
 }
 
 export async function updateUser(userId, prevState, formData) {
+  
   const session = await auth();
-
   if (!session?.user?.isAdmin && session?.user?._id !== userId) {
     return console.log("Access denied!");
   }
+
   if (!formData || typeof formData.get !== "function") {
     console.error("Invalid or missing formData:", formData);
     return { error: "No valid form data received" };
   }
 
   try {
+
     const user = await User.findById(userId);
     if (!user) {
       return { error: "User not found", success: false };
@@ -158,11 +174,14 @@ export async function updateUser(userId, prevState, formData) {
     const name = formData.get("name");
     const email = formData.get("email");
     const phone = formData.get("phone");
+    const status = formData.get("status")
+    const gender = formData.get("gender");
+    const dateOfBirth = formData.get("dateOfBirth");
     const address = formData.get("address");
     const password = formData.get("password");
+    const role = session.user.isAdmin ? formData.get("role") : "user";
     const imageFile = formData.get("image");
-    const role = session?.user?.isAdmin ? formData.get("role") : user.isAdmin;
- console.log(role)
+
     let errors = {};
     if (!name) errors.name = "Name is required";
     if (!email) errors.email = "Email is required";
@@ -173,9 +192,7 @@ export async function updateUser(userId, prevState, formData) {
       return { errors, success: false };
     }
 
-    const isAdmin = role;
-
-   
+    const isAdmin = role === "admin";
 
     // Keep existing image URL if no new image
     let imageUrl = user.imageUrl;
@@ -184,6 +201,7 @@ export async function updateUser(userId, prevState, formData) {
       if (user.imageUrl) {
         const oldKey = imageUrl?.split("/").pop();
         if (oldKey) {
+          console.log("New image replaced to S3");
           await deleteFileFromS3(oldKey);
         }
       }
@@ -197,12 +215,14 @@ export async function updateUser(userId, prevState, formData) {
     const userData = {
       username: name,
       email,
+      status,
+      gender,
+      dateOfBirth,
       phone,
       isAdmin,
       address,
       imageUrl,
     };
-
     // Hash password only if provided
     if (password) {
       const salt = await bcrypt.genSalt(10);
@@ -210,14 +230,10 @@ export async function updateUser(userId, prevState, formData) {
     }
 
     await User.updateOne({ _id: userId }, userData);
+    return {success: "User successfully updated", message:  "User successfully updated"}
   } catch (err) {
-    console.error("Error updating user:", err);
-    return {
-      error: "Failed to update user due to a server error",
-      success: false,
-    };
+    console.log("Error updating user:", err);
   }
 
-  revalidatePath(`/dashboard/users/${userId}`);
-  redirect(`/dashboard/users/${userId}`);
+
 }

@@ -60,6 +60,8 @@ export async function addUsers(prevState, formData) {
   const role = formData.get("role");
   const imageFile = formData.get("image");
 
+
+
   let errors = {};
   if (name.length >= 21) {
     errors.name =
@@ -82,6 +84,8 @@ export async function addUsers(prevState, formData) {
     return { errors };
   }
   const isAdmin = role === "admin";
+
+  console.log(isAdmin)
   const salt = await bcrypt.genSalt(10);
   if (password.length < 6) {
     errors.password =
