@@ -19,7 +19,7 @@ export default async function singleBookingPage (props) {
     }
 let oneRoom = {};
 if (booking) {
-  oneRoom = await Room.findOne({ _id: booking?.roomId?._id }).lean();
+  oneRoom = await Room.findOne({ _id: booking.roomId._id }).lean();
 } else {
   oneRoom = await Room.findOne({ _id: id }).lean();
 }

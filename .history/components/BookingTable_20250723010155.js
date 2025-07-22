@@ -124,7 +124,7 @@ const BookingTable = ({
               </td>
 
               <td className="font-bold px-2 whitespace-nowrap">
-                {item?.roomId ? item?.roomId?.roomName :  "Not found"}
+                {item?.roomId ? item?.roomId?.roomName :  "Room not found"}
               </td>
               <td className="px-2 whitespace-nowrap">{item.userId.username}</td>
               <td className="px-2 whitespace-nowrap">{item.userId.phone}</td>
@@ -180,7 +180,7 @@ const BookingTable = ({
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">
                 <p className="text-lg">
-                  <strong>Room:</strong>    {item?.roomId ? item?.roomId?.roomName :  "Not found"}
+                  <strong>Room:</strong>  {item?.roomId?.roomName} || Room not found!
                 </p>
               </h3>
               <ButtonEditAndCancel
