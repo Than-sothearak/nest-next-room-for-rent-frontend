@@ -43,9 +43,8 @@ export default function LoginForm() {
               />
             </div>
           </div>
+            <input type="hidden" name="redirectTo" value={callbackUrl} />
           <button
-            value={callbackUrl}
-            type="submit"
             disabled={isPending}
             className={`w-full rounded-lg bg-blue-600 p-3 text-primary font-semibold hover:bg-blue-700 transition ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
           >

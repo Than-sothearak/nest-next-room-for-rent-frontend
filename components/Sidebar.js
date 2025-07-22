@@ -1,14 +1,18 @@
 import SideBarClient from "@/components/SideBarClient";
 import { User } from "@/models/User";
-import { mongoDb } from "@/utils/connectDB";
 
-export default async function Sidebar({ session ,navigation }) {
-  await mongoDb()
+export default async function Sidebar({ session ,navigation,servicesCount }) {
+   
    const user = await User.findOne({ _id: session?.user?._id });
+  if (!user) {
+    return <div>User not found</div>;
+  }       
+
   return (
     <>
       <SideBarClient
-      navigation={navigation}
+       servicesCount={servicesCount}
+        navigation={navigation}
         session={session}
         user={JSON.parse(JSON.stringify(user))}
       />

@@ -5,13 +5,14 @@ import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
 import { pageNavigation, userNavigation } from "@/lib/navLinks";
 import Footer from "@/components/Footer";
+import { Service } from "@/models/Service";
 
 export default async function DashboardLayout({
   children,
   admin,
   user,
 }) {
-  await mongoDb();
+ 
   const session = await auth();
   const userId = await User.findOne({ _id: session?.user?._id });
 
@@ -22,16 +23,21 @@ export default async function DashboardLayout({
       </div>
     );
   }
+  let services = [];
+  if (session?.user?.isAdmin) {
+    services = await Service.find({status: "pending"});  
+  } 
 
   return (
     <>
       {session?.user?.isAdmin ? (
         <div className="flex">
           <div className="bg-primary">
-            <Sidebar navigation={pageNavigation} session={session} />
+            <Sidebar navigation={pageNavigation} session={session}  servicesCount={services.length}/>
           </div>
           <div className="w-full lg:mx-4 lg:overflow-x-auto">
             <Navbar
+              servicesCount={services.length}
               navigation={pageNavigation}
               session={session}
               user={JSON.parse(JSON.stringify(userId))}
