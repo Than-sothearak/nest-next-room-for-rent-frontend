@@ -11,7 +11,7 @@ export const authConfig = {
 
       if (isOnDashboard) {
         // Only allow access to /dashboard if logged in
-        return Response.redirect(new URL('/loign', nextUrl));
+        return Response.redirect(new URL('/login', nextUrl));
       }
 
       if (isLoggedIn) {
