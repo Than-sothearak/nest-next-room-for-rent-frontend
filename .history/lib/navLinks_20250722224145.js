@@ -1,12 +1,10 @@
-import { MdSpaceDashboard } from "react-icons/md";
-import { AiFillShop } from "react-icons/ai"; // Replace with correct icon if needed
+import { MdMeetingRoom, MdOutlinePayment, MdSpaceDashboard } from "react-icons/md";
 import { FaUserCircle, FaUsers } from "react-icons/fa";
-import { BiCategory, BiSolidReport } from "react-icons/bi";
+import { BiBookBookmark, BiCategory,  BiSolidReport } from "react-icons/bi";
 import { MdOutlineWorkHistory } from "react-icons/md";
-import { IoSettingsSharp } from "react-icons/io5";
+import { IoSettings, IoSettingsSharp } from "react-icons/io5";
 import { IoIosHelpCircle } from "react-icons/io";
-import { FaBuromobelexperte } from "react-icons/fa6";
-import { FaCalculator } from "react-icons/fa";
+import { FaBuromobelexperte} from "react-icons/fa6";
 export const pageNavigation = {
   name: "Pages",
   links: [ {
@@ -14,17 +12,31 @@ export const pageNavigation = {
     name: "Dashboard",
     icon: <MdSpaceDashboard size={18} />,
   },
+   {
+    path: "/dashboard/rooms",
+    name: "Rooms",
+    icon: <MdMeetingRoom size={18} />, 
+  },
   {
-    path: "/dashboard/pos",
-    name: "Pos System",
-    icon: <FaCalculator size={18} />,
+path: "/dashboard/booking",
+    name: "Booking",
+    icon: <BiBookBookmark size={18} />, 
+  },
+
+   {
+    path: "/dashboard/services",
+    name: "Services",
+    icon: <IoSettings size={18} />,
+  },
+
+  
+   {
+    path: "/dashboard/payments",
+    name: "Payments",
+    icon: <MdOutlinePayment size={18} />,
   },
  
-  {
-    path: "/dashboard/products",
-    name: "Products",
-    icon: <AiFillShop size={18} />, 
-  },
+ 
   {
     path: "/dashboard/categories",
     name: "Category",
@@ -67,6 +79,11 @@ export const analyticNavigation = {
 export const userNavigation = {
   name: "Users",
   links: [
+    {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: <MdSpaceDashboard size={18} />,
+  },
     {
       path: "/setting",
       name: "Setting",

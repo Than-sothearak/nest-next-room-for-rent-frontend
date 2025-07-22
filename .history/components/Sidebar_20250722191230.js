@@ -1,7 +1,7 @@
 import SideBarClient from "@/components/SideBarClient";
 import { User } from "@/models/User";
 
-export default async function Sidebar({ session ,navigation,servicesCount, link }) {
+export default async function Sidebar({ session ,navigation,servicesCount }) {
    
    const user = await User.findOne({ _id: session?.user?._id });
   if (!user) {
@@ -11,7 +11,6 @@ export default async function Sidebar({ session ,navigation,servicesCount, link 
   return (
     <>
       <SideBarClient
-      link={link}
        servicesCount={servicesCount}
         navigation={navigation}
         session={session}
