@@ -7,15 +7,16 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
   const isOnDashboard = pathname.startsWith("/dashboard");
-  const isLogin = pathname === !token;
+  const isLogin = pathname.startsWith("/login");
 
   if (!token && isOnDashboard) {
+    console.log("Login first.");
     return NextResponse.redirect(new URL("/login", req.url));
   }
-  
+  console.log(pathname)
   console.log("Token:", token);
   // 🔐 Block admin access if not an admin
-  if (isLogin && !token?.isAdmin) {
+  if (!token?.isAdmin && pathname === "/dashboard/users") {
     console.log("Unauthorized: Admin dashboard access denied.");
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
