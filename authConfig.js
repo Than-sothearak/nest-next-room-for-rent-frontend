@@ -2,7 +2,11 @@ export const authConfig = {
   pages: {
     signIn: '/login', // Custom login page
   },
-   trustHost: true,
+  trustHost: true,
+  session: {
+    strategy: "jwt", // or "database" if you're using a DB
+  },
+  secret: process.env.AUTH_SECRET,
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
      const isLoggedIn = !!auth?.user;
