@@ -136,7 +136,7 @@ const InvoicePDF = ({ data }) => {
           <Page style={styles.page} size="A4">
             {/* Header */}
             <View style={styles.header}>
-              <Image style={styles.logo} src="next-room-for-rent-yenl.vercel.app/images/logo.jpg"/>
+              <Image style={styles.logo} src="https://next-room-for-rent-yenl.vercel.app/images/logo.jpg"/>
               <View>
                 <Text style={styles.text}>WBC LOGEMENT</Text>
               
