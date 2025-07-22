@@ -4,20 +4,25 @@ export const authConfig = {
   pages: {
     signIn: '/login',
   },
-  callbacks: {
+    callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const pathname = nextUrl.pathname;
 
-    const isProtectedPath = pathname.startsWith('/dashboard') || pathname.startsWith('/invoice');
+      const protectedPaths = ['/dashboard', '/invoice'];
 
-console.log('Auth:', auth);
+      const isProtected = protectedPaths.some((path) =>
+        pathname.startsWith(path)
+      );
 
-// Require login for protected paths
-if (isProtectedPath) {
-  return isLoggedIn;
-}
-      // Redirect logged-in users to /dashboard if accessing root or other pages
+      console.log('Auth:', auth);
+      console.log('Path:', pathname);
+
+      if (isProtected && !isLoggedIn) {
+        return false; // Will redirect to /login
+      }
+
+      // Optional: redirect logged-in users from root (/) to /dashboard
       if (isLoggedIn && pathname === '/') {
         return Response.redirect(new URL('/dashboard', nextUrl));
       }

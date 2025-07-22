@@ -9,14 +9,21 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const pathname = nextUrl.pathname;
 
-    const isProtectedPath = pathname.startsWith('/dashboard') || pathname.startsWith('/invoice');
+      const isOnDashboard = pathname.startsWith('/dashboard');
+      const isOnInvoice = pathname.startsWith('/invoice');
 
-console.log('Auth:', auth);
+      console.log('Auth:', auth);
+      console.log('Path:', pathname);
 
-// Require login for protected paths
-if (isProtectedPath) {
-  return isLoggedIn;
-}
+      if (isOnDashboard) {
+        return isLoggedIn;
+      }
+
+      // Allow access to /invoice/ without login
+      if (isOnInvoice && isLoggedIn) {
+        return true;
+      }
+
       // Redirect logged-in users to /dashboard if accessing root or other pages
       if (isLoggedIn && pathname === '/') {
         return Response.redirect(new URL('/dashboard', nextUrl));

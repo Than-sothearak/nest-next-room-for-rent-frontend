@@ -236,7 +236,7 @@ export default function CreatePaymentLinkForm({ booking }) {
               className="text-center p-2 rounded-md flex items-center gap-2  border justify-between"
             >
               <Image
-                src="https://next-room-for-rent.vercel.app/ABA BANK.svg"
+                src="/ABA BANK.svg"
                 alt="ABA Logo"
                 width={40}
                 height={40}

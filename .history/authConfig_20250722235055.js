@@ -12,6 +12,7 @@ export const authConfig = {
     const isProtectedPath = pathname.startsWith('/dashboard') || pathname.startsWith('/invoice');
 
 console.log('Auth:', auth);
+console.log('Path:', pathname);
 
 // Require login for protected paths
 if (isProtectedPath) {

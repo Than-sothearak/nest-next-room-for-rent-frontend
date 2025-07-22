@@ -63,9 +63,9 @@ const [sort, setSort] = useState(3)
               </p>
               <div className="flex items-center gap-4 ">
                 <p className="text-green-500">{payment.status}</p>
-                <Link href={`/invoice/${payment._id}`} className="hover:bg-blue-300 hover:text-primary p-2 rounded-md">
+                {/* <Link href={`/invoice/${payment._id}`} className="hover:bg-blue-300 hover:text-primary p-2 rounded-md">
                   <BiPrinter size={28} />
-                </Link>
+                </Link> */}
               </div>
             </div>
             <hr className="my-2"></hr>

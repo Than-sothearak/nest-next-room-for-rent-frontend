@@ -61,9 +61,9 @@ const [sort, setSort] = useState(3)
                 Date: {formatDate(payment.startDate)}-
                 {formatDate(payment.dueDate)}{" "}
               </p>
-              <div className="flex items-center gap-4 ">
+              <div className="flex items-center gap-4 bg-green-300">
                 <p className="text-green-500">{payment.status}</p>
-                <Link href={`/invoice/${payment._id}`} className="hover:bg-blue-300 hover:text-primary p-2 rounded-md">
+                <Link href={`/dashboard/invoice/${payment._id}`}>
                   <BiPrinter size={28} />
                 </Link>
               </div>
