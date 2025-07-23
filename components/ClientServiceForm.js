@@ -21,7 +21,7 @@ setIsClicked(false)
 
 
   return (
-    <form action={action} className=''>
+    <form action={action} className='bg-white p-6 rounded-lg shadow-md'>
       <h1 className='text-xl font-bold'>Request service</h1>
       <p className='text-sm text-gray-500 mt-4'>
         Please fill out the form below to request a service. Our team will get back to you as soon as possible.
@@ -36,7 +36,7 @@ setIsClicked(false)
               value={serviceType}
               onChange={(e) => setService(e.target.value)}
               required
-              className="border rounded p-2"
+              className="border rounded p-2 capitalize"
             >
               <option value={serviceType}>{serviceType}</option>
             </select>
@@ -46,7 +46,7 @@ setIsClicked(false)
           <div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <label className="font-bold">Start Date</label>
+                <label className="font-bold">Date</label>
                 <input
                   type="date"
                   name="startDate"
@@ -61,8 +61,8 @@ setIsClicked(false)
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2">
-                  <label className="font-bold">Start Date</label>
+                <div className="grid gap-2" title='Available time form 8:00am-6:am'>
+                  <label className="font-bold">Time</label>
                   <input
                     type="time"
                     name="startTime"
@@ -73,10 +73,10 @@ setIsClicked(false)
                     required
                     className="border rounded p-2"
                   />
-                  {/* {state?.errors?.startDate && (
-              <p className="text-red-500">{state.errors.startDate}</p>
-            )} */}
+                        
+
                 </div>
+              
 
               </div>
 

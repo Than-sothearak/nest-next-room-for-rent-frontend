@@ -6,7 +6,7 @@ import { useState } from "react";
 import SideBarMain from "@/components/SideBarMain";
 
 
-export const Navbar = ({ session, user, navigation, servicesCount}) => {
+export const Navbar = ({ session, user, navigation, servicesCount, link}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   function handleClick() {
@@ -32,7 +32,7 @@ export const Navbar = ({ session, user, navigation, servicesCount}) => {
           <IoMdMenu size={28} />
         </button>
 
-        <div className="capitalize text-sm text-primarytext flex gap-1 items-center  overflow-hidden">
+        <div className="capitalize text-sm text-primarytext flex gap-1 items-center  overflow-hidden whitespace-nowrap">
           {pathArray.map((p, index) => {
             const linkPath = `/${pathArray.slice(0, index + 1).join("/")}`;
             return (
@@ -55,6 +55,7 @@ export const Navbar = ({ session, user, navigation, servicesCount}) => {
 
       <div className="lg:hidden">
         <SideBarMain
+        link={link}
          servicesCount={servicesCount}
           navigation={navigation}
           currentUser={user}

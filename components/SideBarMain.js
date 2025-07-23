@@ -100,7 +100,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation,ser
               <p className="text-2xl">Hi, {currentUser?.username}!</p>
 
               <Link
-                href={`${link}${session?.user?._id}`}
+                href={`${session?.user?.isAdmin ? '/dashboard/users/' : '/dashboard/client-page/'}${session?.user?._id}`}
                 className="bg-slate-200 hover:bg-slate-300  w-full text-center flex gap-2 justify-center items-center border border-slate-300 p-4 rounded-xl cursor-pointer"
               >
                 <p>Edit your account information</p>

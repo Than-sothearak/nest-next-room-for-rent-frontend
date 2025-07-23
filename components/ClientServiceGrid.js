@@ -161,7 +161,7 @@ const ClientService = ({
 
       </div>
       {isClicked && (
-        <div className="fixed w-96 z-30 top-96 left-1/2 overflow-y-auto p-4 bg-white rounded-lg max-lg:w-full  -translate-x-1/2 -translate-y-1/2  shadow-xl">
+        <div className="fixed w-96 z-30 top-96 left-1/2 overflow-y-auto p-4 rounded-lg max-sm:w-full -translate-x-1/2 -translate-y-1/2">
           <ClientServiceForm
             serviceType={serviceType}
             user={user}

@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { Navbar } from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { User } from "@/models/User";
-import { mongoDb } from "@/utils/connectDB";
 import { pageNavigation, userNavigation } from "@/lib/navLinks";
 import Footer from "@/components/Footer";
 import { Service } from "@/models/Service";
@@ -37,6 +36,7 @@ export default async function DashboardLayout({
           </div>
           <div className="w-full lg:mx-4 lg:overflow-x-auto">
             <Navbar
+              link={"/dashboard/users/"}
               servicesCount={services.length}
               navigation={pageNavigation}
               session={session}
@@ -55,6 +55,7 @@ export default async function DashboardLayout({
           </div>
           <div className="w-full lg:mx-4 lg:overflow-x-auto">
             <Navbar
+              link={"/dashboard/client-page/"}
               navigation={userNavigation}
               session={session}
               user={JSON.parse(JSON.stringify(userId))}

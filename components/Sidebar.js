@@ -11,7 +11,7 @@ export default async function Sidebar({ session ,navigation,servicesCount, link 
   return (
     <>
       <SideBarClient
-      link={link}
+       link={link}
        servicesCount={servicesCount}
         navigation={navigation}
         session={session}
