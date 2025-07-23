@@ -1,52 +1,29 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'thearak-next-computer.s3.ap-southeast-1.amazonaws.com',
-      
-      },
-      {
-        protocol: 'https',
-        hostname: 'thearak-next-ecommerce.s3.ap-southeast-1.amazonaws.com',
-        pathname: '/uploads/**',
-      
-      },
-      {
-        protocol: 'https',
-        hostname: 'encrypted-tbn0.gstatic.com',
-      
-      },
-      {
-        protocol: 'https',
-        hostname: 'upload.wikimedia.org',
-      
-      },
-       {
-        protocol: 'https',
-        hostname: 'www.pngmart.com',
-      
-      },
-        {
-        protocol: 'https',
-        hostname: 'cdn.pixabay.com',
-      
-      },
-
-        {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      
-      },
-    ],
+import { NextAuthConfig } from 'next-auth';
+ 
+export const authConfig = {
+  pages: {
+    signIn: '/login',
   },
-  experimental: {
-    serverActions: {
-      serverComponentsExternalPackages: ['grammy'],
-      bodySizeLimit: "5mb", // Increase the body size limit to 5 MB
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const pathname = nextUrl.pathname;
+
+    const isProtectedPath = pathname.startsWith('/dashboard') || pathname.startsWith('/invoice');
+
+console.log('Auth:', auth);
+
+// Require login for protected paths
+if (isProtectedPath) {
+  return isLoggedIn;
+}
+      // Redirect logged-in users to /dashboard if accessing root or other pages
+      if (isLoggedIn && pathname === '/') {
+        return Response.redirect(new URL('/dashboard', nextUrl));
+      }
+
+      return true;
     },
   },
-};
-
-export default nextConfig;
+  providers: [], // Add providers with an empty array for now
+} 
