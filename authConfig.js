@@ -1,24 +1,52 @@
-export const authConfig = {
-  pages: {
-    signIn: '/login', // Custom login page
-  },
-  trustHost: true,
-  session: {
-    strategy: "jwt", // or "database" if you're using a DB
-  },
-  secret: process.env.AUTH_SECRET,
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-    //  const isLoggedIn = !!auth?.user;
-    // const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-    // const isOnLogin = nextUrl.pathname === '/login';
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'thearak-next-computer.s3.ap-southeast-1.amazonaws.com',
+      
+      },
+      {
+        protocol: 'https',
+        hostname: 'thearak-next-ecommerce.s3.ap-southeast-1.amazonaws.com',
+        pathname: '/uploads/**',
+      
+      },
+      {
+        protocol: 'https',
+        hostname: 'encrypted-tbn0.gstatic.com',
+      
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      
+      },
+       {
+        protocol: 'https',
+        hostname: 'www.pngmart.com',
+      
+      },
+        {
+        protocol: 'https',
+        hostname: 'cdn.pixabay.com',
+      
+      },
 
-    // if (!isLoggedIn && isOnDashboard) return false; // Redirect to /login
-    // if (isLoggedIn && isOnLogin) return false; // Redirect to /dashboard or home
-
-      // // Allow access to all other pages (like home `/`) regardless of login
-      return true;
+        {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      
+      },
+    ],
+  },
+  experimental: {
+    serverActions: {
+      serverComponentsExternalPackages: ['grammy'],
+      bodySizeLimit: "5mb", // Increase the body size limit to 5 MB
     },
   },
-  providers: [], // Add your authentication providers here
 };
+
+export default nextConfig;
