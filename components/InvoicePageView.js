@@ -1,4 +1,4 @@
-import { formatDate } from '@/utils/formatDate';
+import { formatDate } from "@/utils/formatDate";
 import {
   Document,
   Page,
@@ -6,94 +6,113 @@ import {
   View,
   StyleSheet,
   Font,
-  Image
-} from '@react-pdf/renderer';
+  Image,
+} from "@react-pdf/renderer";
+
+// import fs from 'fs';
+import path from "path";
+
+Font.register({
+  family: "NotoSansKhmer",
+  src: path.resolve(process.cwd(), "/fonts/NotoSansKhmer-Regular.ttf"),
+});
 
 const styles = StyleSheet.create({
   page: {
     padding: 30,
+    paddingTop: 10,
     fontSize: 10,
-    fontFamily: 'Helvetica',
+    fontFamily: "Helvetica",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between", // space between items horizontally
+    alignItems: "center", // vertical centering of items
     marginBottom: 10,
-     borderBottom: 1,
+    borderBottomWidth: 1, // correct property for borderBottom
+    borderBottomColor: "#ccc", // add a color so border is visible
+  },
+
+  underHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
   text: {
-   fontSize: 25,
-  
+    fontSize: 25,
+  },
+  khmerText: {
+    fontFamily: "NotoSansKhmer",
+    fontSize: 25,
   },
   logo: {
     width: 90,
     height: 90,
   },
   signature: {
-    position: 'absolute',
+    position: "absolute",
     width: 90,
     height: 90,
     top: -30,
     left: 50,
-  
   },
   title: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 14,
     marginVertical: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   section: {
     marginTop: 6,
     marginBottom: 6,
   },
   table: {
-    display: 'table',
-    width: 'auto',
-    borderStyle: 'solid',
-    borderColor: '#000',
+    display: "table",
+    width: "auto",
+    borderStyle: "solid",
+    borderColor: "#000",
     borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
     marginTop: 10,
   },
   tableRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   tableHeader: {
-    backgroundColor: '#f0f0f0',
-    fontWeight: 'bold',
+    backgroundColor: "#f0f0f0",
+    fontWeight: "bold",
   },
   tableCell: {
-    borderStyle: 'solid',
-    borderColor: '#000',
+    borderStyle: "solid",
+    borderColor: "#000",
     borderBottomWidth: 1,
     borderRightWidth: 1,
     padding: 5,
-    textAlign: 'center',
+    textAlign: "center",
   },
   // Column widths
-  no: { width: '5%' },
-  type: { width: '35%', textAlign: 'left' },
-  room: { width: '10%' },
-  level: { width: '10%' },
-  price: { width: '10%' },
-  qty: { width: '10%' },
-  dff: { width: '10%' },
-  amount: { width: '10%' },
+  no: { width: "5%" },
+  type: { width: "35%", textAlign: "left" },
+  room: { width: "10%" },
+  level: { width: "10%" },
+  price: { width: "10%" },
+  qty: { width: "10%" },
+  dff: { width: "10%" },
+  amount: { width: "10%" },
   paymentSection: {
     marginTop: 10,
   },
   signatureSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 90,
-    position: 'relative',
+    position: "relative",
   },
   footer: {
     marginTop: 20,
-    textAlign: 'center',
-    fontStyle: 'italic',
+    textAlign: "center",
+    fontStyle: "italic",
   },
 });
 
@@ -103,27 +122,28 @@ const InvoicePageView = ({ data }) => {
   const items = [
     {
       no: 1,
-      type: `${getData?.category} (${formatDate(getData.startDate)} - ${formatDate(getData.dueDate)})`,
-      room: getData?.roomId?.roomName || '',  // Or get from populated room data
-      level: getData?.roomId?.floor || '',
+      type: `${getData?.category} (${formatDate(
+        getData.startDate
+      )} - ${formatDate(getData.dueDate)})`,
+      room: getData?.roomId?.roomName || "", // Or get from populated room data
+      level: getData?.roomId?.floor || "",
       price: Number(getData.amount),
       qty: 1,
       off: 0,
       amt: Number(getData.amount),
     },
     ...(Array.isArray(getData?.services)
-  ? getData?.services.map((item, index) => ({
-      no: index + 2,
-      type: item?.service,
-      room: '',
-      level: '',
-      price: Number(item?.price),
-      qty: 1,
-      off: 0,
-      amt: Number(item?.price),
-    }))
-  : [])
-
+      ? getData?.services.map((item, index) => ({
+          no: index + 2,
+          type: item?.service,
+          room: "",
+          level: "",
+          price: Number(item?.price),
+          qty: 1,
+          off: 0,
+          amt: Number(item?.price),
+        }))
+      : []),
   ];
 
   const subtotal = items.reduce((sum, item) => sum + item.amt, 0);
@@ -136,22 +156,27 @@ const InvoicePageView = ({ data }) => {
       <Page style={styles.page} size="A4">
         {/* Header */}
         <View style={styles.header}>
-          <Image style={styles.logo} src="https://next-room-for-rent.vercel.app/images/logo.jpg"/>
+          <Image
+            style={styles.logo}
+            src="https://next-room-for-rent.vercel.app/images/logo.jpg"
+          />
           <View>
-            <Text style={styles.text}>WBC LOGEMENT</Text>
-          
-          </View>
-          <View>
-            <Text>No. {getData._id?.slice(-6)}</Text>
-            <Text>Date: {formatDate(getData.startDate)}</Text>
+            <Text style={styles.khmerText}>ឡូហ្សឺម៉ង ដាប៊លយូ ប៊ីសុី (WBC)</Text>
           </View>
         </View>
 
-        <View>
-  <Text>Building Lot #1317, St. 2014, Phnom Penh, Cambodia</Text>
+        <View style={styles.underHeader}>
+          <View>
+            <Text>Building Lot #1317, St. 2014, Phnom Penh, Cambodia</Text>
             <Text>Tel: (855) 12 30 99 30</Text>
             <Text>Email: wbc.logement@gmail.com</Text>
             <Text>Website: www.wbclogement.com</Text>
+          </View>
+
+          <View>
+            <Text>No. {getData._id?.slice(-8)}</Text>
+            <Text>Date: {formatDate(getData.startDate)}</Text>
+          </View>
         </View>
 
         {/* Title */}
@@ -159,8 +184,8 @@ const InvoicePageView = ({ data }) => {
 
         {/* To Section */}
         <View style={styles.section}>
-          <Text>To: {getData.userId?.username|| 'Tenant'}</Text>
-          <Text>Tel: {getData.userId?.phone || '-'}</Text>
+          <Text>To: {getData.userId?.username || "Tenant"}</Text>
+          <Text>Tel: {getData.userId?.phone || "-"}</Text>
         </View>
 
         {/* Table */}
@@ -182,10 +207,14 @@ const InvoicePageView = ({ data }) => {
               <Text style={[styles.tableCell, styles.type]}>{item.type}</Text>
               <Text style={[styles.tableCell, styles.room]}>{item.room}</Text>
               <Text style={[styles.tableCell, styles.level]}>{item.level}</Text>
-              <Text style={[styles.tableCell, styles.price]}>${item.price.toFixed(2)}</Text>
+              <Text style={[styles.tableCell, styles.price]}>
+                ${item.price.toFixed(2)}
+              </Text>
               <Text style={[styles.tableCell, styles.qty]}>{item.qty}</Text>
               <Text style={[styles.tableCell, styles.dff]}>{item.off}</Text>
-              <Text style={[styles.tableCell, styles.amount]}>${item.amt.toFixed(2)}</Text>
+              <Text style={[styles.tableCell, styles.amount]}>
+                ${item.amt.toFixed(2)}
+              </Text>
             </View>
           ))}
         </View>
@@ -201,13 +230,21 @@ const InvoicePageView = ({ data }) => {
         {/* Payment Method */}
         <View style={styles.paymentSection}>
           <Text>Method of Payment:</Text>
-          <Text>ABA - Mr. Meas Borarethy and Ms. Tun Bopha - 012 309 930 (USD)</Text>
+          <Text>
+            ABA - Mr. Meas Borarethy and Ms. Tun Bopha - 012 309 930 (USD)
+          </Text>
           <Text>ACLEDA - Mr. Meas Borarethy - 0001-00231646-14 (USD)</Text>
         </View>
 
         {/* Signatures */}
         <View style={styles.signatureSection}>
-          <View style={styles.signature}> <Image style={styles.signature} src="https://next-room-for-rent.vercel.app/images/signature.png"/></View>
+          <View style={styles.signature}>
+            {" "}
+            <Image
+              style={styles.signature}
+              src="https://next-room-for-rent.vercel.app/images/signature.png"
+            />
+          </View>
           <Text>Authorized Signature: _______Owner_name</Text>
           <Text>Tenant' Signature: __________________</Text>
         </View>
@@ -218,6 +255,5 @@ const InvoicePageView = ({ data }) => {
     </Document>
   );
 };
-
 
 export default InvoicePageView;

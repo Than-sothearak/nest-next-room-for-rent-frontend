@@ -1,6 +1,9 @@
+import DownloadInvoiceButton from "@/components/DownloadInvoiceButton";
 import InvoicePreview from "@/components/InvoicePreview";
+import { Booking } from "@/models/Booking";
 import { Payment } from "@/models/Payment";
 import { mongoDb } from "@/utils/connectDB";
+import { formatDate } from "@/utils/formatDate";
 import React from "react";
 
 export default async function InvoicePage(props) {
@@ -17,8 +20,9 @@ export default async function InvoicePage(props) {
     )
   );
   return (
-    <div><p className="text-center">Invoice page</p>
-        <InvoicePreview data={payment} />
+    <div>
+      <p className="text-center">Invoice page</p>
+      <InvoicePreview data={payment} />
     </div>
   );
 }

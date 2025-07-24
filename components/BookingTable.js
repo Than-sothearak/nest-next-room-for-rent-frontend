@@ -9,6 +9,8 @@ import ButtonEditAndCancel from "./ButtonEditAndCancel";
 import ProcessBilling from "./ButtonProcessBilling";
 import SendInvoiceButton from "./ButtonSendInvoice";
 import { BsTelegram } from "react-icons/bs";
+import { BiPrinter } from "react-icons/bi";
+import DownloadInvoiceButton from "./DownloadInvoiceButton";
 
 // Your helper function to get next payment due date
 
@@ -24,6 +26,11 @@ const BookingTable = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [isClickedm, setIsClicked] = useState(false);
+
+  function handleCLick () {
+    setIsClicked(!isClickedm);
+  }
 
   const [direction, setDirection] = useState("ascending");
 
@@ -112,7 +119,8 @@ const BookingTable = ({
                 <p>Status</p>
               </Link>
             </th>
-            <th className="text-end p-2 whitespace-nowrap">Invoice Status</th>
+            <th className="text-start p-2 whitespace-nowrap">Invoice Status</th>
+            <th className="px-2 text-center whitespace-nowrap"> Print</th>
             <th className="text-center p-2 whitespace-nowrap ">Action</th>
           </tr>
         </thead>
@@ -124,7 +132,7 @@ const BookingTable = ({
               </td>
 
               <td className="font-bold px-2 whitespace-nowrap">
-                {item?.roomId ? item?.roomId?.roomName :  "Not found"}
+                {item?.roomId ? item?.roomId?.roomName : "Not found"}
               </td>
               <td className="px-2 whitespace-nowrap">{item.userId.username}</td>
               <td className="px-2 whitespace-nowrap">{item.userId.phone}</td>
@@ -158,6 +166,9 @@ const BookingTable = ({
               <td className="text-end whitespace-nowrap">
                 <SendInvoiceButton bookingId={item?._id} booking={item} />
               </td>
+              <td className="p-2 text-center">
+                 <DownloadInvoiceButton bookingId={item._id} fileName={`${item.userId.username}-(${formatDate(item.startDate)}-${formatDate(item.dueDate)})`}/>
+              </td>
               <td className="text-center p-2 whitespace-nowrap">
                 <ButtonEditAndCancel
                   bookingId={item?._id}
@@ -166,10 +177,14 @@ const BookingTable = ({
                   id={item._id}
                 />
               </td>
+           
             </tr>
           ))}
         </tbody>
       </table>
+
+       
+      
 
       <div className="lg:hidden">
         {booking.map((item, index) => (
@@ -180,7 +195,8 @@ const BookingTable = ({
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">
                 <p className="text-lg">
-                  <strong>Room:</strong>    {item?.roomId ? item?.roomId?.roomName :  "Not found"}
+                  <strong>Room:</strong>{" "}
+                  {item?.roomId ? item?.roomId?.roomName : "Not found"}
                 </p>
               </h3>
               <ButtonEditAndCancel
@@ -202,9 +218,10 @@ const BookingTable = ({
                 }, 0)}
             </p>
             <p>
-              <strong>Date:</strong> {formatDate(item.startDate)} - {formatDate(item.dueDate)}
+              <strong>Date:</strong> {formatDate(item.startDate)} -{" "}
+              {formatDate(item.dueDate)}
             </p>
-        
+
             <div className="mt-2 flex justify-between items-center flex-wrap gap-4">
               <div
                 className={`${
