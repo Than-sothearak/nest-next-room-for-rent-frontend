@@ -1,10 +1,9 @@
 import mongoose, { model, Schema, models } from "mongoose";
 import { User } from "./User";
-import { Room } from "./Room";
 
 const BookingSchema = new Schema({
   userId: { type: mongoose.Types.ObjectId, ref: User },
-  roomId: { type: mongoose.Types.ObjectId, ref: Room },
+  roomId: { type: mongoose.Types.ObjectId, ref: "Room" },
   startDate: { type: Date, required: true },
   dueDate: { type: Date, required: true },
   contract: { type: Number, required: true },

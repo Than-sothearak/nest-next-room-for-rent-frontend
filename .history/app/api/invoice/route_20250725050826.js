@@ -24,8 +24,7 @@ export async function POST(req) {
     }
 
     const pdfBuffer = await generateInvoicePdf(booking);
-   console.log(booking);
-
+   
     return new Response(pdfBuffer, {
       status: 200,
       headers: {

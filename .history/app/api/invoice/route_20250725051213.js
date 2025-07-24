@@ -24,7 +24,7 @@ export async function POST(req) {
     }
 
     const pdfBuffer = await generateInvoicePdf(booking);
-   console.log(booking);
+   console.log('PDF buffer length:', pdfBuffer.length);
 
     return new Response(pdfBuffer, {
       status: 200,

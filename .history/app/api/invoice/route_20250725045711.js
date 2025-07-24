@@ -20,18 +20,17 @@ export async function POST(req) {
       });
 
     if (!booking) {
-      return new Response('Booking not found', { status: 404 });
+      return new NextResponse('Booking not found', { status: 404 });
     }
 
     const pdfBuffer = await generateInvoicePdf(booking);
-   console.log(booking);
+    console.log(pdfBuffer)
 
     return new Response(pdfBuffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="invoice.pdf"',
-        'Content-Length': pdfBuffer.length.toString(),
       },
     });
   } catch (error) {

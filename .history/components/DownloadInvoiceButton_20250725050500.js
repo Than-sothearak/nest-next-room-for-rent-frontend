@@ -18,17 +18,11 @@ export default function DownloadInvoiceButton({ bookingId,fileName }) {
         throw new Error('Failed to generate invoice');
       }
 
-      if (res.status === 204) {
-  alert("Server returned 204 No Content — check server response logic.");
-  return;
-}
-
       const blob = await res.blob();
-      console.log(res)
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'invoice.pdf';
+      link.download = fileName || 'invoice.pdf';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

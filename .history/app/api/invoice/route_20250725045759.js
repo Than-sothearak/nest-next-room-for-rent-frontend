@@ -24,15 +24,13 @@ export async function POST(req) {
     }
 
     const pdfBuffer = await generateInvoicePdf(booking);
-   console.log(booking);
-
+   
     return new Response(pdfBuffer, {
       status: 200,
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment; filename="invoice.pdf"',
-        'Content-Length': pdfBuffer.length.toString(),
-      },
+      // headers: {
+      //   'Content-Type': 'application/pdf',
+      //   'Content-Disposition': 'attachment; filename="invoice.pdf"',
+      // },
     });
   } catch (error) {
     console.error('Error generating invoice PDF:', error);
