@@ -9,14 +9,6 @@ import {
   Image,
 } from "@react-pdf/renderer";
 
-// import fs from 'fs';
-import path from "path";
-
-Font.register({
-  family: "NotoSansKhmer",
-  src: path.resolve(process.cwd(), "/fonts/NotoSansKhmer-Regular.ttf"),
-});
-
 const styles = StyleSheet.create({
   page: {
     padding: 30,
@@ -39,10 +31,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   text: {
-    fontSize: 25,
-  },
-  khmerText: {
-    fontFamily: "NotoSansKhmer",
     fontSize: 25,
   },
   logo: {
@@ -161,7 +149,7 @@ const InvoicePageView = ({ data }) => {
             src="https://next-room-for-rent.vercel.app/images/logo.jpg"
           />
           <View>
-            <Text style={styles.khmerText}>ឡូហ្សឺម៉ង ដាប៊លយូ ប៊ីសុី (WBC)</Text>
+            <Text style={styles.text}>Logement (WBC)</Text>
           </View>
         </View>
 
