@@ -1,6 +1,5 @@
 import mongoose, { model, Schema, models } from "mongoose";
 import { Category } from "./Category";
-import { User } from "./User";
 
 const RoomSchema = new Schema(
   {
@@ -17,7 +16,7 @@ const RoomSchema = new Schema(
     category: { type: mongoose.Types.ObjectId, ref: Category },
     properties: { type: Object },
     variants: { type: Object },
-    createdBy: { type: mongoose.Types.ObjectId, ref: User },
+    createdBy: { type: mongoose.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
