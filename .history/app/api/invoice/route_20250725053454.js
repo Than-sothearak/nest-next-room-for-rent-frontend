@@ -24,13 +24,13 @@ export async function POST(req) {
       return new Response('Booking not found', { status: 404 });
     }
     const fileName = `${booking?.userId?.username}_${formatDate(booking.startDate)}-${formatDate(booking.dueDate)}`
-
+console.log(fileName)
     const pdfBuffer = await generateInvoicePdf(booking);
     return new Response(pdfBuffer, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Disposition': 'attachment; filename="invoice.pdf"',
         'Content-Length': pdfBuffer.length.toString(),
       },
     });
