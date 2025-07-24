@@ -1,7 +1,7 @@
 export default function manifest() {
   return {
     name: 'Next.js logement',
-    short_name: 'Logement',
+    short_name: 'WBC',
     description: 'A Progressive Web App built with Next.js',
     start_url: '/',
     display: 'standalone',
@@ -10,7 +10,7 @@ export default function manifest() {
     "icons": [
 
            {
-      "src": "/favicon-96x96.png",
+      "src": "/favicon.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable"

@@ -1,7 +1,7 @@
 export default function manifest() {
   return {
     name: 'Next.js logement',
-    short_name: 'Logement',
+    short_name: 'WBC',
     description: 'A Progressive Web App built with Next.js',
     start_url: '/',
     display: 'standalone',
