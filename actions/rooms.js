@@ -1,5 +1,4 @@
 "use server";
-import { Product } from "@/models/Product";
 import { mongoDb } from "@/utils/connectDB";
 import { revalidatePath } from "next/cache";
 import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
@@ -53,7 +52,7 @@ export async function getRoom(query, page, sort) {
           sort = { createdAt: -1 }; // fallback
       }
     }
-
+    await Booking.find();
     const rooms = await Room.find()
       .sort(sort || { createdAt: -1 })
       .populate("category")
