@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { Room } from "@/models/Room";
 import { auth } from "@/auth";
+import { Booking } from "@/models/Booking";
 
 export async function getRoom(query, page, sort) {
   await mongoDb();
