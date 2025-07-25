@@ -20,7 +20,6 @@ const CategoryForm = ({ catData, catId, categories }) => {
     catId
   );
 
-
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,

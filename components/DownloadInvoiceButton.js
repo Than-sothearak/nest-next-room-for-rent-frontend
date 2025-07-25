@@ -1,5 +1,4 @@
 'use client';
-
 import { useState } from "react";
 import { BiDownload } from "react-icons/bi";
 
@@ -24,7 +23,7 @@ export default function DownloadInvoiceButton({ bookingId,fileName }) {
 }
 
       const blob = await res.blob();
-      console.log(res)
+  
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -42,6 +41,7 @@ export default function DownloadInvoiceButton({ bookingId,fileName }) {
   return (
   
       <button
+      title="Download Invoice"
       onClick={handleDownload}
       disabled={isLoading}
       className={`bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ${isLoading ? 'opacity-50 cursor-wait' : ''}`}

@@ -1,9 +1,21 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import { BiUndo, BiUserPlus } from "react-icons/bi";
 import { FaBookBookmark, FaDoorClosed } from "react-icons/fa6";
 import { PiInvoiceBold } from "react-icons/pi";
 import { FaCar, FaMotorcycle, FaParking } from "react-icons/fa";
+import AnalysisSummaryCard from "./AnalysisSummaryCard";
 const AnalysisGrid = ({ users, payments, booking, parking, roomCount }) => {
+  
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  function handleCardClick({title, values}) {
+    setSelectedCard({ title, values });
+  }
+
+     const closeModal = () => {
+    setSelectedCard(null);
+  };
 
   let totalParking = 0
   for (let key in parking) {
@@ -12,7 +24,10 @@ const AnalysisGrid = ({ users, payments, booking, parking, roomCount }) => {
 
   return (
     <div className="mt-4 rounded-lg grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-      <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
+        {selectedCard && <AnalysisSummaryCard closeModal={closeModal} data={selectedCard}/>}
+      <button 
+      onClick={() =>handleCardClick({title: "Total Tenants", values: users})}
+      className="hover:bg-blue-500 hover:text-primary w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg hover:bg-primarydark transition-all duration-300">
         <div>
           <BiUserPlus size={28} />
         </div>
@@ -20,10 +35,11 @@ const AnalysisGrid = ({ users, payments, booking, parking, roomCount }) => {
           <h2>Total Tenants</h2>
           <h1 className="text-2xl font-bold">{users.length}</h1>
           <p className="text-green-500 text-xs">
-            12% <span className="text-primarytext">more than previus week</span>
+            12% <span className="">more than previus week</span>
           </p>
         </div>
-      </div>
+      
+      </button>
 
       <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
         <div>
@@ -58,7 +74,9 @@ const AnalysisGrid = ({ users, payments, booking, parking, roomCount }) => {
         </div>
       </div>
 
-      <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
+       <button 
+      onClick={() =>handleCardClick({title: "Total Parking", values: booking})}
+      className="hover:bg-blue-500 hover:text-primary w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg hover:bg-primarydark transition-all duration-300">
         <div>
           <FaParking size={28} />
         </div>
@@ -77,7 +95,7 @@ const AnalysisGrid = ({ users, payments, booking, parking, roomCount }) => {
             </div>
           </div>
         </div>
-      </div>
+      </button >
 
       <div className="w-full justify-start items-start flex gap-4 p-4 bg-primary rounded-lg ">
         <div>

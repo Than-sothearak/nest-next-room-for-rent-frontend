@@ -16,7 +16,7 @@ export default async function categoryPage ({ searchParams }) {
    
     { header: "Category", accessor: "category" },
     { header: "Parent", accessor: "parentCategory" },
-    { header: "Created At", accessor: "createdAt" },
+
   ];
 
     return <div className="max-lg:h-screen overflow-x-auto p-4 bg-primary mt-4 rounded-lg">

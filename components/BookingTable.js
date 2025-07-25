@@ -9,7 +9,6 @@ import ButtonEditAndCancel from "./ButtonEditAndCancel";
 import ProcessBilling from "./ButtonProcessBilling";
 import SendInvoiceButton from "./ButtonSendInvoice";
 import { BsTelegram } from "react-icons/bs";
-import { BiPrinter } from "react-icons/bi";
 import DownloadInvoiceButton from "./DownloadInvoiceButton";
 
 // Your helper function to get next payment due date
@@ -185,8 +184,9 @@ const BookingTable = ({
       <div className="lg:hidden">
         {booking.map((item, index) => (
           <div
+          href={`/dashboard/${pathname}/${item._id}`}
             key={item._id}
-            className="bg-white border mt-4 dark:bg-slate-200 p-4 mb-4 rounded-lg shadow-md"
+            className="bg-white border mt-4 dark:bg-slate-200 p-4 mb-4 w-full  h-full rounded-lg shadow-md"
           >
             <div className="flex justify-between items-center">
               <h3 className="font-bold text-lg">
@@ -210,7 +210,7 @@ const BookingTable = ({
               <strong>Total:</strong> $
               {item.rent +
                 item.properties?.reduce((sum, service) => {
-                  return sum + Number(service.price);
+                  return sum + Number(service.values);
                 }, 0)}
             </p>
             <p>
@@ -235,6 +235,9 @@ const BookingTable = ({
               <div className="flex gap-2">
                 <SendInvoiceButton bookingId={item?._id} booking={item} />
                 <ToggleToPaid item={item} />
+              
+                <DownloadInvoiceButton bookingId={item._id} fileName={`${item.userId.username}-(${formatDate(item.startDate)}-${formatDate(item.dueDate)})`} />
+              
               </div>
             </div>
           </div>

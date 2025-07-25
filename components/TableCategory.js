@@ -26,7 +26,7 @@ const TableCategory = ({ data, columns, pageName,session }) => {
                   {col.header}
                 </th>
               ))}
-              <th className="py-2 px-4 text-left">Action</th>
+              <th className="py-2 px-4 text-right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -60,7 +60,7 @@ const TableCategory = ({ data, columns, pageName,session }) => {
                    
                   </td>
                 ))}
-                <td className="px-4 relative ">
+                <td className="px-4">
                   <ButtonViewAndDelete
                   session={session}
                     pending={pending}

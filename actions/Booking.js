@@ -305,11 +305,12 @@ function propertiesFormData(formData) {
 
   for (const [name, value] of formData.entries()) {
     if (name === "part") {
-      currentPart = { part: value, values: "" };
+      currentPart = { part: value, values: [] };
       properties.push(currentPart);
     } else if (name === "values" && currentPart) {
-      currentPart.values = Number(value);
-    } 
+      const splitValues = value.split(";");
+      currentPart.values = [...currentPart.values, ...splitValues];
+    }
   }
 
   return properties;
