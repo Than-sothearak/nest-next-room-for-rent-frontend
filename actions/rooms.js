@@ -6,13 +6,12 @@ import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
 import { Room } from "@/models/Room";
 import { auth } from "@/auth";
 
-
 export async function getRoom(query, page, sort) {
-await mongoDb();
-    const session = await auth();
-    if (!session?.user?.isAdmin) {
-        return console.log("Access denied!");
-    }
+  await mongoDb();
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied!");
+  }
 
   const ITEM_PER_PAGE = 10;
 
@@ -27,38 +26,36 @@ await mongoDb();
       })
         .lean()
         .populate("category")
+        .populate("bookings")
         .populate("parentCategory");
       const count = rooms.length;
       return { rooms, count, ITEM_PER_PAGE };
     }
-   
 
-    if(sort) {
-      
-  switch (sort) {
-    case 'date-asc':
-      sort = { createdAt: 1 };
-      break;
-    case 'date-desc':
-      sort = { createdAt: -1 };
-      break;
-    case 'status-asc':
-      sort = { status: 1 };
-      break;
-    case 'status-desc':
-      sort = { status: -1 };
-      break;
-     case 'one bed room':
-      sort = { status: -1 };
-      break;
-    default:
-      sort = { createdAt: -1 }; // fallback
-  }
+    if (sort) {
+      switch (sort) {
+        case "date-asc":
+          sort = { createdAt: 1 };
+          break;
+        case "date-desc":
+          sort = { createdAt: -1 };
+          break;
+        case "status-asc":
+          sort = { status: 1 };
+          break;
+        case "status-desc":
+          sort = { status: -1 };
+          break;
+        case "one bed room":
+          sort = { status: -1 };
+          break;
+        default:
+          sort = { createdAt: -1 }; // fallback
+      }
     }
-    
 
     const rooms = await Room.find()
-      .sort(sort || {createdAt: -1})
+      .sort(sort || { createdAt: -1 })
       .populate("category")
       .populate("parentCategory")
       .populate("bookings")
@@ -67,8 +64,6 @@ await mongoDb();
     const count = await Room.countDocuments();
 
     return { rooms, count, ITEM_PER_PAGE };
-
-   
   } catch (err) {
     console.error("Error fetching rooms:", err);
     return { error: "Failed to fetch due to a server error" };
@@ -76,12 +71,12 @@ await mongoDb();
 }
 
 export async function addRoom(prevState, formData) {
-await mongoDb();
-    const session = await auth();
-    if (!session?.user?.isAdmin) {
-      return console.log("Access denied! you are not admin");
-    }
-  
+  await mongoDb();
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied! you are not admin");
+  }
+
   try {
     if (!formData || typeof formData.get !== "function") {
       console.error("Invalid or missing formData:", formData);
@@ -95,8 +90,8 @@ await mongoDb();
     const price = formData.get("price");
     const status = formData.get("status");
     const description = formData.get("description");
-     const airConditionerCleanDate = formData.get("airConditionerCleanDate")
-    const roomMaintenanceDate = formData.get("roomMaintenanceDate")
+    const airConditionerCleanDate = formData.get("airConditionerCleanDate");
+    const roomMaintenanceDate = formData.get("roomMaintenanceDate");
     const parentCategory = formData.get("parentCategory");
     const imageFiles = formData.getAll("images");
     const properties = propertiesFormData(formData);
@@ -131,7 +126,7 @@ await mongoDb();
     if (imageFiles && imageFiles.length > 0) {
       for (const imageFile of imageFiles) {
         if (imageFile.size > 0) {
-          const imageUrl = await uploadFileToS3(imageFile) // Replace with actual upload logic
+          const imageUrl = await uploadFileToS3(imageFile); // Replace with actual upload logic
           imageUrls.push(imageUrl);
           console.log("Image uploaded to S3:", imageUrl);
         }
@@ -139,32 +134,33 @@ await mongoDb();
     } else {
       console.log("No image provided");
     }
-   
+
     await Room.create({
       ...roomData,
       imageUrls: imageUrls,
     });
-  
-   console.log("Room add successfully")
+
+    console.log("Room add successfully");
   } catch (err) {
     console.error("Error saving rooms:", err);
-    return { error: "Failed to save due to a server error", message: "Error saving rooms!" };
+    return {
+      error: "Failed to save due to a server error",
+      message: "Error saving rooms!",
+    };
   }
 
-    return { success: true, message: "Booking added successfully!" };
-   
-    
+  return { success: true, message: "Booking added successfully!" };
 }
 
 export async function updateRoom(roomId, prevState, formData) {
-await mongoDb();
-    const session = await auth();
-    if (!session?.user?.isAdmin) {
-      return console.log("Access denied! you are not admin");
-    }
-  
+  await mongoDb();
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    return console.log("Access denied! you are not admin");
+  }
+
   const room = await Room.findById(roomId);
- 
+
   if (!room) {
     return { error: "Room not found" };
   }
@@ -177,13 +173,12 @@ await mongoDb();
     const price = formData.get("price");
     const status = formData.get("status");
     const description = formData.get("description");
-    const airConditionerCleanDate = formData.get("airConditionerCleanDate")
-    const roomMaintenanceDate = formData.get("roomMaintenanceDate")
+    const airConditionerCleanDate = formData.get("airConditionerCleanDate");
+    const roomMaintenanceDate = formData.get("roomMaintenanceDate");
     const parentCategory = formData.get("parentCategory");
     const imageFiles = formData.getAll("images");
     const properties = propertiesFormData(formData);
     let removedImages = formData.getAll("removeImages") || [];
- 
 
     const updatedImageUrls = room.imageUrls.filter(
       (imageUrl) => !removedImages.includes(imageUrl) // Remove only matching URLs
@@ -239,13 +234,17 @@ await mongoDb();
     };
 
     const errors = validateProductFields(roomData);
-    if (Object.keys(errors).length > 0) return { errors: errors, message: "Failed to update room please try again" };
+    if (Object.keys(errors).length > 0)
+      return {
+        errors: errors,
+        message: "Failed to update room please try again",
+      };
 
     // Update the product
     await Room.updateOne({ _id: roomId }, roomData);
 
     revalidatePath(`/dashboard/rooms/${roomId}`);
-        console.log("Room updated!");
+    console.log("Room updated!");
     return { success: true, message: "Room update successfully!" };
   } catch (err) {
     console.error("Error updating room:", err);
@@ -280,11 +279,11 @@ function validateProductFields({
 }) {
   const errors = {};
   if (!roomName) errors.roomName = "Room name is required";
-   if (!floor) errors.floor = "Floor is required";
+  if (!floor) errors.floor = "Floor is required";
   if (!parentCategory) errors.parentCategory = "Parent category is required";
   if (!capacity) errors.capacity = "Capacity is required";
   if (!category) errors.category = "Category is required";
   if (!price) errors.price = "Price is required";
 
-  return errors ;
+  return errors;
 }

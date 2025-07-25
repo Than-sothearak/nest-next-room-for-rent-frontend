@@ -3,9 +3,11 @@ import { auth } from "@/auth";
 import Pagination from "@/components/Pagination";
 import { RoomGrid } from "@/components/RoomGrid";
 import SearchComponent from "@/components/SearchComponent";
+import { mongoDb } from "@/utils/connectDB";
 import Link from "next/link";
 
 const roomPage = async ({ searchParams }) => {
+  await mongoDb();
   const session = await auth();
   const { query } = await searchParams;
 
