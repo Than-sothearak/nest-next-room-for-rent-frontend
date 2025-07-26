@@ -43,7 +43,7 @@ const BookingTable = ({
     }
   };
 
-  const [optimisticData, setOptimisticData] = useOptimistic(
+    const [optimisticData, setOptimisticData] = useOptimistic(
     booking,
     (currentData, id) => {
       return currentData.filter((data) => data._id !== id);
@@ -73,6 +73,8 @@ const BookingTable = ({
       </div>
     );
   }
+
+
 
   return (
     <div className="overflow-y-clip overflow-x-auto">
