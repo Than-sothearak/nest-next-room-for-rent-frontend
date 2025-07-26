@@ -67,13 +67,13 @@ const BookingTable = ({
     );
   }
 
-  const [optimisticData, setOptimisticData] = useOptimistic(
-    booking,
-    (currentData, id) => {
-      return currentData.filter((data) => data._id !== id);
-    }
-  );
-
+    const [optimisticData, setOptimisticData] = useOptimistic(
+      booking,
+      (currentData, id) => {
+        return currentData.filter((data) => data._id !== id);
+      }
+    );
+  
   return (
     <div className="overflow-y-clip overflow-x-auto">
       <div>
@@ -83,7 +83,7 @@ const BookingTable = ({
         <ProcessBilling />
         <p>Total: {count}</p>
       </div>
-      <table className="mt-4 min-w-[800px] w-full border rounded shadow">
+      <table className="mt-4 min-w-[800px] w-full border rounded shadow max-lg:hidden">
         <thead className="bg-primary text-tertiary">
           <tr className="bg-gray-100 text-left">
             <th className="text-start p-2 whitespace-nowrap">No</th>
@@ -159,8 +159,8 @@ const BookingTable = ({
               <td className="text-center p-2 whitespace-nowrap">
                 <div
                   className={`${item?.userId?.telegramChatId
-                    ? "text-blue-500"
-                    : "opacity-40"
+                      ? "text-blue-500"
+                      : "opacity-40"
                     } flex items-center gap-1`}
                 >
                   <BsTelegram size={24} />
@@ -174,7 +174,6 @@ const BookingTable = ({
               </td>
               <td className="text-center p-2 whitespace-nowrap">
                 <ButtonViewAndDelete
-                  setOptimisticData={setOptimisticData}
                   bookingId={item?._id}
                   session={session}
                   link={`/dashboard/${pathname}/${item._id}`}
@@ -190,7 +189,7 @@ const BookingTable = ({
 
 
 
-      {/* <div className="lg:hidden">
+      <div className="lg:hidden">
         {booking.map((item, index) => (
           <div
           href={`/dashboard/${pathname}/${item._id}`}
@@ -251,7 +250,7 @@ const BookingTable = ({
             </div>
           </div>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };

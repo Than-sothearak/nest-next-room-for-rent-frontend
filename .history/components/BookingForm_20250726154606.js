@@ -99,7 +99,7 @@ export default function BookingForm({
 
   return (
     <div>
-          {state?.success && (
+          {!state?.success && (
               <div className="">
                 <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
 

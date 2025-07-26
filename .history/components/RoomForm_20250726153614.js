@@ -12,7 +12,7 @@ import {
   getFormattedAgoText,
 
 } from "@/utils/formatDate";
-import toast, { CheckmarkIcon, Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 import { IoArrowForward } from "react-icons/io5";
 
@@ -102,14 +102,10 @@ export default function RoomForm({
   }, [room]);
 
   useEffect(() => {
-    if (state?.success) {
-      const notify = () => toast.success(state.message);
+    if (state?.errors || state?.success) {
+      const notify = () => toast(state.message);
       notify();
-
-    } else if (state?.errors) {
-      const notify = () => toast.error(state.message);
-      notify();
-
+      setFiles([]);
     }
   }, [state]);
 
@@ -118,36 +114,41 @@ export default function RoomForm({
       <form action={action} className="te">
         <div className="flex max-lg:flex-wrap gap-4">
           <div className="space-y-4 w-full bg-primary rounded-lg">
-    <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={8}
-          containerClassName=""
-          containerStyle={{}}
-          toastOptions={{
-            // Define default options
-            className: "",
-            duration: 5000,
-            removeDelay: 1000,
-            style: {
-              background: "oklch(62.3% 0.214 259.815)",
-              color: "#fff",
-            },
-          }}
-        />
+            {state?.success && (
+              // <div className="te flex items-center gap-2 p-2 justify-center text-center rounded-t-md bg-green-500 text-primary">
+              //   <MdSmsFailed size={20} /> {state?.message}
+              // </div>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(79.2% 0.209 151.711)",
+                    color: "#fff",
+                  },
+                }}
+              />
+            )}
+
             {state?.success && (
               <div className="">
                 <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
 
                 </div>
                 <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-4 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
-                  <div className="flex gap-4 flex-col justify-center items-center w-full">
-                    <CheckmarkIcon size={28} />
+                  <div className="flex gap-4 flex-col justify-center w-full">
                     <p className="w-full text-green-500 text-center">
                       {state?.message}
                     </p>
-                    <div className="flex justify-between gap-2"><Link
-                      href="/dashboard/rooms" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Room page</Link>
+                    <div className="flex justify-between gap-2"><Link 
+                    href="/dashboard/rooms" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Room page</Link>
 
                     </div>
                   </div>
@@ -155,7 +156,25 @@ export default function RoomForm({
               </div>
             )}
 
-
+            {state?.errors && (
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />
+            )}
             <div className="space-y-4 w-full p-4 bg-primary rounded-lg">
               <h1 className="font-bold text-lg">Basic Information</h1>
               <div className="space-y-4">

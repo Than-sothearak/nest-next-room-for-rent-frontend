@@ -102,14 +102,10 @@ export default function RoomForm({
   }, [room]);
 
   useEffect(() => {
-    if (state?.success) {
-      const notify = () => toast.success(state.message);
+    if (state?.errors || state?.success) {
+      const notify = () => toast(state.message);
       notify();
-
-    } else if (state?.errors) {
-      const notify = () => toast.error(state.message);
-      notify();
-
+      setFiles([]);
     }
   }, [state]);
 
@@ -118,23 +114,7 @@ export default function RoomForm({
       <form action={action} className="te">
         <div className="flex max-lg:flex-wrap gap-4">
           <div className="space-y-4 w-full bg-primary rounded-lg">
-    <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={8}
-          containerClassName=""
-          containerStyle={{}}
-          toastOptions={{
-            // Define default options
-            className: "",
-            duration: 5000,
-            removeDelay: 1000,
-            style: {
-              background: "oklch(62.3% 0.214 259.815)",
-              color: "#fff",
-            },
-          }}
-        />
+
             {state?.success && (
               <div className="">
                 <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
@@ -142,7 +122,7 @@ export default function RoomForm({
                 </div>
                 <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-4 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
                   <div className="flex gap-4 flex-col justify-center items-center w-full">
-                    <CheckmarkIcon size={28} />
+                    <CheckmarkIcon size={28}/>
                     <p className="w-full text-green-500 text-center">
                       {state?.message}
                     </p>
@@ -155,7 +135,7 @@ export default function RoomForm({
               </div>
             )}
 
-
+  
             <div className="space-y-4 w-full p-4 bg-primary rounded-lg">
               <h1 className="font-bold text-lg">Basic Information</h1>
               <div className="space-y-4">

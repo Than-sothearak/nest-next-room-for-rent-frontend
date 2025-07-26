@@ -35,7 +35,8 @@ const ButtonViewAndDelete = ({
   }
   return (
 
-
+<div>
+  
 
     <form
       className="justify-end flex items-center gap-2"
@@ -77,9 +78,10 @@ const ButtonViewAndDelete = ({
       </div>
 
       {/* Confirmation Modal */}
-      {showConfirmation &&
-        createPortal(
-          <div className="w-full h-full fixed inset-0 bg-black/80 flex justify-center items-center">
+  
+    </form>
+        {showConfirmation && (
+               <div className="w-full h-full fixed inset-0 bg-black/80 flex justify-center items-center z-50">
             <div className="bg-white text-black p-6 rounded-md w-[300px]">
               <p className="text-center text-sm mb-4">
                 {"Are you sure to delete this item?"}
@@ -106,9 +108,8 @@ const ButtonViewAndDelete = ({
               </div>
             </div>
           </div>,
-          document.body
         )}
-    </form>
+</div>
 
   );
 };

@@ -34,11 +34,11 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
     <>
       <form
 
-        className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
+        className="flex flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
                     duration-300 transform hover:scale-125 bg-black/70 p-4 rounded-full"
         onMouseLeave={() => setIsClicked(false)}
       >
-        {/* <Toaster
+        <Toaster
           position="top-center"
           reverseOrder={false}
           gutter={8}
@@ -54,7 +54,7 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
               color: "#fff",
             },
           }}
-        /> */}
+        />
 
         <button
           disabled={!session?.user?.isAdmin}

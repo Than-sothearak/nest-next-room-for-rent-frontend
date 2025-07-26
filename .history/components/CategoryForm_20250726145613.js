@@ -55,12 +55,33 @@ const CategoryForm = ({ catData, catId, categories }) => {
             duration: 5000,
             removeDelay: 1000,
             style: {
-              background: "oklch(62.3% 0.214 259.815)",
+              background: "oklch(79.2% 0.209 151.711)",
               color: "#fff",
             },
           }}
         />
 
+    
+
+      {/* {state?.errors && (
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{}}
+          toastOptions={{
+            // Define default options
+            className: "",
+            duration: 5000,
+            removeDelay: 1000,
+            style: {
+              background: "oklch(70.4% 0.191 22.216)",
+              color: "#fff",
+            },
+          }}
+        />
+      )} */}
       <div className="grid gap-4">
         <div>
           <div className="flex gap-4">

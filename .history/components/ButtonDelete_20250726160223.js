@@ -38,7 +38,7 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
                     duration-300 transform hover:scale-125 bg-black/70 p-4 rounded-full"
         onMouseLeave={() => setIsClicked(false)}
       >
-        {/* <Toaster
+        <Toaster
           position="top-center"
           reverseOrder={false}
           gutter={8}
@@ -54,7 +54,7 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
               color: "#fff",
             },
           }}
-        /> */}
+        />
 
         <button
           disabled={!session?.user?.isAdmin}

@@ -55,7 +55,7 @@ const CategoryForm = ({ catData, catId, categories }) => {
             duration: 5000,
             removeDelay: 1000,
             style: {
-              background: "oklch(62.3% 0.214 259.815)",
+              background: "oklch(79.2% 0.209 151.711)",
               color: "#fff",
             },
           }}

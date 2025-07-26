@@ -7,10 +7,8 @@ import { formatDate } from "@/utils/formatDate";
 import AddPropertyForm from "./AddPropertyForm";
 import { BiTrash } from "react-icons/bi";
 import { useRouter } from "next/navigation";
-import toast, { CheckmarkIcon, Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { FaFile } from "react-icons/fa";
-import Link from "next/link";
-import { IoArrowForward } from "react-icons/io5";
 
 export default function BookingForm({
   users,
@@ -89,42 +87,18 @@ export default function BookingForm({
     if (state?.success) {
       const notify = () => toast.success(state.message);
       notify();
-
+      
     } else if (state?.errors) {
       const notify = () => toast.error(state.message);
       notify();
-
+      
     }
   }, [state]);
 
   return (
+
     <div>
-          {state?.success && (
-              <div className="">
-                <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
-
-                </div>
-                <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-4 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
-                  <div className="flex gap-4 flex-col justify-center items-center w-full">
-                    <CheckmarkIcon size={28} />
-                    <p className="w-full text-green-500 text-center">
-                      {state?.message}
-                    </p>
-                    <div className="flex justify-between gap-2"><Link
-                      href="/dashboard/booking" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Book page</Link>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-      <form
-        action={action}
-        className="grid grid-cols-2 max-md:grid-cols-1 gap-4  mt-4 "
-      >
-         
-
-        <Toaster
+       <Toaster
           position="top-center"
           reverseOrder={false}
           gutter={8}
@@ -151,7 +125,7 @@ export default function BookingForm({
               value={selectedUser}
               title={users?.find(u => u._id === selectedUser)?.username || ''}
               onChange={(e) => setSelectedUser(e.target.value)}
-              className="border rounded p-2"
+                            className="border rounded p-2"
             >
               <option value="">Select user</option>
               {users.map((u) => (
@@ -160,22 +134,22 @@ export default function BookingForm({
                 </option>
               ))}
             </select>
-            {state?.errors?.userId && (
-              <p className="text-red-500">{state.errors.userId}</p>
-            )}
+                {state?.errors?.userId && (
+                <p className="text-red-500">{state.errors.userId}</p>
+              )}
           </div>
 
           <div className="grid gap-2">
             <label className="font-bold">Room available  <span className="font-normal">(required)</span></label>
-
+             
             <select
               name="roomId"
               value={selectedRoom}
               onChange={(e) => setSelectedRoom(e.target.value)}
-
+           
               className="border rounded p-2"
             >
-
+          
               {oneRoom ? (
                 <option value={oneRoom._id}>{oneRoom.roomName}</option>
               ) : (
@@ -194,18 +168,18 @@ export default function BookingForm({
                     ))
               )}
             </select>
-
+           
             {state?.errors?.roomId && (
               <p className="text-red-500">{state.errors.roomId}</p>
             )}
           </div>
           <div className="grid gap-2">
-            <label className="font-bold flex gap-2">Contract <span className="font-normal"></span></label>
+            <label className="font-bold">Contract  <span className="font-normal">(required)</span></label>
             <select
               name="contract"
               value={contract}
               onChange={(e) => setContract(e.target.value)}
-
+             
               className="border rounded p-2"
             >
               <option value="">Select months</option>
@@ -231,7 +205,7 @@ export default function BookingForm({
 
               <option value={12}>12 month</option>
             </select>
-            {state?.errors?.contract && (
+            {state?.errors?.roomId && (
               <p className="text-red-500">{state.errors.contract}</p>
             )}
           </div>
@@ -243,7 +217,7 @@ export default function BookingForm({
                 name="startDate"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-
+              
                 className="border rounded p-2"
               />
               {state?.errors?.startDate && (
@@ -257,7 +231,7 @@ export default function BookingForm({
                 name="dueDate"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-
+                
                 className="border rounded p-2"
               />
               {state?.errors?.endDate && (
@@ -278,7 +252,7 @@ export default function BookingForm({
                     const value = e.target.value;
                     setRent(value === "" ? "" : Number(e.target.value));
                   }}
-
+             
                   className="w-full border rounded p-2"
                 />
                 {state?.errors?.rent && (
@@ -295,7 +269,7 @@ export default function BookingForm({
                     const value = e.target.value;
                     setDeposit(value === "" ? "" : Number(e.target.value));
                   }}
-
+              
                   className="w-full border rounded p-2"
                 />
                 {state?.errors?.deposit && (
@@ -321,7 +295,7 @@ export default function BookingForm({
               name="paymentStatus"
               value={paymentStatus}
               onChange={(e) => setPayment(e.target.value)}
-
+       
               className={`border rounded p-2 ${paymentStatus === 'paid' ? 'text-green-500' : 'text-red-500'} `}
             >  <option value="unpaid" className="text-black">Unpaid</option>
               <option value="paid" className="text-black">Paid</option>
@@ -335,7 +309,7 @@ export default function BookingForm({
               name="status"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-
+        
               className="border rounded p-2"
             >
               <option value="active">Active</option>

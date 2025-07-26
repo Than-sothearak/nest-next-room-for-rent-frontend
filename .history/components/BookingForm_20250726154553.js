@@ -99,7 +99,7 @@ export default function BookingForm({
 
   return (
     <div>
-          {state?.success && (
+          {!state?.success && (
               <div className="">
                 <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
 
@@ -111,7 +111,7 @@ export default function BookingForm({
                       {state?.message}
                     </p>
                     <div className="flex justify-between gap-2"><Link
-                      href="/dashboard/booking" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Book page</Link>
+                      href="/dashboard/rooms" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Book page</Link>
 
                     </div>
                   </div>

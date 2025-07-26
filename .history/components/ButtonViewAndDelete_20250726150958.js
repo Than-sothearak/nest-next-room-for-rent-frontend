@@ -1,19 +1,35 @@
 "use client";
 import { deleteById } from "@/actions/deleteFromDb";
-import React, { startTransition, useActionState, useEffect, useState } from "react";
+import Link from "next/link";
+import React, { startTransition, useActionState, useEffect, useOptimistic, useState, useTransition } from "react";
 import { createPortal } from "react-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { FaTrash } from "react-icons/fa";
 
-const ButtonDelete = ({ id, session, setOptimisticData }) => {
-  const [isClicked, setIsClicked] = useState(false);
+const ButtonViewAndDelete = ({
+  link,
+  id,
+  setOptimisticData
+}) => {
+  const [isClicked, setIsClicked] = useState(true);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isPending, setIsPending] = useState(false)
 
   const handleShowConfirm = () => {
     setIsClicked(false);
     setShowConfirmation(false);
   };
 
+  // const deleteUserById = deleteById.bind(null, id)
+
+  // const [state, formAction, isPending] = useActionState(deleteUserById, undefined,
+  //   id);
+  // useEffect(() => {
+  //   if (state?.errors || state?.success) {
+  //     const notify = () => toast(state.message);
+  //     notify();
+  //     setShowConfirmation(false)
+  //   }
+  // }, [state]);
 
   const handelDelete = async (id) => {
     startTransition(() => {
@@ -29,16 +45,10 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
 
     setShowConfirmation(false)
   }
-
   return (
-    <>
-      <form
 
-        className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
-                    duration-300 transform hover:scale-125 bg-black/70 p-4 rounded-full"
-        onMouseLeave={() => setIsClicked(false)}
-      >
-        {/* <Toaster
+  <div>
+            <Toaster
           position="top-center"
           reverseOrder={false}
           gutter={8}
@@ -54,34 +64,45 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
               color: "#fff",
             },
           }}
-        /> */}
-
+        />
+    <form
+      className="justify-end flex items-center gap-2"
+    >
+   
+      {/* Dropdown menu */}
+      <div
+        className={`flex gap-2 justify-items-center items-center rounded-md transition-opacity duration-200 ease-out max-sm:right-0 left-0 top-4 
+        }`}
+      >
+        <Link
+          href={link}
+          className="bg-blue-500  text-primary border border-secondary px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
+        >
+          Edit
+        </Link>
         <button
-          disabled={!session?.user?.isAdmin}
           type="button"
-          title={!session?.user?.isAdmin ? "Don't have permission" : "Edit"}
-          onClick={() => setIsClicked((prev) => !prev)}
-        ></button>
-
-        <button type="button" onClick={() => setShowConfirmation(true)}>
-          <FaTrash />
+          onClick={() => setShowConfirmation(true)}
+          className="bg-red-500 text-secondarytext px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
+        >
+          Delete
         </button>
-      </form>
+      </div>
 
       {/* Confirmation Modal */}
       {showConfirmation &&
         createPortal(
           <div className="w-full h-full fixed inset-0 bg-black/80 flex justify-center items-center z-[9999]">
-            <div className="bg-white text-black p-6 rounded-md shadow-lg w-[300px]">
+            <div className="bg-white text-black p-6 rounded-md w-[300px]">
               <p className="text-center text-sm mb-4">
-                {"Are you sure you want to delete this item?"}
+                {isPending ? "Deleting item..." : "Are you sure to delete this item?"}
               </p>
               <div className="w-full flex justify-between gap-4">
                 <button
 
                   type="button"
                   onClick={handleShowConfirm}
-                  className={` bg-gray-400 rounded-md  w-full text-white`}
+                  className={`${isPending ? 'opacity-40 cursor-wait ' : 'hover:bg-gray-600'} bg-gray-400 rounded-md  w-full text-white`}
                 >
                   No
                 </button>
@@ -90,20 +111,19 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
                     type="button"
                     onClick={() => handelDelete(id)}
 
-                    className={` rounded-md bg-red-500 px-4 py-2 text-white w-full hover:bg-red-700`}
+                    className={`${isPending ? 'opacity-40 cursor-wait' : ''} rounded-md bg-red-500 px-4 py-2 text-white w-full hover:bg-red-700`}
                   >
                     Yes
                   </button>
                 </form>
               </div>
             </div>
-
           </div>,
-
           document.body
         )}
-    </>
+    </form>
+  </div>
   );
 };
 
-export default ButtonDelete;
+export default ButtonViewAndDelete;

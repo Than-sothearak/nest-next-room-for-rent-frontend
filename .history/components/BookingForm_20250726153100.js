@@ -7,10 +7,8 @@ import { formatDate } from "@/utils/formatDate";
 import AddPropertyForm from "./AddPropertyForm";
 import { BiTrash } from "react-icons/bi";
 import { useRouter } from "next/navigation";
-import toast, { CheckmarkIcon, Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { FaFile } from "react-icons/fa";
-import Link from "next/link";
-import { IoArrowForward } from "react-icons/io5";
 
 export default function BookingForm({
   users,
@@ -99,31 +97,10 @@ export default function BookingForm({
 
   return (
     <div>
-          {state?.success && (
-              <div className="">
-                <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
-
-                </div>
-                <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-4 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
-                  <div className="flex gap-4 flex-col justify-center items-center w-full">
-                    <CheckmarkIcon size={28} />
-                    <p className="w-full text-green-500 text-center">
-                      {state?.message}
-                    </p>
-                    <div className="flex justify-between gap-2"><Link
-                      href="/dashboard/booking" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Book page</Link>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
       <form
         action={action}
         className="grid grid-cols-2 max-md:grid-cols-1 gap-4  mt-4 "
       >
-         
-
         <Toaster
           position="top-center"
           reverseOrder={false}

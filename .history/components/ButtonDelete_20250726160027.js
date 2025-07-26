@@ -38,23 +38,7 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
                     duration-300 transform hover:scale-125 bg-black/70 p-4 rounded-full"
         onMouseLeave={() => setIsClicked(false)}
       >
-        {/* <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={8}
-          containerClassName=""
-          containerStyle={{}}
-          toastOptions={{
-            // Define default options
-            className: "",
-            duration: 5000,
-            removeDelay: 1000,
-            style: {
-              background: "oklch(62.3% 0.214 259.815)",
-              color: "#fff",
-            },
-          }}
-        /> */}
+  
 
         <button
           disabled={!session?.user?.isAdmin}
@@ -97,9 +81,25 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
                 </form>
               </div>
             </div>
-
+         <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{}}
+          toastOptions={{
+            // Define default options
+            className: "",
+            duration: 5000,
+            removeDelay: 1000,
+            style: {
+              background: "oklch(62.3% 0.214 259.815)",
+              color: "#fff",
+            },
+          }}
+        />
           </div>,
-
+       
           document.body
         )}
     </>
