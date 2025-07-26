@@ -184,14 +184,10 @@ export default function BookingForm({
                 </option>
               ))}
             </select>
-                {state?.errors?.userId && (
-                <p className="text-red-500">{state.errors.userId}</p>
-              )}
           </div>
 
           <div className="grid gap-2">
             <label className="font-bold">Room available  <span className="font-normal">(required)</span></label>
-             
             <select
               name="roomId"
               value={selectedRoom}
@@ -199,7 +195,9 @@ export default function BookingForm({
            
               className="border rounded p-2"
             >
-          
+              {state?.errors?.userId && (
+                <p className="text-red-500">{state.errors.userId}</p>
+              )}
               {oneRoom ? (
                 <option value={oneRoom._id}>{oneRoom.roomName}</option>
               ) : (
@@ -218,13 +216,12 @@ export default function BookingForm({
                     ))
               )}
             </select>
-           
             {state?.errors?.roomId && (
               <p className="text-red-500">{state.errors.roomId}</p>
             )}
           </div>
           <div className="grid gap-2">
-            <label className="font-bold">Contract  <span className="font-normal">(required)</span></label>
+            <label className="font-bold">contract  <span className="font-normal">(required)</span></label>
             <select
               name="contract"
               value={contract}
@@ -302,7 +299,7 @@ export default function BookingForm({
                     const value = e.target.value;
                     setRent(value === "" ? "" : Number(e.target.value));
                   }}
-             
+                  required
                   className="w-full border rounded p-2"
                 />
                 {state?.errors?.rent && (
@@ -319,7 +316,7 @@ export default function BookingForm({
                     const value = e.target.value;
                     setDeposit(value === "" ? "" : Number(e.target.value));
                   }}
-              
+                  required
                   className="w-full border rounded p-2"
                 />
                 {state?.errors?.deposit && (
@@ -455,7 +452,7 @@ export default function BookingForm({
         <button
           type="submit"
           disabled={isPending}
-          className={`p-2 bg-blue-600 text-secondarytext w-full mb-4 hover:bg-blue-500 hover:text-slate-200 rounded-md ${isPending ? "opacity-50 cursor-not-allowed" : ""
+          className={`p-2 bg-blue-600 text-secondarytext w-full mt-6 mb-10 hover:bg-blue-500 hover:text-slate-200 rounded-md ${isPending ? "opacity-50 cursor-not-allowed" : ""
             }`}
         >
           {isPending

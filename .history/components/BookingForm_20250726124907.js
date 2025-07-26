@@ -450,9 +450,7 @@ export default function BookingForm({
             />
 
           </div>
-        </div>
-
-        <button
+               <button
           type="submit"
           disabled={isPending}
           className={`p-2 bg-blue-600 text-secondarytext w-full mb-4 hover:bg-blue-500 hover:text-slate-200 rounded-md ${isPending ? "opacity-50 cursor-not-allowed" : ""
@@ -466,6 +464,9 @@ export default function BookingForm({
               ? "Update"
               : "Create Booking"}
         </button>
+        </div>
+
+   
       </form>
     </div>
   );
