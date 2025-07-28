@@ -66,3 +66,26 @@ export function getFormattedAgoText(dateString) {
 
   return result.trim() + " ago";
 }
+
+export function timeAgo(lastLogin) {
+  if (!lastLogin) return 'Never logged in';
+
+  const now = new Date();
+  const past = new Date(lastLogin);
+  const diff = now - past; // difference in ms
+
+  const minute = 60 * 1000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+  const month = 30 * day;  // approx
+  const year = 365 * day;  // approx
+
+  if (diff < minute) return 'Just now';
+  if (diff < hour) return Math.floor(diff / minute) + ' minute(s) ago';
+  if (diff < day) return Math.floor(diff / hour) + ' hour(s) ago';
+  if (diff < month) return Math.floor(diff / day) + ' day(s) ago';
+  if (diff < year) return Math.floor(diff / month) + ' month(s) ago';
+
+  return Math.floor(diff / year) + ' year(s) ago';
+}
+

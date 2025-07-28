@@ -4,6 +4,7 @@ import { PiEmptyThin } from "react-icons/pi";
 import ButtonViewAndDelete from "./ButtonViewAndDelete";
 import { useFormStatus } from "react-dom";
 import Image from "next/image";
+import { formatDate, timeAgo } from "@/utils/formatDate";
 
 const TableComponent = ({
   productCount,
@@ -37,7 +38,7 @@ const TableComponent = ({
                 </td>
               ))}
 
-              <td>Action</td>
+              <td className="text-end">Action</td>
             </tr>
           </thead>
           <tbody>
@@ -48,7 +49,7 @@ const TableComponent = ({
               >
                 <td>{(Number(currentPage) - 1) * itemPerPage + index + 1}</td>
                 {columns.map((column, colIndex) => (
-                  <td key={colIndex} className="py-4 px-4">
+                  <td key={colIndex} className="py-4 px-4  whitespace-nowrap">
                     <div className="flex gap-2 justify-start items-center">
                       {colIndex === 0 && (
                         <div className="relative aspect-square h-10 w-10  ">
@@ -76,18 +77,16 @@ const TableComponent = ({
                       ) : column.accessor === "category" ? (
                         row.category?.category || "No Category"
                       ) : column.accessor === "isAdmin" ? (
-                        row[column.accessor] ? (
-                          "Admin"
-                        ) : (
-                          "User"
-                        )
+                        row[column.accessor] ?  "Admin" : "User" 
                       ) : column.accessor === "status" ? (
-                        row[column.accessor] === 'active' ? (
-                          "Avtive"
-                        ) : (
-                          "Deactivated"
-                        )
-                      ) : column.accessor ? (
+                        row[column.accessor] === 'active' ?  "Avtive" : "Deactivated" 
+                      ): column.accessor === "createdAt" ? (
+                        formatDate(row[column.accessor]) 
+                      ) : column.accessor === "lastLogin" ? (
+                        timeAgo(row[column.accessor]) 
+                      ) 
+                      
+                      : column.accessor ? (
                         row[column.accessor]
                       ) : (
                         row[column.header]
