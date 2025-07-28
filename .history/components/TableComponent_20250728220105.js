@@ -50,7 +50,7 @@ const TableComponent = ({
                 <td>{(Number(currentPage) - 1) * itemPerPage + index + 1}</td>
                 {columns.map((column, colIndex) => (
                   <td key={colIndex} className="py-4 px-4  whitespace-nowrap" 
-                  title={`${column.accessor === "deviceModel" ? `${row.osName} ${row.browserName} ${row.deviceType}`: '' }`}>
+                  title={`${row[column.header] === "Device" ? 'lala': 'lolol'}`}>
                     <div className="flex gap-2 justify-start items-center">
                       {colIndex === 0 && (
                         <div className="relative aspect-square h-10 w-10  ">
