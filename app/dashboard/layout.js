@@ -12,14 +12,9 @@ export default async function DashboardLayout({
   admin,
   user,
 }) {
-
   const session = await auth();
-<<<<<<< HEAD
-  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate delay for loading
-=======
   await mongoDb()
   await new Promise((res) => setTimeout(res, 10000));
->>>>>>> 4915b8829410d5770fda4b8c2fe73241e0ba6cd2
   const userId = await User.findOne({ _id: session?.user?._id });
 
   if (!session || !userId) {
