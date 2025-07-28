@@ -23,7 +23,7 @@ export async function authenticate(prevState, formData) {
   const device = parser.getDevice();
   const os = parser.getOS();
   const browser = parser.getBrowser();
-
+  const deviceType = device.type || "Desktop"
   try {
 
 
@@ -59,8 +59,8 @@ export async function authenticate(prevState, formData) {
           lastIP: ip,
           location: `${location.city}, ${location.region}, ${location.country}`,
           lastUserAgent: userAgent,
-          deviceType: device.type || "Desktop",
-          deviceModel: device.model || "Desktop",
+          deviceType: deviceType,
+          deviceModel: device.model || "",
           osName: os.name || "",
           browserName: browser.name || "",
         },
