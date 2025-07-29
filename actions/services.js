@@ -99,8 +99,6 @@ export async function getServices(query, page, sortKey, sortDate, sortDirection,
         .limit(ITEM_PER_PAGE)
         .skip(ITEM_PER_PAGE * (page - 1));;
 
-      console.log(count)
-
       return { services, count, serviceCount, ITEM_PER_PAGE };
     }
 

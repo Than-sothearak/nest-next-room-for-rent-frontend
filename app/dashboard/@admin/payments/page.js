@@ -4,11 +4,15 @@ import Pagination from "@/components/Pagination";
 import SearchCompoenent from "@/components/SearchComponent";
 import { formatDate, formatDateTime } from "@/utils/formatDate";
 import Link from "next/link";
-import { BiPrinter, BiSortAlt2, BiUpArrowAlt, BiDownArrowAlt } from "react-icons/bi";
+import {
+  BiPrinter,
+  BiSortAlt2,
+  BiUpArrowAlt,
+  BiDownArrowAlt,
+} from "react-icons/bi";
 import React from "react";
 
 export default async function ServicePage({ searchParams }) {
-
   const session = await auth();
   if (!session || !session.user?.isAdmin) {
     return (
@@ -19,24 +23,29 @@ export default async function ServicePage({ searchParams }) {
     );
   }
   const { query } = await searchParams;
- 
-  const { page } = (await searchParams) || 1;
-    const {sortKey} = (await searchParams) || "requesting";
-    const {sortDate} = (await searchParams) || "date";
-    const {sortDirection }= await searchParams || "descending";
+
+  const { page } = await searchParams || 1;
+  const { sortKey } = (await searchParams) || "requesting";
+  const { sortDate } = (await searchParams) || "date";
+  const { sortDirection } = (await searchParams) || "descending";
 
   const { payments, count, ITEM_PER_PAGE } = await getPayments(
     query,
-    page,
+    page || 1,
     sortKey,
     sortDate,
-    sortDirection,
+    sortDirection
   );
-  const totalPages = Math.max(1, Math.ceil(count / ITEM_PER_PAGE));
-
-  const nextDirection = sortDirection === "descending" ? "ascending" : "descending";
+  const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE));
+  
+  const nextDirection =
+    sortDirection === "descending" ? "ascending" : "descending";
   const sortIcon =
-    sortDirection === "ascending" ? <BiUpArrowAlt size={16} /> : <BiDownArrowAlt size={16} />;
+    sortDirection === "ascending" ? (
+      <BiUpArrowAlt size={16} />
+    ) : (
+      <BiDownArrowAlt size={16} />
+    );
 
   return (
     <div className="p-4 bg-primary mt-4 rounded-lg">
@@ -88,8 +97,8 @@ export default async function ServicePage({ searchParams }) {
               const extra = Array.isArray(p.services)
                 ? p.services.reduce((sum, it) => sum + Number(it?.values), 0)
                 : 0;
-              const total = p.amount + extra; 
-              
+              const total = p.amount + extra;
+
               return (
                 <tr key={p._id} className="border-t text-sm">
                   <td className="p-2 whitespace-nowrap">
@@ -106,13 +115,18 @@ export default async function ServicePage({ searchParams }) {
                       {p.status}
                     </span>
                   </td>
-                 
-                  <td className="p-2 whitespace-nowrap">{formatDateTime(p.paidAt)}</td>
+
+                  <td className="p-2 whitespace-nowrap">
+                    {formatDateTime(p.paidAt)}
+                  </td>
                   <td className="p-2 whitespace-nowrap">{p.userId.username}</td>
                   <td className="p-2 text-right">${total.toFixed(2)}</td>
                   <td className="p-2 text-center">
                     <Link href={`/invoice/${p._id}`} title="Print invoice">
-                      <BiPrinter size={20} className="inline hover:text-blue-600" />
+                      <BiPrinter
+                        size={20}
+                        className="inline hover:text-blue-600"
+                      />
                     </Link>
                   </td>
                 </tr>
@@ -128,15 +142,15 @@ export default async function ServicePage({ searchParams }) {
           </tbody>
         </table>
       </div>
-
-      {/* PAGINATION */}
+  
       <Pagination
-        totalPages={totalPages}
-        pathname={"/dashboard/services"}
+        totalPages={countPage}
+        pathname={"/payments"}
         itemPerPage={ITEM_PER_PAGE}
         currentPage={page}
         query={query}
       />
+      {/* PAGINATION */}
     </div>
   );
 }

@@ -21,6 +21,7 @@ const LastTransitionPage = async () => {
 
       const formatted = latestPayment.map((payment) => ({
         name: payment.userId ? payment.userId?.username : "Unknown",
+        image: payment.userId?.imageUrl ,
         date: new Date(payment.paidAt).toLocaleDateString(),
         amount: (
           (Number(payment.amount) || 0) +
@@ -30,7 +31,6 @@ const LastTransitionPage = async () => {
 
         status: payment.status === "paid" ? "Completed" : "Padding",
       }));
-
 
       return (
         <>

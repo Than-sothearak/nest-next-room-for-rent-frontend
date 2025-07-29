@@ -14,7 +14,6 @@ export async function getPayments(query, page, sortKey, sortDate, sortDirection,
         const ITEM_PER_PAGE = 20;
         let sort = { createdAt: -1 }
         let key = {};
-
         // key.status = { $in: ["pending", "cancelled", "accepted"] };
 
         // if (sortKey) {
@@ -83,7 +82,7 @@ export async function getPayments(query, page, sortKey, sortDate, sortDirection,
             .skip(ITEM_PER_PAGE * (page - 1));
 
 
-        const count = payments.length
+        const count = await Payment.countDocuments();
 
         return { payments, count, ITEM_PER_PAGE };
     } catch (err) {
