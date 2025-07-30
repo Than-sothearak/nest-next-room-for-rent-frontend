@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-const AdminPage = async ({children}) => {
-  const session = await auth();
+const AdminPage = async ({ children }) => {
+   const session = await auth();
   {
     if (!session) {
       return <div>Please log in to access the dashboard.</div>;
@@ -11,7 +11,8 @@ const AdminPage = async ({children}) => {
     if (session?.user?.isAdmin) {
       return (
         <>
-          <div>{children}</div>
+            <div>{children}</div>
+        
         </>
       );
     }

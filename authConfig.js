@@ -4,6 +4,13 @@ export const authConfig = {
   pages: {
     signIn: "/login",
   },
+  session: {
+    strategy: 'jwt',
+    maxAge: 60* 60 , // 1 hour (optional, session max duration)
+  },
+  jwt: {
+    maxAge: 60* 60,
+  },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
