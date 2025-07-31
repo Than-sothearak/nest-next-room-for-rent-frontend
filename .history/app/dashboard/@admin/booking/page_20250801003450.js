@@ -2,6 +2,7 @@ import { getBooking } from '@/actions/Booking';
 import { auth } from '@/auth';
 import BookingTable from '@/components/BookingTable';
 import SearchCompoenent from '@/components/SearchComponent';
+import { Invoice } from '@/models/Invoice';
 import Link from 'next/link';
 import React from 'react'
 
@@ -16,7 +17,8 @@ const bookPage = async ({searchParams}) => {
       page,
     );
 
-
+    const invoices = await Invoice.findOne()
+    console.log(invoices)
     const ITEM_PER_PAGE = 20;
     const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
 
@@ -37,8 +39,7 @@ const bookPage = async ({searchParams}) => {
         </Link>
       </div>
       <BookingTable
-
-       count={count}
+      count={count}
       session={session}
         booking={JSON.parse(JSON.stringify(booking))}
         currentPage={page ||1}

@@ -11,6 +11,7 @@ const addBookingPage = async () => {
     const { rooms } = await getRoom()
             const invoices = await Invoice.findOne()
    
+  console.log(invoices)
   return (
     <div>
         <BookingForm 

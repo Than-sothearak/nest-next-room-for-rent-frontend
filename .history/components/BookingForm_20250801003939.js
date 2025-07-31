@@ -106,13 +106,12 @@ export default function BookingForm({
                 <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
 
                 </div>
-                <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-8 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
+                <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-4 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
                   <div className="flex gap-4 flex-col justify-center items-center w-full">
                     <CheckmarkIcon size={28} />
                     <p className="w-full text-green-500 text-center">
                       {state?.message}
                     </p>
-                    <span>Invoice No: {String(state?.invoiceId).padStart(5,0)}</span>
                     <div className="flex justify-between gap-2"><Link
                       href="/dashboard/booking" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Book page</Link>
 
@@ -145,7 +144,7 @@ export default function BookingForm({
           }}
         />
         <div className="space-y-4 bg-white shadow  p-4  rounded-xl">
-          <h2 className="text-xl font-semibold">{booking ? "Edit Booking" : "Create Booking"} Invoice: { booking ? String(booking?.invoiceId).padStart(5, '0') : String(invoices + 1).padStart(5, '0') }  </h2>
+          <h2 className="text-xl font-semibold">{booking ? "Edit Booking" : "Create Booking"} Invoice: {String(booking?.invoiceId).padStart(5, '0')}  </h2>
 
           <div className="grid gap-2">
             <label className="font-bold">User phone number <span className="font-normal">(required)</span></label>

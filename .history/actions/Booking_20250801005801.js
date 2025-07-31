@@ -107,13 +107,12 @@ export async function createBooking(prevState, formData) {
     );
 
     console.log("Booking created successfully");
-      return { success: true, message: "Booking added successfully!", invoiceId: invoiceId}
   } catch (error) {
     console.error("Error creating booking:", error);
     return { error: "Failed to create booking due to a server error", message: "Failed to create booking due to a server error" };
   }
 
-
+  return { success: true, message: "Booking added successfully!", invoiceId: invoiceId };
 }
 
 export async function updateBooking(bookId, prevState, formData) {

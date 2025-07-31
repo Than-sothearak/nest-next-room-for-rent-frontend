@@ -106,7 +106,7 @@ export default function BookingForm({
                 <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
 
                 </div>
-                <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-8 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
+                <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-4 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
                   <div className="flex gap-4 flex-col justify-center items-center w-full">
                     <CheckmarkIcon size={28} />
                     <p className="w-full text-green-500 text-center">

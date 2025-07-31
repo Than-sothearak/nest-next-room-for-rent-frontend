@@ -34,9 +34,26 @@ export async function createBooking(prevState, formData) {
     const properties = propertiesFormData(formData);
     const parking = parkingFormData(formData.get("parking"), formData.get("parkingSize"));
 
+    let invoiceId = "00001";
+    let invoiceMonth
+    const newMonth = getMonthString(startDate) || "2025-1";
+    try {
+       const counter = await Invoice.findOneAndUpdate(
+    { month: "invoice" },
+    { $inc: { number: 1 } },
+    { upsert: true, new: true }
+  );
+
+      invoiceId = String(counter.number).padStart(5, '0');
+    } catch (err) {
+      console.log(err)
+    }
+    invoiceMonth = newMonth
 
     const bookingData = {
       userId,
+      invoiceId,
+      invoiceMonth,
       roomId,
       startDate,
       dueDate,
@@ -76,28 +93,8 @@ export async function createBooking(prevState, formData) {
       console.log("No file provided");
     }
 
-    
-    let invoiceId = "00001";
-    let invoiceMonth
-    const newMonth = getMonthString(startDate) || "2025-1";
-    try {
-       const counter = await Invoice.findOneAndUpdate(
-    { month: "invoice" },
-    { $inc: { number: 1 } },
-    { upsert: true, new: true }
-  );
-
-      invoiceId = String(counter.number).padStart(5, '0');
-    } catch (err) {
-      console.log(err)
-    }
-
-    invoiceMonth = newMonth
-
     await Booking.create({
       ...bookingData,
-      invoiceId,
-      invoiceMonth,
       files: fileUrls,
     });
 
@@ -107,13 +104,12 @@ export async function createBooking(prevState, formData) {
     );
 
     console.log("Booking created successfully");
-      return { success: true, message: "Booking added successfully!", invoiceId: invoiceId}
   } catch (error) {
     console.error("Error creating booking:", error);
     return { error: "Failed to create booking due to a server error", message: "Failed to create booking due to a server error" };
   }
 
-
+  return { success: true, message: "Booking added successfully!" };
 }
 
 export async function updateBooking(bookId, prevState, formData) {
@@ -146,7 +142,27 @@ export async function updateBooking(bookId, prevState, formData) {
     const properties = propertiesFormData(formData);
     const parking = parkingFormData(formData.get("parking"), formData.get("parkingSize"));
 
+    let invoiceId = 1
+    if (booking?.invoiceId) {
+      invoiceId = booking?.invoiceId;
+    }
+    let invoiceMonth
+    const oldMonth = booking.invoiceMonth || getMonthString(booking.startDate);
+    const newMonth = getMonthString(startDate);
+    try {
+      if (oldMonth !== newMonth) {
+    const counter = await Invoice.findOneAndUpdate(
+    { month: "invoice" },
+    { $inc: { number: 1 } },
+    { upsert: true, new: true }
+  );
 
+      invoiceId = String(counter.number).padStart(5, '0');
+      }
+    } catch (err) {
+      console.log(err)
+    }
+    invoiceMonth = newMonth
 
     const updatedFileUrls = booking.files.filter(
       (file) => !removedFiles.includes(file) // Remove only matching URLs
@@ -156,6 +172,8 @@ export async function updateBooking(bookId, prevState, formData) {
     const bookingData = {
       userId: userId,
       roomId: roomId,
+      invoiceId,
+      invoiceMonth,
       invoiceSent,
       startDate,
       dueDate,
@@ -172,6 +190,15 @@ export async function updateBooking(bookId, prevState, formData) {
 
     const errors = validateProductFields(bookingData);
     if (Object.keys(errors).length > 0) return { errors, message: "Please input all required fields" };
+
+    //  const existingName = await Booking.findOne({
+    //     roomId: formData.get("roomId"),
+    //   });
+    //   if (existingName) {
+    //     errors.roomId = "This room is already booked";
+    //     console.log("XX This room is already booked XX");
+    //     return { errors };
+    //   }
 
     try {
       if (removedFiles && removedFiles.length > 0) {
@@ -203,30 +230,9 @@ export async function updateBooking(bookId, prevState, formData) {
     }
 
     console.log("Files URLs after processing:", fileUrls);
-    
-        let invoiceId = 1
-    if (booking?.invoiceId) {
-      invoiceId = booking?.invoiceId;
-    }
-    let invoiceMonth
-    const oldMonth = booking.invoiceMonth || getMonthString(booking.startDate);
-    const newMonth = getMonthString(startDate);
-    try {
-      if (oldMonth !== newMonth) {
-    const counter = await Invoice.findOneAndUpdate(
-    { month: "invoice" },
-    { $inc: { number: 1 } },
-    { upsert: true, new: true }
-  );
 
-      invoiceId = String(counter.number).padStart(5, '0');
-      }
-    } catch (err) {
-      console.log(err)
-    }
-    invoiceMonth = newMonth
-    await Booking.updateOne({ _id: bookId }, {...bookingData, invoiceId, invoiceMonth});
-    
+    await Booking.updateOne({ _id: bookId }, bookingData);
+
     // Update room status accordingly
     await syncRoomStatuses({
       oldRoomId,
@@ -250,7 +256,7 @@ export async function updateBooking(bookId, prevState, formData) {
     }
 
     console.log("Booking updated!");
-    return { success: true, message: "Booking update successfully!", invoiceId: invoiceId };
+    return { success: true, message: "Booking update successfully!" };
   } catch (err) {
     console.error("Error updating room:", err);
     return { error: "Failed to update booking due to a server error", message: "Failed to update booking due to a server error" };
@@ -359,9 +365,6 @@ function parkingFormData(name, size) {
 
 
 function getMonthString(date) {
-  if (!date) {
-    return 
-  }
   return new Date(date).toISOString().slice(0, 7); // "YYYY-MM"
 }
 

@@ -107,13 +107,12 @@ export async function createBooking(prevState, formData) {
     );
 
     console.log("Booking created successfully");
-      return { success: true, message: "Booking added successfully!", invoiceId: invoiceId}
   } catch (error) {
     console.error("Error creating booking:", error);
     return { error: "Failed to create booking due to a server error", message: "Failed to create booking due to a server error" };
   }
 
-
+  return { success: true, message: "Booking added successfully!" };
 }
 
 export async function updateBooking(bookId, prevState, formData) {
@@ -225,7 +224,7 @@ export async function updateBooking(bookId, prevState, formData) {
       console.log(err)
     }
     invoiceMonth = newMonth
-    await Booking.updateOne({ _id: bookId }, {...bookingData, invoiceId, invoiceMonth});
+    await Booking.updateOne({ _id: bookId }, bookingData, invoiceId, invoiceMonth);
     
     // Update room status accordingly
     await syncRoomStatuses({
@@ -250,7 +249,7 @@ export async function updateBooking(bookId, prevState, formData) {
     }
 
     console.log("Booking updated!");
-    return { success: true, message: "Booking update successfully!", invoiceId: invoiceId };
+    return { success: true, message: "Booking update successfully!" };
   } catch (err) {
     console.error("Error updating room:", err);
     return { error: "Failed to update booking due to a server error", message: "Failed to update booking due to a server error" };
