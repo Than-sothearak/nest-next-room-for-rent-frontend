@@ -163,8 +163,9 @@ export async function cancelService(serviceId, telegramChatId) {
   await mongoDb();
   const session = await auth();
   const admin = await User.findOne({ isAdmin: true });
+
  if (!telegramChatId) {
-  console.log("No telegram id")
+ return { error: "!telegramChatId" };
  }
   try {
     const service = await Service.findById(serviceId).populate("userId").populate("roomId");
@@ -201,7 +202,7 @@ export async function cancelService(serviceId, telegramChatId) {
     return { success: true, message: "Service cancelled successfully!" };
   } catch (err) {
     console.error("Error cancelling service:", err);
-    return { error: "Failed to cancel service" };
+    return { error: "Failed to cancel service", message: "Failed to cancel service!" };
   }
 }
 

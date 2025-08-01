@@ -9,8 +9,15 @@ import Link from "next/link";
 const roomPage = async ({ searchParams }) => {
   await mongoDb();
   const session = await auth();
+  if (!session || !session.user?.isAdmin) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold">Unauthorized</h1>
+      </div>
+    );
+  }
   const { query } = await searchParams;
-
+ 
   const pathname = "room"
   const { page } = (await searchParams) || 1;
   const { sort } = await searchParams 

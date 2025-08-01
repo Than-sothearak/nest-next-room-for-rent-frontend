@@ -63,7 +63,7 @@ export default async function DashboardLayout({
               user={JSON.parse(JSON.stringify(userId))}
             />
             <div className="max-lg:mx-2 overflow-x-auto">{children} </div>
-            <div className="max-lg:mx-2 overflow-x-auto">{user}</div>
+            <div className="max-lg:mx-2 overflow-x-auto h-screen my-4">{user}</div>
              <Footer />
           </div>
         </div>

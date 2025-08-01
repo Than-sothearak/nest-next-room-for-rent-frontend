@@ -1,38 +1,70 @@
-"use client"
-import { requestService } from '@/actions/requestService'
-import React, { useActionState, useEffect, useState } from 'react'
+"use client";
+import { requestService } from "@/actions/requestService";
+import React, { useActionState, useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
-const ClientServiceForm = ({ serviceType, user, booking, price, setIsClicked }) => {
-  const [startDate, setStartDate] = useState("")
+const ClientServiceForm = ({
+  serviceType,
+  user,
+  booking,
+  price,
+  setIsClicked,
+}) => {
+  const [startDate, setStartDate] = useState("");
   const [prices, setPrices] = useState(price);
-  const [service, setService] = useState("" || serviceType)
-   const [startTime, setStartTime] = useState("")
-   const [note, setNote] = useState("")
+  const [service, setService] = useState("" || serviceType);
+  const [startTime, setStartTime] = useState("");
+  const [note, setNote] = useState("");
 
-   const handleAddRequest = requestService.bind(null, booking)
- const [state, action, isPending] = useActionState(handleAddRequest, undefined)
+  const handleAddRequest = requestService.bind(null, booking);
+  const [state, action, isPending] = useActionState(
+    handleAddRequest,
+    undefined
+  );
 
-useEffect(()=> {
-  if (state?.success) {
-setIsClicked(false)
-  }
-},[state])
+  useEffect(() => {
+     if (state?.success) {
+      setIsClicked(false);
+      const notify = () => toast.success(state.message);
+      notify();
 
+    } else if (state?.errors) {
+      const notify = () => toast.error(state.message);
+      notify();
 
+    }
+  }, [state]);
 
   return (
-    <form action={action} className='bg-white p-6 rounded-lg shadow-md'>
-      <h1 className='text-xl font-bold'>Request service</h1>
-      <p className='text-sm text-gray-500 mt-4'>
-        Please fill out the form below to request a service. Our team will get back to you as soon as possible.
+    <form action={action} className="bg-white p-6 rounded-lg shadow-md">
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{}}
+          toastOptions={{
+            // Define default options
+            className: "",
+            duration: 5000,
+            removeDelay: 1000,
+            style: {
+              background: "oklch(62.3% 0.214 259.815)",
+              color: "#fff",
+            },
+          }}
+        />
+      <h1 className="text-xl font-bold">Request service</h1>
+      <p className="text-sm text-gray-500 mt-4">
+        Please fill out the form below to request a service. Our team will get
+        back to you as soon as possible.
       </p>
       <div>
-
-        <div className='flex flex-col gap-4 mt-4'>
+        <div className="flex flex-col gap-4 mt-4">
           <div className="grid gap-2">
             <label className="font-bold">Service</label>
             <select
-              name='serviceType'
+              name="serviceType"
               value={serviceType}
               onChange={(e) => setService(e.target.value)}
               required
@@ -40,7 +72,6 @@ setIsClicked(false)
             >
               <option value={serviceType}>{serviceType}</option>
             </select>
-
           </div>
 
           <div>
@@ -61,7 +92,10 @@ setIsClicked(false)
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2" title='Available time form 8:00am-6:am'>
+                <div
+                  className="grid gap-2"
+                  title="Available time form 8:00am-6:am"
+                >
                   <label className="font-bold">Time</label>
                   <input
                     type="time"
@@ -73,55 +107,46 @@ setIsClicked(false)
                     required
                     className="border rounded p-2"
                   />
-                        
-
                 </div>
-              
-
               </div>
-
             </div>
           </div>
-           <div className="hidden">
-  <label className="block font-medium">Price</label>
-  <input
-    name="price"
-    type="number"
-    value={price.price}
-    onChange={(e) => setPrices(Number(e.target.value))}
-    placeholder="Price in USD"
-    className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
-  />
-</div>
-              <div>
-                <label className="block font-medium">Note</label>
-                <textarea
-                  name="note"
-                  type="text"
-                  defaultValue={note}
-                  placeholder="Write a note to admin"
-                  className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
-                  rows="4"
-                ></textarea>
-              </div>
+          <div className="hidden">
+            <label className="block font-medium">Price</label>
+            <input
+              name="price"
+              type="number"
+              value={price.price}
+              onChange={(e) => setPrices(Number(e.target.value))}
+              placeholder="Price in USD"
+              className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label className="block font-medium">Note</label>
+            <textarea
+              name="note"
+              type="text"
+              defaultValue={note}
+              placeholder="Write a note to admin"
+              className="mt-2 w-full p-2 rounded-md bg-secondary border-none border-white text-md focus:ring-0 focus:outline-none"
+              rows="4"
+            ></textarea>
+          </div>
         </div>
 
-                <button
+        <button
           type="submit"
           disabled={isPending}
           className={`p-2 bg-blue-600 text-secondarytext w-full mt-6  hover:bg-blue-500 hover:text-slate-200 rounded-md ${
             isPending ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isPending
-            ? 
-              "Submiting..."
-              : "Submit"
-          }
+          {isPending ? "Submiting..." : "Submit"}
         </button>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default ClientServiceForm
+export default ClientServiceForm;

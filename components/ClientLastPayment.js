@@ -53,7 +53,7 @@ const [sort, setSort] = useState(3)
             <option value="24">Last 24 months</option>
           </select>
         </div>
-       <div className="h-[28rem] overflow-y-auto px-4 pb-4">
+       <div className="h-[32rem] overflow-y-auto px-4 pb-4">
          {payments.map((payment) => (
           <div className="bg-slate-100 p-2 mt-2 " key={payment._id}>
             <div className="flex items-center justify-between font-bold text-sm">
@@ -85,7 +85,7 @@ const [sort, setSort] = useState(3)
                 ${" "}
                 {payment.amount +
                   (payment.services?.reduce((sum, item) => {
-                    return sum + Number(item.price);
+                    return sum + Number(item.values);
                   }, 0) || 0)}
               </p>
             </div>

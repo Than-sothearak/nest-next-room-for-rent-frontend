@@ -1,5 +1,5 @@
 "use client";
-import React, { useActionState, useState } from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import { GiVacuumCleaner } from "react-icons/gi";
 import {
   MdOutlineConstruction,
@@ -9,6 +9,7 @@ import { TbAirConditioningDisabled } from "react-icons/tb";
 import ClientServiceForm from "./ClientServiceForm";
 import { cancelService } from "@/actions/services";
 import { formatDate, formatDateOnly, formatDateTime, formatTo12Hour } from "@/utils/formatDate";
+import toast, { Toaster } from "react-hot-toast";
 
 const ClientService = ({
   services,
@@ -56,17 +57,36 @@ const ClientService = ({
       icon: <MdOutlineConstruction size={60} />,
     },
   ];
-  const handleAction = async (serviceId) => {
-    const response = await cancelService(serviceId);
+
+  const handleAction = async (serviceId, telegramChatId) => {
+    const response = await cancelService(serviceId, telegramChatId);
+      const notify = () => toast.success("Cancelling service...");
+      notify();
+     console.log("Cancelling service with ID:", serviceId);
     if (response.error) {
-      console.error("Error cancelling service:", response.error);
-    } else {
-      console.log("Service cancelled successfully:", response.message);
-    }
+      alert(response.error);
+    } 
   };
 
   return (
-    <div className="mt-4 relative">
+    <div className="relative">
+           <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(62.3% 0.214 259.815)",
+                    color: "#fff",
+                  },
+                }}
+              />
       <h1 className="text-xl font-bold">Service available</h1>
       <div className="mt-4 rounded-lg grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-4">
         {types.map((item, index) => {
@@ -105,7 +125,9 @@ const ClientService = ({
 
               {/* Overlay when pending */}
               {isPending && (
-                <form className="absolute top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2 bg-white flex items-center justify-center text-black px-2 py-1 rounded-md z-0">
+                <div
+              
+                className="absolute top-1/2 left-1/2 w-full h-full -translate-x-1/2 -translate-y-1/2 bg-white flex items-center justify-center text-black px-2 py-1 rounded-md z-0">
                   <div className="flex flex-col text-xs items-center gap-2">
                     {item.icon}
                   </div>
@@ -116,14 +138,14 @@ const ClientService = ({
                     .map((service) => (
                       <button
                         key={service._id}
-                        onClick={() => handleAction(service._id)}
+                        onClick={() => handleAction(service._id , user?.telegramChatId)}
                         type="button"
                         className="absolute bottom-2 bg-blue-500 p-2 rounded-md right-2 text-primary hover:bg-blue-700"
                       >
                         Cancel
                       </button>
                     ))}
-                </form>
+                </div>
               )}
 
               {/* Overlay when accepted */}

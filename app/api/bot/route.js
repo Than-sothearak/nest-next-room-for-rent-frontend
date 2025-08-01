@@ -23,7 +23,11 @@ bot.command("start", async (ctx) => {
     return ctx.reply("❌ User not found in database.");
   }
 
-  await ctx.reply(`សូមស្វាគមន៍ គណនីរបស់លោកអ្នកបានភ្ជាប់ជាមួយ WBC Logment 
+
+  if (user.isAdmin) {
+    return await ctx.reply("សូមស្វាគមន៍ អ្នកគ្រប់គ្រង!");
+  } else {
+    await ctx.reply(`សូមស្វាគមន៍ គណនីរបស់លោកអ្នកបានភ្ជាប់ជាមួយ WBC Logment 
 លេខសំគាល់អតិថិជន ID "${user._id}
 ឈ្មោះអតិថិជន ៖ ${user.username}"
 លេខទូរស័ព្ទ ៖ ${user.phone} 
@@ -32,6 +36,7 @@ bot.command("start", async (ctx) => {
 សម្រាប់ព័ត៌មានបន្ថែម សូមទំនាក់ទំនងមកលេខ 086643253  សូមអរគុណ!
 
 ដើម្បីផ្តាច់សេវាកម្មនេះ សូមលោកអ្នកចុច​ /stop`);
+  }
 });
 
 bot.command("stop", async (ctx) => {

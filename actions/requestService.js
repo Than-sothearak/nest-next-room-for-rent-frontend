@@ -51,6 +51,6 @@ export async function requestService(booking, prevState, formData) {
         return { success: true, message: "Request sent successfully!" };
 
     } catch (err) {
-        return { err: 'Fieled to requesting service!' }
+        return { err: 'Fieled to requesting service!',message: "Fieled to requesting service!" }
     }
 }

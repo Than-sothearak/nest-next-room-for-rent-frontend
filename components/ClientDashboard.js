@@ -5,6 +5,8 @@ import { BsTelegram } from "react-icons/bs";
 import Link from "next/link";
 import CreatePaymentLinkForm from "./CreatePaymentLinkForm";
 import CheckTransaction from "./CheckTransaction";
+import { CgUnavailable } from "react-icons/cg";
+import { BiCheckCircle } from "react-icons/bi";
 
 
 
@@ -70,15 +72,16 @@ export const ClientDashboard = ({ booking, payments }) => {
             <div>
            
               <h1 className="font-bold text-3xl text-end">
-                {booking?.rent +
+                {booking?.rent + 
                   booking?.properties.reduce((sum, service) => {
-                    return sum + Number(service.price);
+                    return sum + Number(service.values);
                   }, 0)}
+
                 $
               </h1>
 
-                <CheckTransaction tranId={booking?.tran_id}/>
-              {/* <p
+                {/* <CheckTransaction tranId={booking?.tran_id}/> */}
+              <p
                 className={`${booking?.paymentStatus === "unpaid"
                   ? "text-red-500"
                   : "text-green-500"
@@ -90,7 +93,7 @@ export const ClientDashboard = ({ booking, payments }) => {
                   <BiCheckCircle />
                 )}
                 {booking?.paymentStatus}
-              </p> */}
+              </p>
             </div>
           </div>
           <div className="w-full mt-2 text-start flex justify-between gap-4 items-start flex-col">

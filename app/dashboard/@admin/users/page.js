@@ -8,6 +8,13 @@ import Pagination from "@/components/Pagination";
 
 const userPage = async ({ searchParams }) => {
   const session = await auth();
+    if (!session || !session.user?.isAdmin) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <h1 className="text-2xl font-bold">Unauthorized</h1>
+      </div>
+    );
+  }
   const { query } = await searchParams;
   
   const {page} = await searchParams || 1;
