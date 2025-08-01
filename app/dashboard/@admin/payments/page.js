@@ -48,7 +48,7 @@ export default async function ServicePage({ searchParams }) {
     );
 
   return (
-    <div className="p-4 bg-primary mt-4 rounded-lg">
+    <div className="p-4 bg-primary rounded-lg">
       {/* TOP BAR */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <SearchCompoenent

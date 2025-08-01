@@ -46,7 +46,7 @@ export default async function DashboardLayout({
             />
             <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
 
-            <div className="max-lg:mx-2 overflow-x-auto">{admin}</div>
+            <div className="max-lg:mx-2 overflow-x-auto h-screen my-4">{admin}</div>
               <Footer />
           </div>
         </div>

@@ -13,7 +13,7 @@ export default function LastTransactionComponent({data}) {
   };
 
   return (
-    <div className="mt-4 rounded-lg bg-primary p-4 w-full">
+    <div className="rounded-lg bg-primary p-4 w-full">
       <h1 className="text-2xl">Last Transactions</h1>
       <div className='w-full overflow-x-auto'>
         <table className="rounded-lg w-full">

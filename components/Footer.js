@@ -17,7 +17,7 @@ const handleRefreshPage = () => {
 }
 
   return (
-    <div className='z-20 sticky bottom-0 border bg-primary flex justify-center w-full mt-10 lg:hidden shadow-xl '>
+    <div className='z-20 sticky bottom-0 border bg-primary flex justify-center w-full lg:hidden shadow-xl '>
       <div className='flex justify-between w-full'>
         <button className='hover:bg-slate-200 p-4' onClick={handleBackward}><IoArrowBack size={28}/></button>
         <button className='hover:bg-slate-200 p-4' onClick={handleRefreshPage}><IoRefresh size={28}/></button>

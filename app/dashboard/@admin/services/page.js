@@ -34,7 +34,7 @@ const servicePage = async ({searchParams}) => {
     const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
 
   return (
-    <div className='p-4 bg-primary mt-4 rounded-lg'>
+    <div className='p-4 bg-primary rounded-lg'>
          <div className="flex justify-between items-center gap-4">
         <div className='max-sm:w-full'>
           <SearchCompoenent

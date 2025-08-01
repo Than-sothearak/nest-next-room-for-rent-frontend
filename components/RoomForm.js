@@ -114,7 +114,7 @@ export default function RoomForm({
   }, [state]);
 
   return (
-    <div className="mt-4 rounded-lg text-black relative">
+    <div className="rounded-lg text-black relative">
       <form action={action} className="te">
         <div className="flex max-lg:flex-wrap gap-4">
           <div className="space-y-4 w-full bg-primary rounded-lg">

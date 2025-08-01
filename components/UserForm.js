@@ -56,7 +56,7 @@ export default function UserForm({ userId, userData, session }) {
 
   if (session?.user?.isAdmin || session?.user?._id === userId)
     return (
-      <div className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary mt-4 border rounded-xl relative">
+      <div className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary border rounded-xl relative">
         <div className="bg-primary text-center p-4 rounded-t-xl">
           <h1 className="font-bold text-lg">
             {userId ? "Edit user" : "Create new user"}

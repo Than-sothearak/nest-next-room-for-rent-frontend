@@ -21,7 +21,7 @@ const bookPage = async ({searchParams}) => {
     const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
 
   return (
-    <div className='p-4 justify-center bg-primary mt-4 rounded-lg'>
+    <div className='p-4 justify-center bg-primary rounded-lg'>
          <div className="flex justify-between items-center gap-4">
         <div>
           <SearchCompoenent

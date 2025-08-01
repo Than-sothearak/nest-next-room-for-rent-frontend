@@ -50,7 +50,7 @@ export default function RoomSingleView({ room }) {
   }
 
   return (
-    <div className="mt-4 rounded-lg text-black relative">
+    <div className="rounded-lg text-black relative">
       <div>
         <div className="flex max-lg:flex-wrap gap-4">
           <div className="w-full flex flex-col gap-4">

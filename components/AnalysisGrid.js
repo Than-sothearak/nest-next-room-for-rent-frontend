@@ -23,7 +23,7 @@ const AnalysisGrid = ({ users, payments, booking, parking, roomCount }) => {
   }
 
   return (
-    <div className="mt-4 rounded-lg grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div className="rounded-lg grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {selectedCard && <AnalysisSummaryCard closeModal={closeModal} data={selectedCard}/>}
       <button 
       onClick={() =>handleCardClick({title: "Total Tenants", values: users})}

@@ -21,7 +21,7 @@ export default async function singleCategoryPage(props) {
   }
 
   return (
-    <div className="p-4 bg-primary rounded-md mt-4">
+    <div className="p-4 bg-primary rounded-md">
       <CategoryForm categories={categories} catId={id} catData={JSON.parse(JSON.stringify(category))} />
     </div>
   );

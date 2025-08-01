@@ -123,7 +123,7 @@ export default function BookingForm({
             )}
       <form
         action={action}
-        className="grid grid-cols-2 max-md:grid-cols-1 gap-4  mt-4 "
+        className="grid grid-cols-2 max-md:grid-cols-1 gap-4"
       >
          
 
