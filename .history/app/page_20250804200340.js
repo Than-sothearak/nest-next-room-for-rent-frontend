@@ -37,7 +37,7 @@ export default async function Home() {
           href="/login"
           className="bg-blue-600 text-white w-full px-8 py-3 rounded-xl text-lg font-semibold shadow-lg hover:bg-blue-700 active:scale-95 transition transform duration-300"
         >
-          {user[0]?.username}
+          {user?.username[0]}
           Get Started
         </Link>
       </div>

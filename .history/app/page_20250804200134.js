@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +6,6 @@ import Link from "next/link";
 export default async function Home() {
   const session = await auth();
   await mongoDb();
-  const user = await User.find()
   // Not logged in: show login button
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center px-6 ">
@@ -37,7 +35,6 @@ export default async function Home() {
           href="/login"
           className="bg-blue-600 text-white w-full px-8 py-3 rounded-xl text-lg font-semibold shadow-lg hover:bg-blue-700 active:scale-95 transition transform duration-300"
         >
-          {user[0]?.username}
           Get Started
         </Link>
       </div>
