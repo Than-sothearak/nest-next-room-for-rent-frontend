@@ -86,14 +86,14 @@ const ButtonViewAndDelete = ({
           <div className="w-full h-full fixed inset-0 bg-black/80 flex justify-center items-center">
             <div className="bg-white text-black p-6 rounded-md w-[300px]">
               <p className="text-center text-sm mb-4">
-                {isLoading ? "Deleting..." : "Are you sure to delete this item?"}
+                {"Are you sure to delete this item?"}
               </p>
               <div className="w-full flex justify-between gap-4">
                 <button
-                  disabled={isLoading}
+
                   type="button"
                   onClick={handleShowConfirm}
-                  className={`${isLoading ? 'cursor-wait' : ''} 'hover:bg-gray-600'} bg-gray-400 rounded-md  w-full text-white`}
+                  className={`'hover:bg-gray-600'} bg-gray-400 rounded-md  w-full text-white`}
                 >
                   No
                 </button>
@@ -101,8 +101,8 @@ const ButtonViewAndDelete = ({
                   <button
                     type="button"
                     onClick={() => handelDelete(id)}
-                    disabled={isLoading}
-                    className={` rounded-md bg-red-500 px-4 py-2 text-white w-full hover:bg-red-700 ${isLoading ? 'cursor-wait' : ''}`}
+
+                    className={` rounded-md bg-red-500 px-4 py-2 text-white w-full hover:bg-red-700`}
                   >
                     Yes
                   </button>
