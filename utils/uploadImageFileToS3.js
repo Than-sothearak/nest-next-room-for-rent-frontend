@@ -38,7 +38,7 @@ export async function uploadFileToS3(file) {
     }
 
     const params = {
-      Bucket: process.env.AWS_S3_BUCKET,
+      Bucket: process.env.NEXT_S3_BUCKET,
       ACL: "public-read",
       Key: fileName,
       Body: uploadBuffer,
@@ -47,7 +47,7 @@ export async function uploadFileToS3(file) {
 
     await s3Client.send(new PutObjectCommand(params));
     console.log(`File uploaded successfully to S3: uploads/${fileName}`);
-    return `https://${process.env.AWS_S3_BUCKET}.s3.ap-southeast-1.amazonaws.com/${fileName}`;
+    return `https://${process.env.NEXT_S3_BUCKET}.s3.ap-southeast-1.amazonaws.com/${fileName}`;
   } catch (error) {
     console.error("S3 Upload Error:", error);
     throw new Error("Failed to upload file to S3");
@@ -65,7 +65,7 @@ export async function deleteFileFromS3(file) {
 
     await s3Client.send(
       new DeleteObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET,
+        Bucket: process.env.NEXT_S3_BUCKET,
         Key: `${file}`,
       })
     );
