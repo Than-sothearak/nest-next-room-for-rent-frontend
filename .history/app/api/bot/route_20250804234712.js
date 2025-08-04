@@ -50,5 +50,5 @@ bot.command("stop", async (ctx) => {
   សម្រាប់ព័ត៌មានបន្ថែម សូមទំនាក់ទំនងមកលេខ 086643253  សូមអរគុណ!
     `);
 });
-bot.start();
+
 export default webhookCallback(bot, "std/http");

@@ -1,8 +1,9 @@
+import { mongoDb } from "../../utils/connectDB.js";
+import { User } from "../../models/User.js";
 import { Bot, webhookCallback } from "grammy";
-import { mongoDb } from "@/utils/connectDB";
-import { User } from "@/models/User";
+import "dotenv/config";
 
-export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
+const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN); // ✅ Now using env variable
 
 bot.command("start", async (ctx) => {
   const userIdFromPayload = ctx.message.text.split(" ")[1]; // /start <userId>
@@ -23,7 +24,6 @@ bot.command("start", async (ctx) => {
     return ctx.reply("❌ User not found in database.");
   }
 
-
   if (user.isAdmin) {
     return await ctx.reply("សូមស្វាគមន៍ អ្នកគ្រប់គ្រង!");
   } else {
@@ -41,14 +41,14 @@ bot.command("start", async (ctx) => {
 
 bot.command("stop", async (ctx) => {
   await mongoDb();
+
   await User.findOneAndUpdate(
     { telegramChatId: ctx.chat.id },
     { telegramChatId: null }
   );
   await ctx.reply(`លោកអ្នកនឹងមិនទទួលបានព័ត៌មានដោយស្វ័យប្រវត្តិពី WBC Logment ទៀតទេ!
-
-  សម្រាប់ព័ត៌មានបន្ថែម សូមទំនាក់ទំនងមកលេខ 086643253  សូមអរគុណ!
+សម្រាប់ព័ត៌មានបន្ថែម សូមទំនាក់ទំនងមកលេខ 086643253  សូមអរគុណ!
     `);
 });
-bot.start();
+
 export default webhookCallback(bot, "std/http");
