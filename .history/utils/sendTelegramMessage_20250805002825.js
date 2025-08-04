@@ -1,5 +1,5 @@
 // utils/sendTelegramInvoice.js
-import { bot } from "@/app/api/telegram-webhook/route";
+import { bot } from "@/app/api/telegram/route";
 import { InputFile } from "grammy";
 import { formatDate } from "./formatDate";
 
@@ -16,15 +16,14 @@ export async function sendInvoiceToTelegram(chatId, pdfBuffer, booking) {
       throw new Error("User does not have a Telegram chat ID.");
     }
 
-    const message = `
-<b>📢 Invoice Notification</b>
-
-👤 <b>Customer:</b> ${customer}
-💵 <b>Amount:</b> ${rent} $
-📅 <b>Date:</b> ${formatDate(startDate)}_${formatDate(dueDate)}
-
-✅ <i>Thank you for your payment</i>
-    `.trim();
+const message = `
+<b>📢 Invoice Notification</b>\n
+Dear <b>${customer}</b>,\n
+Please find the attached invoice for <b>${formatDate(startDate)} – ${formatDate(dueDate)}</b>.
+Kindly review and complete the payment at your earliest convenience.\n
+Thank you.
+Best regards.
+`.trim();
 
     // Send message
     await bot.api.sendMessage(chatId, message, {

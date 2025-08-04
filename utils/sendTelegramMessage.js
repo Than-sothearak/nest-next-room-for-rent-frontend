@@ -1,5 +1,5 @@
 // utils/sendTelegramInvoice.js
-import { bot } from "@/app/api/bot/route";
+import { bot } from "@/app/api/telegram/route";
 import { InputFile } from "grammy";
 import { formatDate } from "./formatDate";
 
