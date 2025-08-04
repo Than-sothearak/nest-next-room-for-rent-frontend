@@ -1,11 +1,8 @@
-import { Bot, webhookCallback } from "grammy";
-import "dotenv/config";
+import { Bot } from "grammy";
 import { mongoDb } from "../../utils/connectDB.js";
-import { User } from "../..//models/User.js";
+import { User } from "../../models/User.js";
 
-const token = process.env.TELEGRAM_BOT_TOKEN
-if (!token) throw new Error("BOT_TOKEN is unset");
-const bot = new Bot(token); // ✅ Now using env variable
+export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 
 bot.command("start", async (ctx) => {
   const userIdFromPayload = ctx.message.text.split(" ")[1]; // /start <userId>
@@ -71,7 +68,4 @@ export async function POST(request) {
   return new Response("OK", { status: 200 });
 }
 
-export const config = {
-  runtime: "edge",
-};
-export default webhookCallback(bot, "https");
+bot.start();

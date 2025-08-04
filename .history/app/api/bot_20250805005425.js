@@ -70,8 +70,8 @@ export async function POST(request) {
   // Respond quickly to Telegram with 200 OK
   return new Response("OK", { status: 200 });
 }
-
-export const config = {
-  runtime: "edge",
-};
-export default webhookCallback(bot, "https");
+bot.start();
+// export const config = {
+//   runtime: "edge",
+// };
+// export default webhookCallback(bot, "https");
