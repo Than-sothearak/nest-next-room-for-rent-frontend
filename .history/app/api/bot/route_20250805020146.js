@@ -1,9 +1,6 @@
 import { Bot, webhookCallback } from "grammy";
 import { mongoDb } from "@/utils/connectDB";
 import { User } from "@/models/User";
-export const dynamic = 'force-dynamic'
-
-export const fetchCache = 'force-no-store'
 
 const token = process.env.TELEGRAM_BOT_TOKEN
 if (!token) throw new Error('TELEGRAM_BOT_TOKEN environment variable not found.')
@@ -56,4 +53,4 @@ bot.command("stop", async (ctx) => {
     `);
 });
 
-export const POST = webhookCallback(bot, 'std/http')
+export default webhookCallback(bot, "https");
