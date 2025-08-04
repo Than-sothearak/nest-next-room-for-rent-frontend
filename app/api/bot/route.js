@@ -1,11 +1,8 @@
 import { Bot, webhookCallback } from "grammy";
-import "dotenv/config";
-import { mongoDb } from "../../utils/connectDB.js";
-import { User } from "../..//models/User.js";
+import { mongoDb } from "@/utils/connectDB";
+import { User } from "@/models/User";
 
-const token = process.env.TELEGRAM_BOT_TOKEN
-if (!token) throw new Error("BOT_TOKEN is unset");
-const bot = new Bot(token); // ✅ Now using env variable
+export const bot = new Bot(process.env.TELEGRAM_BOT_TOKEN);
 
 bot.command("start", async (ctx) => {
   const userIdFromPayload = ctx.message.text.split(" ")[1]; // /start <userId>
@@ -53,23 +50,6 @@ bot.command("stop", async (ctx) => {
   សម្រាប់ព័ត៌មានបន្ថែម សូមទំនាក់ទំនងមកលេខ 086643253  សូមអរគុណ!
     `);
 });
-
-export async function POST(request) {
-  const body = await request.json();
-  try {
-    // 🔧 Ensure the bot is initialized
-    if (!bot.isInited()) {
-      await bot.init();
-    }
-
-    await bot.handleUpdate(body);
-  } catch (err) {
-    console.error("Telegram bot error:", err);
-  }
-
-  // Respond quickly to Telegram with 200 OK
-  return new Response("OK", { status: 200 });
-}
 
 export const config = {
   runtime: "edge",

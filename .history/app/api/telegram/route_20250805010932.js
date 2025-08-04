@@ -51,19 +51,4 @@ bot.command("stop", async (ctx) => {
     `);
 });
 
-export async function POST(request) {
-  const body = await request.json();
-  try {
-    // 🔧 Ensure the bot is initialized
-    if (!bot.isInited()) {
-      await bot.init();
-    }
-
-    await bot.handleUpdate(body);
-  } catch (err) {
-    console.error("Telegram bot error:", err);
-  }
-
-  // Respond quickly to Telegram with 200 OK
-  return new Response("OK", { status: 200 });
-}
+export const POST = webhookCallback(bot, 'std/http')
