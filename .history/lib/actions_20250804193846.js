@@ -23,9 +23,8 @@ export async function authenticate(prevState, formData) {
   const device = parser.getDevice();
   const os = parser.getOS();
   const browser = parser.getBrowser();
-
+  await mongoDb()
   try {
-    await mongoDb()
     // Check if email exists first
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const user = await getUser(email);
