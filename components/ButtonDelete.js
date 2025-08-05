@@ -33,9 +33,8 @@ const ButtonDelete = ({ id, session, setOptimisticData }) => {
   return (
     <>
       <form
-
-        className="flex justify-center items-center text-slate-200 transition-all opacity-0 group-hover:opacity-100
-                    duration-300 transform hover:scale-125 bg-black/70 p-4 rounded-full"
+        title="Delete"
+        className="flex justify-center items-center transition-all rounded-full"
         onMouseLeave={() => setIsClicked(false)}
       >
         {/* <Toaster

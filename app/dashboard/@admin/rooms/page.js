@@ -18,21 +18,12 @@ const roomPage = async ({ searchParams }) => {
   }
   const { query } = await searchParams;
  
-  const pathname = "room"
+  const pathname = "rooms"
   const { page } = (await searchParams) || 1;
   const { sort } = await searchParams 
   const { rooms, count, ITEM_PER_PAGE } = await getRoom(query, page, sort);
   const countPage = Math.ceil(parseFloat(count / ITEM_PER_PAGE)) || 1;
  
-  const productColumns = [
-    
-    { header: "Room Number", accessor: "roomName" },
-    { header: "Category", accessor: "category" },
-    { header: "Floor", accessor: "floor" },
-     { header: "Price", accessor: "price" },
-      { header: "Status", accessor: "status" },
-    { header: "Created At", accessor: "createdAt" },
-  ];
 
   return (
     <div className="p-4 bg-primary rounded-lg max-sm:p-2">
@@ -51,6 +42,9 @@ const roomPage = async ({ searchParams }) => {
         </Link>
       </div>
       <RoomGrid
+      ITEM_PER_PAGE={ITEM_PER_PAGE}
+      currentPage={page || 1}
+      count={count}
       session={session}
       data={JSON.parse(JSON.stringify(rooms))} 
       pageName="admin/rooms"/>

@@ -20,8 +20,6 @@ export async function getRoom(query, page, sort) {
       const rooms = await Room.find({
         $or: [
           { roomName: { $regex: query, $options: "i" } },
-
-          { BrandName: { $regex: query, $options: "i" } },
         ],
       })
         .lean()

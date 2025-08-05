@@ -38,8 +38,8 @@ const bookPage = async ({searchParams}) => {
       </div>
       <BookingTable
 
-       count={count}
-      session={session}
+        count={count}
+        session={session}
         booking={JSON.parse(JSON.stringify(booking))}
         currentPage={page ||1}
         itemPerPage={ITEM_PER_PAGE}
