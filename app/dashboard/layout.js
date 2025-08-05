@@ -36,8 +36,9 @@ export default async function DashboardLayout({
           <div className="bg-primary">
             <Sidebar navigation={pageNavigation} session={session}  servicesCount={services.length} link={"/dashboard/users/"}/>
           </div>
-          <div className="w-full lg:mx-4 lg:overflow-x-auto">
-            <Navbar
+          <div className="flex flex-col justify-between w-full lg:mx-4 lg:overflow-x-auto h-screen">
+           <div>
+             <Navbar
               link={"/dashboard/users/"}
               servicesCount={services.length}
               navigation={pageNavigation}
@@ -46,7 +47,8 @@ export default async function DashboardLayout({
             />
             <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
 
-            <div className="max-lg:mx-2 overflow-x-auto h-screen my-4">{admin}</div>
+            <div className="max-lg:mx-2 overflow-x-auto my-4">{admin}</div>
+           </div>
               <Footer />
           </div>
         </div>
@@ -55,16 +57,20 @@ export default async function DashboardLayout({
           <div className="bg-primary">
             <Sidebar navigation={userNavigation} session={session} link={"/dashboard/client-page/"} />
           </div>
-          <div className="w-full lg:mx-4 lg:overflow-x-auto">
-            <Navbar
+         <div className="flex flex-col justify-between w-full lg:mx-4 lg:overflow-x-auto h-screen">
+           <div>
+             <Navbar
               link={"/dashboard/client-page/"}
-              navigation={userNavigation}
+              servicesCount={services.length}
+              navigation={pageNavigation}
               session={session}
               user={JSON.parse(JSON.stringify(userId))}
             />
-            <div className="max-lg:mx-2 overflow-x-auto">{children} </div>
-            <div className="max-lg:mx-2 overflow-x-auto h-screen my-4">{user}</div>
-             <Footer />
+            <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
+
+            <div className="max-lg:mx-2 overflow-x-auto my-4">{user}</div>
+           </div>
+              <Footer />
           </div>
         </div>
       )}
