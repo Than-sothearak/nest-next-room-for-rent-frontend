@@ -76,7 +76,7 @@ const BookingTable = ({
   }
 
   return (
-    <div className="overflow-y-clip overflow-x-auto">
+    <div className="">
       <div className="mt-4">
         <h1 className="font-bold text-2xl pb-2">Booking</h1>
       </div>
@@ -84,7 +84,8 @@ const BookingTable = ({
         <ProcessBilling />
         <p>Total: {count}</p>
       </div>
-      <table className="mt-4 min-w-[800px] w-full border rounded shadow">
+      <div className=" overflow-x-auto pb-10">
+        <table className="mt-4 w-full border rounded shadow">
         <thead className="bg-primary text-tertiary">
           <tr className="bg-gray-100 text-left">
             <th className="text-start p-2 whitespace-nowrap">No</th>
@@ -167,7 +168,7 @@ const BookingTable = ({
                   <BsTelegram size={24} />
                 </div>
               </td>
-              <td className="text-end whitespace-nowrap">
+              <td className="text-end whitespace-nowrap z-40">
                 <SendInvoiceButton bookingId={item?._id} booking={item} />
               </td>
               <td className="p-2 text-center">
@@ -187,6 +188,7 @@ const BookingTable = ({
           ))}
         </tbody>
       </table>
+      </div>
 
 
 

@@ -26,7 +26,7 @@ const roomPage = async ({ searchParams }) => {
  
 
   return (
-    <div className="p-4 bg-primary rounded-lg max-sm:p-2">
+    <div className="p-4 bg-primary rounded-lg max-sm:p-2 h-full overflow-y-auto">
       <div className="flex justify-between items-center gap-4">
         <div>
           <SearchComponent

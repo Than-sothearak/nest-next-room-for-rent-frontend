@@ -21,7 +21,7 @@ export const Navbar = ({ session, user, navigation, servicesCount, link}) => {
   let name;
 
   return (
-    <div className=" shadow-md bg-primary py-4 px-4 w-full max-sm:block flex justify-between items-center max-md:sticky top-0 z-30">
+    <div className="h-14 shadow-md bg-primary py-4 px-4 w-full max-sm:block flex justify-between items-center max-md:sticky top-0 z-30">
       <div className="max-sm:mb-2 flex gap-4 items-center">
         <button
           className="lg:hidden"
