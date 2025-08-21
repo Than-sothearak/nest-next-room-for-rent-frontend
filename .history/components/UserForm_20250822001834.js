@@ -275,12 +275,12 @@ export default function UserForm({ userId, userData, session }) {
                   Telegram Id
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="telegramChatId"
                   id="telegramChatId"
-                  defaultValue={formData?.telegramChatId || ""}
+                  defaultValue={formData?.telegramChatId || "Na"}
                   onChange={handleChange}
-                  placeholder="Na"
+                  placeholder="274323966"
                   className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent border-secondary outline-none focus:ring-2 focus:border-none"
                 />
            

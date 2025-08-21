@@ -275,7 +275,7 @@ export default function UserForm({ userId, userData, session }) {
                   Telegram Id
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   name="telegramChatId"
                   id="telegramChatId"
                   defaultValue={formData?.telegramChatId || ""}
