@@ -3,13 +3,15 @@ import ChooseSingleImageFile from "@/components/ChooseSingleImage";
 import { addUsers, updateUser } from "@/actions/users"; // Import update function
 import { useActionState, useEffect, useState } from "react";
 import ChangPasswordForm from "./ChangPasswordForm";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate, formatDateForForm } from "@/utils/formatDate";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function UserForm({ userId, userData, session }) {
   const [formData, setFormData] = useState({
     name: userData?.username || "",
     email: userData?.email || "",
+    telegramChatId: userData?.telegramChatId || "Na",
     status: userData?.status || "active",
     gender: userData?.gender || "male",
     dateOfBirth: userData?.dateOfBirth || "",
@@ -29,6 +31,8 @@ export default function UserForm({ userId, userData, session }) {
   const router = useRouter();
   useEffect(() => {
     if (state?.success) {
+      const notify = () => toast(state.message);
+      notify();
       router.refresh();
     }
   }, [state]);
@@ -53,7 +57,7 @@ export default function UserForm({ userId, userData, session }) {
 
   if (session?.user?.isAdmin || session?.user?._id === userId)
     return (
-      <div className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary mt-4 border rounded-xl relative">
+      <div className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary border rounded-xl relative">
         <div className="bg-primary text-center p-4 rounded-t-xl">
           <h1 className="font-bold text-lg">
             {userId ? "Edit user" : "Create new user"}
@@ -68,7 +72,7 @@ export default function UserForm({ userId, userData, session }) {
             <ChooseSingleImageFile
               imageUrl={
                 formData?.imageUrl ||
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                "/images/user.png"
               }
             />
             <h2 className="text-lg font-bold mt-4 text-center">
@@ -139,11 +143,11 @@ export default function UserForm({ userId, userData, session }) {
                   id="phone"
                   defaultValue={formData?.phone}
                   onChange={handleChange}
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="+ (855) 123 456"
                   className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none border-secondary "
                 />
                 {state?.errors?.phone && (
-                  <p className="mt-1  text-red-600">{state.errors.phone}</p>
+                  <p className="mt-1 text-lg text-red-600">{state.errors.phone}</p>
                 )}
               </div>
 
@@ -161,7 +165,7 @@ export default function UserForm({ userId, userData, session }) {
                     id="role"
                     defaultValue={formData?.role}
                     onChange={handleChange}
-                    className="text-lg bg-primary w-full px-4 py-2.5 rounded-lg border border-secondary  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiAjdjQgdjRaIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2hldnJvbi1kb3duIj48cGF0aCBkPSJtNiA5IDYgNiA2LTYiLz48L3N2Zz4=')] bg-no-repeat bg-[right_0.75rem_center]"
+                    className="text-lg bg-primary w-full px-4 py-2.5 rounded-lg border border-secondary  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all "
                   >
                     <option value="user">User</option>
                     <option value="admin">Administrator</option>
@@ -194,7 +198,7 @@ export default function UserForm({ userId, userData, session }) {
                     type="date"
                     name="dateOfBirth"
                     id="dateOfBirth"
-                    value={formatDate(formData?.dateOfBirth) || ""}
+                    value={formatDateForForm(formData?.dateOfBirth) || ""}
                     onChange={handleChange}
                     placeholder="123 Main St, City, Country"
                     className="text-lg bg-secondary border w-full border-secondary  px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none"
@@ -262,6 +266,25 @@ export default function UserForm({ userId, userData, session }) {
                       Deactivated
                     </option>
                   </select>
+
+                  <div>
+                <label
+                  htmlFor="email"
+                  className="block text-lg font-bold text-primarytext mb-1"
+                >
+                  Telegram Id
+                </label>
+                <input
+                  type="text"
+                  name="telegramChatId"
+                  id="telegramChatId"
+                  defaultValue={formData?.telegramChatId}
+                  onChange={handleChange}
+                  placeholder="274323966"
+                  className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent border-secondary outline-none focus:ring-2 focus:border-none"
+                />
+           
+              </div>
                 </div>
              </div>
             )}
@@ -369,19 +392,43 @@ export default function UserForm({ userId, userData, session }) {
 
             {/* Status Messages */}
             {state?.success && (
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-lg font-medium text-green-700 text-center">
-                  User {userId ? "updated" : "created"} successfully!
-                </p>
-              </div>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(79.2% 0.209 151.711)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
 
             {state?.error && !state?.errors && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-lg font-medium text-red-700 text-center">
-                  {state.error}
-                </p>
-              </div>
+             <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
           </div>
         </form>

@@ -59,6 +59,7 @@ export async function addUsers(prevState, formData) {
   const password = formData.get("password");
   const role = formData.get("role");
   const imageFile = formData.get("image");
+  const telegramChatId = formData.get("telegramChatId")
 
 
 
@@ -125,6 +126,7 @@ export async function addUsers(prevState, formData) {
         address,
         password: hashPassword,
         imageUrl,
+        telegramChatId,
       };
 
       await User.create(userData);
@@ -181,6 +183,7 @@ export async function updateUser(userId, prevState, formData) {
     const password = formData.get("password");
     const role = session.user.isAdmin ? formData.get("role") : "user";
     const imageFile = formData.get("image");
+      const telegramChatId = formData.get("telegramChatId")
 
     let errors = {};
     if (!name) errors.name = "Name is required";
@@ -222,6 +225,7 @@ export async function updateUser(userId, prevState, formData) {
       isAdmin,
       address,
       imageUrl,
+      telegramChatId,
     };
     // Hash password only if provided
     if (password) {

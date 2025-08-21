@@ -11,7 +11,7 @@ export default function UserForm({ userId, userData, session }) {
   const [formData, setFormData] = useState({
     name: userData?.username || "",
     email: userData?.email || "",
-    telegramChatId: userData?.telegramChatId || "Na",
+    telegramChatId: userData?.telegramChatId || "Na"
     status: userData?.status || "active",
     gender: userData?.gender || "male",
     dateOfBirth: userData?.dateOfBirth || "",

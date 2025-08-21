@@ -3,8 +3,9 @@ import ChooseSingleImageFile from "@/components/ChooseSingleImage";
 import { addUsers, updateUser } from "@/actions/users"; // Import update function
 import { useActionState, useEffect, useState } from "react";
 import ChangPasswordForm from "./ChangPasswordForm";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate, formatDateForForm } from "@/utils/formatDate";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function UserForm({ userId, userData, session }) {
   const [formData, setFormData] = useState({
@@ -29,6 +30,8 @@ export default function UserForm({ userId, userData, session }) {
   const router = useRouter();
   useEffect(() => {
     if (state?.success) {
+      const notify = () => toast(state.message);
+      notify();
       router.refresh();
     }
   }, [state]);
@@ -53,7 +56,7 @@ export default function UserForm({ userId, userData, session }) {
 
   if (session?.user?.isAdmin || session?.user?._id === userId)
     return (
-      <div className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary mt-4 border rounded-xl relative">
+      <div className="text-lg w-[978px] max-2xl:w-full mx-auto bg-primary border rounded-xl relative">
         <div className="bg-primary text-center p-4 rounded-t-xl">
           <h1 className="font-bold text-lg">
             {userId ? "Edit user" : "Create new user"}
@@ -68,7 +71,7 @@ export default function UserForm({ userId, userData, session }) {
             <ChooseSingleImageFile
               imageUrl={
                 formData?.imageUrl ||
-                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                "/images/user.png"
               }
             />
             <h2 className="text-lg font-bold mt-4 text-center">
@@ -139,11 +142,11 @@ export default function UserForm({ userId, userData, session }) {
                   id="phone"
                   defaultValue={formData?.phone}
                   onChange={handleChange}
-                  placeholder="+1 (555) 123-4567"
+                  placeholder="+ (855) 123 456"
                   className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none border-secondary "
                 />
                 {state?.errors?.phone && (
-                  <p className="mt-1  text-red-600">{state.errors.phone}</p>
+                  <p className="mt-1 text-lg text-red-600">{state.errors.phone}</p>
                 )}
               </div>
 
@@ -180,7 +183,7 @@ export default function UserForm({ userId, userData, session }) {
               )}
             </div>
 
-            {session?.user?.isAdmin && (
+            {/* {session?.user?.isAdmin && (
              <div className="flex flex-col gap-4">
                <div className="flex items-center gap-4 max-md:flex-col">
                 <div className="w-full">
@@ -194,7 +197,7 @@ export default function UserForm({ userId, userData, session }) {
                     type="date"
                     name="dateOfBirth"
                     id="dateOfBirth"
-                    value={formatDate(formData?.dateOfBirth) || ""}
+                    value={formatDateForForm(formData?.dateOfBirth) || ""}
                     onChange={handleChange}
                     placeholder="123 Main St, City, Country"
                     className="text-lg bg-secondary border w-full border-secondary  px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent outline-none focus:ring-2 focus:border-none"
@@ -262,9 +265,32 @@ export default function UserForm({ userId, userData, session }) {
                       Deactivated
                     </option>
                   </select>
+
+                  <div>
+                <label
+                  htmlFor="email"
+                  className="block text-lg font-bold text-primarytext mb-1"
+                >
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  defaultValue={formData?.email}
+                  onChange={handleChange}
+                  placeholder="john@example.com"
+                  className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent border-secondary outline-none focus:ring-2 focus:border-none"
+                />
+                {state?.errors?.email && (
+                  <p className="mt-1 text-lg text-red-600">
+                    {state.errors.email}
+                  </p>
+                )}
+              </div>
                 </div>
              </div>
-            )}
+            )} */}
 
             {/* Address Field */}
             <div className="">
@@ -369,19 +395,43 @@ export default function UserForm({ userId, userData, session }) {
 
             {/* Status Messages */}
             {state?.success && (
-              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-lg font-medium text-green-700 text-center">
-                  User {userId ? "updated" : "created"} successfully!
-                </p>
-              </div>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(79.2% 0.209 151.711)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
 
             {state?.error && !state?.errors && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-lg font-medium text-red-700 text-center">
-                  {state.error}
-                </p>
-              </div>
+             <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />
             )}
           </div>
         </form>

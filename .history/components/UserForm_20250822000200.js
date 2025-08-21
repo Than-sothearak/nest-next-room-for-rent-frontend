@@ -11,7 +11,6 @@ export default function UserForm({ userId, userData, session }) {
   const [formData, setFormData] = useState({
     name: userData?.username || "",
     email: userData?.email || "",
-    telegramChatId: userData?.telegramChatId || "Na",
     status: userData?.status || "active",
     gender: userData?.gender || "male",
     dateOfBirth: userData?.dateOfBirth || "",
@@ -275,12 +274,12 @@ export default function UserForm({ userId, userData, session }) {
                   Telegram Id
                 </label>
                 <input
-                  type="text"
-                  name="telegramChatId"
-                  id="telegramChatId"
-                  defaultValue={formData?.telegramChatId}
+                  type="email"
+                  name="email"
+                  id="email"
+                  defaultValue={formData?.email}
                   onChange={handleChange}
-                  placeholder="274323966"
+                  placeholder="john@example.com"
                   className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent border-secondary outline-none focus:ring-2 focus:border-none"
                 />
            

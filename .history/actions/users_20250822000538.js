@@ -59,8 +59,9 @@ export async function addUsers(prevState, formData) {
   const password = formData.get("password");
   const role = formData.get("role");
   const imageFile = formData.get("image");
+  const telegramChatId = formData.get("telegramChatId")
 
-  console.log(role)
+
 
   let errors = {};
   if (name.length >= 21) {
@@ -83,7 +84,9 @@ export async function addUsers(prevState, formData) {
     if (!address) errors.address = "Address is required";
     return { errors };
   }
-  const isAdmin = role;
+  const isAdmin = role === "admin";
+
+  console.log(isAdmin)
   const salt = await bcrypt.genSalt(10);
   if (password.length < 6) {
     errors.password =
@@ -123,6 +126,7 @@ export async function addUsers(prevState, formData) {
         address,
         password: hashPassword,
         imageUrl,
+        telegramChatId,
       };
 
       await User.create(userData);
@@ -179,7 +183,8 @@ export async function updateUser(userId, prevState, formData) {
     const password = formData.get("password");
     const role = session.user.isAdmin ? formData.get("role") : "user";
     const imageFile = formData.get("image");
- console.log(role)
+      const telegramChatId = formData.get("telegramChatId")
+
     let errors = {};
     if (!name) errors.name = "Name is required";
     if (!email) errors.email = "Email is required";
@@ -220,6 +225,7 @@ export async function updateUser(userId, prevState, formData) {
       isAdmin,
       address,
       imageUrl,
+      telegramChatId,
     };
     // Hash password only if provided
     if (password) {

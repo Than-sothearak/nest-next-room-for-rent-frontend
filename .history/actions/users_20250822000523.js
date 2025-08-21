@@ -59,10 +59,9 @@ export async function addUsers(prevState, formData) {
   const password = formData.get("password");
   const role = formData.get("role");
   const imageFile = formData.get("image");
+  const telegramChatId = formData.get("telegramChatId")
 
-const isAdmin = role === "admin";
 
-  console.log(isAdmin)
 
   let errors = {};
   if (name.length >= 21) {
@@ -85,7 +84,9 @@ const isAdmin = role === "admin";
     if (!address) errors.address = "Address is required";
     return { errors };
   }
-  
+  const isAdmin = role === "admin";
+
+  console.log(isAdmin)
   const salt = await bcrypt.genSalt(10);
   if (password.length < 6) {
     errors.password =
@@ -125,6 +126,7 @@ const isAdmin = role === "admin";
         address,
         password: hashPassword,
         imageUrl,
+        telegramChatId,
       };
 
       await User.create(userData);
