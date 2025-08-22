@@ -8,10 +8,10 @@ export const FormSendMessage = ({ setIsClicked, userData }) => {
   const [state, action, pending] = useActionState(sendMessage, undefined);
   
   return (
-    <div className="bg-black/80 w-full flex justify-center items-center absolute z-40 left-0 top-0 bottom-0">
+    <div className="bg-black/80 w-full flex justify-center items-center absolute z-40 left-0 top-0 bottom-0 h-screen">
       <form
         action={action}
-        className="px-6 bg-white w-1/2 absolute z-50 top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2  flex flex-col justify-start items-end gap-4 rounded-md p-4 shadow-lg border"
+        className="px-6 bg-white lg:w-1/2 xl:w-[860px] max-md:w-full absolute z-50 top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2  flex flex-col justify-start items-end gap-4 rounded-md p-4 shadow-lg border"
       >
         <button
           type="button"
@@ -27,7 +27,7 @@ export const FormSendMessage = ({ setIsClicked, userData }) => {
           <textarea
             placeholder={`Write your message here...${
               userData ? ` to ${userData.username}` : ""
-            } sent by ${state?.session?.user?.username || "User"}`}
+            }`}
             id="message"
             name="message"
             rows="10"
