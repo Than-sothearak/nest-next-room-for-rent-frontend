@@ -1,10 +1,12 @@
 "use client";
-import React, { useOptimistic } from "react";
+import React, { useOptimistic, useState } from "react";
 import { PiEmptyThin } from "react-icons/pi";
 import ButtonViewAndDelete from "./ButtonViewAndDelete";
 import { useFormStatus } from "react-dom";
 import Image from "next/image";
 import { formatDate, timeAgo } from "@/utils/formatDate";
+import { set } from "mongoose";
+import { FormSendMessage } from "./FormSendMessage";
 
 const TableComponent = ({
   productCount,
@@ -16,6 +18,8 @@ const TableComponent = ({
   itemPerPage,
 }) => {
   const { pending } = useFormStatus();
+  const [isClicked, setIsClicked] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const [optimisticData, setOptimisticData] = useOptimistic(
     data,
@@ -23,6 +27,11 @@ const TableComponent = ({
       return currentData.filter((data) => data._id !== id);
     }
   );
+
+  function clickOnSendMessage(e) {
+    setUserData(e);
+    setIsClicked(true);
+  }
 
   return (
     <div className="overflow-y-clip overflow-x-auto">
@@ -32,12 +41,13 @@ const TableComponent = ({
           <thead>
             <tr className="font-bold h-10">
               <td>No</td>
+
               {columns.map((col, index) => (
                 <td key={index} className="px-4">
                   {col.header}
                 </td>
               ))}
-
+              <td className="text-center">Message</td>
               <td className="text-end">Action</td>
             </tr>
           </thead>
@@ -49,8 +59,15 @@ const TableComponent = ({
               >
                 <td>{(Number(currentPage) - 1) * itemPerPage + index + 1}</td>
                 {columns.map((column, colIndex) => (
-                  <td key={colIndex} className="py-4 px-4  whitespace-nowrap" 
-                  title={`${column.accessor === "deviceModel" ? `${row.osName} ${row.browserName} ${row.deviceType}`: '' }`}>
+                  <td
+                    key={colIndex}
+                    className="py-4 px-4  whitespace-nowrap"
+                    title={`${
+                      column.accessor === "deviceModel"
+                        ? `${row.osName} ${row.browserName} ${row.deviceType}`
+                        : ""
+                    }`}
+                  >
                     <div className="flex gap-2 justify-start items-center">
                       {colIndex === 0 && (
                         <div className="relative aspect-square h-10 w-10  ">
@@ -78,16 +95,22 @@ const TableComponent = ({
                       ) : column.accessor === "category" ? (
                         row.category?.category || "No Category"
                       ) : column.accessor === "isAdmin" ? (
-                        row[column.accessor] ?  "Admin" : "User" 
+                        row[column.accessor] ? (
+                          "Admin"
+                        ) : (
+                          "User"
+                        )
                       ) : column.accessor === "status" ? (
-                        row[column.accessor] === 'active' ?  "Avtive" : "Deactivated" 
-                      ): column.accessor === "createdAt" ? (
-                        formatDate(row[column.accessor]) 
+                        row[column.accessor] === "active" ? (
+                          "Avtive"
+                        ) : (
+                          "Deactivated"
+                        )
+                      ) : column.accessor === "createdAt" ? (
+                        formatDate(row[column.accessor])
                       ) : column.accessor === "lastLogin" ? (
-                        timeAgo(row[column.accessor]) 
-                      ) 
-                      
-                      : column.accessor ? (
+                        timeAgo(row[column.accessor])
+                      ) : column.accessor ? (
                         row[column.accessor]
                       ) : (
                         row[column.header]
@@ -95,7 +118,16 @@ const TableComponent = ({
                     </div>
                   </td>
                 ))}
-                <td className="relative ">
+                <td className="px-2">
+                  <button
+                  type="button"
+                    onClick={(e) => clickOnSendMessage(row)}
+                    className="bg-blue-500 whitespace-nowrap text-primary border border-secondary px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
+                  >
+                    Send message
+                  </button>
+                </td>
+                <td className="relative">
                   <ButtonViewAndDelete
                     session={session}
                     link={`/dashboard/${pageName}/${row._id}`}
@@ -106,13 +138,18 @@ const TableComponent = ({
                 </td>
               </tr>
             ))}
+            
           </tbody>
+          
         </table>
       ) : (
         <div className="text-slate-500 py-4 text-md flex gap-2 justify-start items-center">
           <PiEmptyThin size={24} />
           <p className="">No user founded</p>
         </div>
+      )}
+      {isClicked && (
+       <FormSendMessage setIsClicked={setIsClicked} userData={userData} />
       )}
     </div>
   );
