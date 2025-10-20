@@ -85,6 +85,12 @@ const styles = StyleSheet.create({
   price: { width: "10%" },
   qty: { width: "10%" },
   dff: { width: "10%" },
+  subtotal: {
+    fontWeight: "bold",
+  width: "90%",       // span all columns except Amount (10%)
+  textAlign: "right", // push the label to the right edge
+  paddingRight: 8,    // optional: a bit of breathing room
+},
   amount: { width: "10%" },
   paymentSection: {
     marginTop: 10,
@@ -124,10 +130,10 @@ const InvoicePDF = ({ data }) => {
           type: item?.part,
           room: "",
           level: "",
-          price: Number(item?.values),
-          qty: 1,
+          price: Number(item?.price),
+          qty: item.qty || 1,
           dff: 0,
-          amt: Number(item?.values),
+          amt: Number(item?.price * (item.qty || 1)),
         }))
       : []),
   ];
@@ -160,7 +166,7 @@ const InvoicePDF = ({ data }) => {
           </View>
 
           <View>
-            <Text>No. {String(getData?.invoiceId).padStart(5, '0')}</Text>
+            <Text>No. {String(getData?.invoiceId).padStart(5, "0")}</Text>
             <Text>Date: {formatDate(getData.startDate)}</Text>
           </View>
         </View>
@@ -203,16 +209,35 @@ const InvoicePDF = ({ data }) => {
               </Text>
             </View>
           ))}
+         <View style={styles.tableRow}>
+ 
+<Text style={[styles.tableCell, { flexGrow: 1, textAlign: "right" }]}>
+  Sub-total:
+</Text>
+<Text style={[styles.tableCell, styles.amount]}>
+  ${subtotal.toFixed(2)}
+</Text>
+
+</View>
+
+         <View style={styles.tableRow}>
+ 
+<Text style={[styles.tableCell, { flexGrow: 1, textAlign: "right" }]}>
+  Total
+</Text>
+<Text style={[styles.tableCell, styles.amount]}>
+${total.toFixed(2)}
+</Text>
+
+</View>
         </View>
 
         {/* Summary */}
-        <View style={styles.section}>
-          <Text>Sub-total: ${subtotal.toFixed(2)}</Text>
-          <Text>TOTAL: ${total.toFixed(2)}</Text>
-          <Text>Deposit: ${deposit.toFixed(2)}</Text>
-          <Text>Balance: ${balance.toFixed(2)}</Text>
-        </View>
 
+        <Text>Sub-total: ${subtotal.toFixed(2)}</Text>
+        <Text>TOTAL: ${total.toFixed(2)}</Text>
+        <Text>Deposit: ${deposit.toFixed(2)}</Text>
+        <Text>Balance: ${balance.toFixed(2)}</Text>
         {/* Payment Method */}
         <View style={styles.paymentSection}>
           <Text>Method of Payment:</Text>

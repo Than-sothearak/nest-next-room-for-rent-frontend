@@ -333,23 +333,28 @@ function validateProductFields({
   return errors;
 }
 
-// Helper function to parse FormData
+
+// ✅ Matches { part, price, qty } structure
 function propertiesFormData(formData) {
-  let properties = [];
+  const properties = [];
   let currentPart = null;
 
-  for (const [name, value] of formData.entries()) {
-    if (name === "part") {
-      currentPart = { part: value, values: [] };
+  for (const [key, val] of formData.entries()) {
+    if (key === "part") {
+      // start a new row
+      currentPart = { part: String(val).trim(), price: "", qty: "" };
       properties.push(currentPart);
-    } else if (name === "values" && currentPart) {
-      const splitValues = value.split(";");
-      currentPart.values = [...currentPart.values, ...splitValues];
+    } 
+    else if (key === "price" && currentPart) {
+      currentPart.price = String(val).trim();
+    } 
+    else if (key === "qty" && currentPart) {
+      currentPart.qty = String(val).trim();
     }
   }
 
-  return properties;
-}
+  // optional: remove empty rows
+  return properties.filter(p => p.part || p.price || p.qty);}
 
 function parkingFormData(name, size) {
   let parking = { slot: name, size: size };

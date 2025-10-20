@@ -4,13 +4,13 @@ import { createBooking, updateBooking } from "@/actions/Booking";
 import { useActionState, useEffect, useState } from "react";
 import ChooseFile from "./ChooseFile";
 import { formatDate, formatDateForForm } from "@/utils/formatDate";
-import AddPropertyForm from "./AddPropertyForm";
 import { BiTrash } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import toast, { CheckmarkIcon, Toaster } from "react-hot-toast";
 import { FaFile } from "react-icons/fa";
 import Link from "next/link";
 import { IoArrowForward } from "react-icons/io5";
+import AddPropertyFormBooking from "./AddPropertyFormBooking";
 
 export default function BookingForm({
   users,
@@ -391,7 +391,7 @@ export default function BookingForm({
               </div>
             </div>
           </div>
-          <AddPropertyForm formData={formData} setFormData={setFormData} />
+          <AddPropertyFormBooking formData={formData} setFormData={setFormData} />
 
 
           <div className="border p-4 rounded-md">

@@ -146,7 +146,7 @@ const BookingTable = ({
 
               <td className="px-2 whitespace-nowrap">{`$${item.rent +
                 item.properties?.reduce((sum, service) => {
-                  return sum + Number(service.values);
+                  return sum + Number(service.price) * Number(service.qty);
                 }, 0)
                 }`}</td>
 
