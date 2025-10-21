@@ -1,6 +1,6 @@
 'use client';
 
-import InvoicePayment from './InvoicePageView';
+import InvoicePageView from './InvoicePageView';
 import dynamic from "next/dynamic";
 
 
@@ -15,7 +15,7 @@ export default function InvoicePreview({ data }) {
   return (
     <div className="h-screen">
       <PDFViewer width="100%" height="100%">
-        <InvoicePayment data={data} />
+        <InvoicePageView data={data} />
       </PDFViewer>
     </div>
   );

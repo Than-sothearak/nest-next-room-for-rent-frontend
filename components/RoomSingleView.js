@@ -67,7 +67,7 @@ export default function RoomSingleView({ room }) {
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       alt={`Image ${index}`}
-                      className="rounded-md object-cover transition-opacity duration-300 group-hover:opacity-25"
+                      className="rounded-md object-cover transition-opacity duration-300"
                       src={`${image}`}
                     />
                     <button

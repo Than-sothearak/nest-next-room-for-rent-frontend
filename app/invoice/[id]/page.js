@@ -19,6 +19,7 @@ export default async function InvoicePage(props) {
         .sort({ startDate: -1 })
     )
   );
+
   return (
     <div>
       <p className="text-center">Invoice page</p>

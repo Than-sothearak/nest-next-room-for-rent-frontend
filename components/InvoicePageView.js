@@ -1,4 +1,3 @@
-import InvoicePage from "@/app/invoice/[id]/default";
 import { formatDate } from "@/utils/formatDate";
 import {
   Document,
@@ -19,12 +18,13 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "space-between", // space between items horizontally
+    alignItems: "center", // vertical centering of items
     marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomWidth: 1, // correct property for borderBottom
+    borderBottomColor: "#ccc", // add a color so border is visible
   },
+
   underHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -50,7 +50,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontWeight: "bold",
   },
-  section: {
+  totals: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "flex-end",
     marginTop: 6,
     marginBottom: 6,
   },
@@ -71,6 +75,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     fontWeight: "bold",
   },
+  textBold: {
+    fontWeight: "bold",
+  },
   tableCell: {
     borderStyle: "solid",
     borderColor: "#000",
@@ -79,6 +86,7 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlign: "center",
   },
+  // Column widths
   no: { width: "5%" },
   type: { width: "35%", textAlign: "left" },
   room: { width: "10%" },
@@ -86,12 +94,6 @@ const styles = StyleSheet.create({
   price: { width: "10%" },
   qty: { width: "10%" },
   dff: { width: "10%" },
-  subtotal: {
-    fontWeight: "bold",
-  width: "90%",       // span all columns except Amount (10%)
-  textAlign: "right", // push the label to the right edge
-  paddingRight: 8,    // optional: a bit of breathing room
-},
   amount: { width: "10%" },
   paymentSection: {
     marginTop: 10,
@@ -103,6 +105,10 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   footer: {
+    position: "absolute",
+    bottom: 30,
+    left: 0,
+    right: 0,
     marginTop: 20,
     textAlign: "center",
     fontStyle: "italic",
@@ -115,33 +121,33 @@ const InvoicePageView = ({ data }) => {
   const items = [
     {
       no: 1,
-      type: `${getData?.roomId?.category?.category} (${formatDate(
+      type: `${getData?.category} (${formatDate(
         getData.startDate
       )} - ${formatDate(getData.dueDate)})`,
-      room: getData?.roomId?.roomName || "",
+      room: getData?.roomId?.roomName || "", // Or get from populated room data
       level: getData?.roomId?.floor || "",
-      price: Number(getData.rent),
+      price: Number(getData.amount),
       qty: 1,
-      dff: 0,
-      amt: Number(getData.rent),
+      off: 0,
+      amt: Number(getData.amount),
     },
-    ...(Array.isArray(getData?.properties)
-      ? getData.properties.map((item, index) => ({
+    ...(Array.isArray(getData?.services)
+      ? getData?.services.map((item, index) => ({
           no: index + 2,
           type: item?.part,
           room: "",
           level: "",
-          price: Number(item?.price),
-          qty: item.qty || 1,
-          dff: 0,
-          amt: Number(item?.price * (item.qty || 1)),
+          price: Number(item?.price) || Number(item?.values),
+          qty: Number(item?.qty) || 1,
+          off: 0,
+          amt: Number(item?.price) * Number(item?.qty || 1),
         }))
       : []),
   ];
 
   const subtotal = items.reduce((sum, item) => sum + item.amt, 0);
   const deposit = Number(0);
-  const total = subtotal;
+  const total = subtotal + deposit;
   const balance = total - deposit;
 
   return (
@@ -204,41 +210,56 @@ const InvoicePageView = ({ data }) => {
                 ${item.price.toFixed(2)}
               </Text>
               <Text style={[styles.tableCell, styles.qty]}>{item.qty}</Text>
-              <Text style={[styles.tableCell, styles.dff]}>{item.dff}</Text>
+              <Text style={[styles.tableCell, styles.dff]}>{item.off}</Text>
               <Text style={[styles.tableCell, styles.amount]}>
                 ${item.amt.toFixed(2)}
               </Text>
             </View>
           ))}
-         <View style={styles.tableRow}>
- 
-<Text style={[styles.tableCell, { flexGrow: 1, textAlign: "right" }]}>
-  Sub-total:
-</Text>
-<Text style={[styles.tableCell, styles.amount]}>
-  ${subtotal.toFixed(2)}
-</Text>
-
-</View>
-
-         <View style={styles.tableRow}>
- 
-<Text style={[styles.tableCell, { flexGrow: 1, textAlign: "right" }]}>
-  Total
-</Text>
-<Text style={[styles.tableCell, styles.amount]}>
-${total.toFixed(2)}
-</Text>
-
-</View>
         </View>
 
-        {/* Summary */}
+        {/* Totals */}
+        <View style={styles.totals}>
+          <View
+            style={{
+              minWidth: "100px",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: "8px",
+              }}
+            >
+              <Text>Sub-total:</Text>
+              <Text>${subtotal.toFixed(2)}</Text>
+            </View>
 
-        <Text>Sub-total: ${subtotal.toFixed(2)}</Text>
-        <Text>TOTAL: ${total.toFixed(2)}</Text>
-        <Text>Deposit: ${deposit.toFixed(2)}</Text>
-        <Text>Balance: ${balance.toFixed(2)}</Text>
+              <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: "8px",
+              }}
+            >
+              <Text>Deposit:</Text>
+              <Text>${0}</Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: "8px",
+              }}
+            >
+              <Text style={styles.textBold}>Total:</Text>
+              <Text style={styles.textBold}>${total.toFixed(2)}</Text>
+            </View>
+          </View>
+        </View>
+
         {/* Payment Method */}
         <View style={styles.paymentSection}>
           <Text>Method of Payment:</Text>
@@ -251,6 +272,7 @@ ${total.toFixed(2)}
         {/* Signatures */}
         <View style={styles.signatureSection}>
           <View style={styles.signature}>
+            {" "}
             <Image
               style={styles.signature}
               src="https://next-room-for-rent.vercel.app/images/signature.png"

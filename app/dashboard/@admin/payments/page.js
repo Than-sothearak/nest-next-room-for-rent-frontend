@@ -99,7 +99,7 @@ export default async function ServicePage({ searchParams }) {
           <tbody>
             {payments.map((p) => {
               const extra = Array.isArray(p.services)
-                ? p.services.reduce((sum, it) => sum + Number(it?.values), 0)
+                ? p.services.reduce((sum, it) => sum + Number(it?.price) * Number(it?.qty), 0)
                 : 0;
               const total = p.amount + extra;
 

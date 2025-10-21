@@ -20,30 +20,30 @@ export default function BookingForm({
   bookingId,
   oneRoom,
 }) {
-
   const [formData, setFormData] = useState({
     properties: booking?.properties || [],
     fileUrls: booking?.files || [],
   });
 
-
   const [contract, setContract] = useState(booking?.contract || "");
   const [files, setFiles] = useState([]);
-  const [isSuccess, setIsSuccess] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false);
   const [selectedUser, setSelectedUser] = useState(booking?.userId || "");
   const [selectedRoom, setSelectedRoom] = useState(booking?.roomId || "");
   const [startDate, setStartDate] = useState(
     formatDateForForm(booking?.startDate) || ""
   );
-  const [endDate, setEndDate] = useState(formatDateForForm(booking?.dueDate) || "");
+  const [endDate, setEndDate] = useState(
+    formatDateForForm(booking?.dueDate) || ""
+  );
   const [rent, setRent] = useState(booking?.rent || "");
   const [deposit, setDeposit] = useState(booking?.deposit || "");
   const [status, setStatus] = useState(booking?.status || "");
   const [invoiceSent, setInvoiceSent] = useState(booking?.invoiceSent || false);
   const [notes, setNotes] = useState(booking?.notes || "");
-  const [paymentStatus, setPayment] = useState(booking?.paymentStatus || '')
-  const [parking, setParking] = useState(booking?.parking?.slot || '')
-  const [qty, setQty] = useState(booking?.parking?.size || '')
+  const [paymentStatus, setPayment] = useState(booking?.paymentStatus || "");
+  const [parking, setParking] = useState(booking?.parking?.slot || "");
+  const [qty, setQty] = useState(booking?.parking?.size || "");
   const calculateTotal = () => {
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -63,11 +63,8 @@ export default function BookingForm({
         fileUrls: prevFormData.fileUrls.filter((_, i) => i !== index), // Remove from imageUrls
         removedFiles: [...(prevFormData.removedFiles || []), removedFile], // Store removed image properly
       };
-
     });
-
   };
-
 
   const updateBookingWithId = updateBooking.bind(null, booking?._id);
   const [state, action, isPending] = useActionState(
@@ -76,8 +73,8 @@ export default function BookingForm({
   );
 
   const handleCLose = () => {
-    setIsSuccess(false)
-  }
+    setIsSuccess(false);
+  };
 
   const router = useRouter();
   useEffect(() => {
@@ -91,42 +88,41 @@ export default function BookingForm({
     if (state?.success) {
       const notify = () => toast.success(state.message);
       notify();
-
     } else if (state?.errors) {
       const notify = () => toast.error(state.message);
       notify();
-
     }
   }, [state]);
 
   return (
     <div>
-          {state?.success && (
-              <div className="">
-                <div className="bg-black/50 w-full h-full fixed inset-0 z-10">
-
-                </div>
-                <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-8 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
-                  <div className="flex gap-4 flex-col justify-center items-center w-full">
-                    <CheckmarkIcon size={28} />
-                    <p className="w-full text-green-500 text-center">
-                      {state?.message}
-                    </p>
-                    <span>Invoice No: {String(state?.invoiceId).padStart(5,0)}</span>
-                    <div className="flex justify-between gap-2"><Link
-                      href="/dashboard/booking" className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"><IoArrowForward />Go to Book page</Link>
-
-                    </div>
-                  </div>
-                </div>
+      {state?.success && (
+        <div className="">
+          <div className="bg-black/50 w-full h-full fixed inset-0 z-10"></div>
+          <div className="z-20 bg-primary border shadow-md flex items-center justify-center fixed px-10 py-8 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 rounded-md">
+            <div className="flex gap-4 flex-col justify-center items-center w-full">
+              <CheckmarkIcon size={28} />
+              <p className="w-full text-green-500 text-center">
+                {state?.message}
+              </p>
+              <span>Invoice No: {String(state?.invoiceId).padStart(5, 0)}</span>
+              <div className="flex justify-between gap-2">
+                <Link
+                  href="/dashboard/booking"
+                  className="whitespace-nowrap flex items-center gap-2 bg-blue-500 p-2 rounded-md text-primary w-full justify-center"
+                >
+                  <IoArrowForward />
+                  Go to Book page
+                </Link>
               </div>
-            )}
+            </div>
+          </div>
+        </div>
+      )}
       <form
         action={action}
         className="grid grid-cols-2 max-md:grid-cols-1 gap-4"
       >
-         
-
         <Toaster
           position="top-center"
           reverseOrder={false}
@@ -145,14 +141,21 @@ export default function BookingForm({
           }}
         />
         <div className="space-y-4 bg-white shadow  p-4  rounded-xl">
-          <h2 className="text-xl font-semibold">{booking ? "Edit Booking" : "Create Booking"} Invoice: { booking ? String(booking?.invoiceId).padStart(5, '0') : String(invoices + 1).padStart(5, '0') }  </h2>
+          <h2 className="text-xl font-semibold">
+            {booking ? "Edit Booking" : "Create Booking"} Invoice:{" "}
+            {booking
+              ? String(booking?.invoiceId).padStart(5, "0")
+              : String(invoices + 1).padStart(5, "0")}{" "}
+          </h2>
 
           <div className="grid gap-2">
-            <label className="font-bold">User phone number <span className="font-normal">(required)</span></label>
+            <label className="font-bold">
+              User phone number <span className="font-normal">(required)</span>
+            </label>
             <select
               name="userId"
               value={selectedUser}
-              title={users?.find(u => u._id === selectedUser)?.username || ''}
+              title={users?.find((u) => u._id === selectedUser)?.username || ""}
               onChange={(e) => setSelectedUser(e.target.value)}
               className="border rounded p-2"
             >
@@ -169,32 +172,33 @@ export default function BookingForm({
           </div>
 
           <div className="grid gap-2">
-            <label className="font-bold">Room available  <span className="font-normal">(required)</span></label>
+            <label className="font-bold">
+              Room available <span className="font-normal">(required)</span>
+            </label>
 
             <select
               name="roomId"
               value={selectedRoom}
               onChange={(e) => setSelectedRoom(e.target.value)}
-
               className="border rounded p-2"
             >
-
-              {oneRoom ? (
-                <option value={oneRoom._id}>{oneRoom.roomName}</option>
-              ) : (
-                booking === "undefined" ? rooms
+            <option value={oneRoom._id}>{oneRoom.roomName}</option>
+            {booking === "undefined" ? (
+                rooms
                   .filter((r) => r.status === 1)
                   .map((r) => (
                     <option key={r._id} value={r._id}>
                       {r.name || r.roomName}
                     </option>
-                  )) : rooms
-                    .filter((r) => r.status === 1)
-                    .map((r) => (
-                      <option key={r._id} value={r._id}>
-                        {r.name || r.roomName}
-                      </option>
-                    ))
+                  ))
+              ) : (
+                rooms
+                  .filter((r) => r.status === 1)
+                  .map((r) => (
+                    <option key={r._id} value={r._id}>
+                      {r.name || r.roomName}
+                    </option>
+                  ))
               )}
             </select>
 
@@ -203,12 +207,13 @@ export default function BookingForm({
             )}
           </div>
           <div className="grid gap-2">
-            <label className="font-bold flex gap-2">Contract <span className="font-normal"></span></label>
+            <label className="font-bold flex gap-2">
+              Contract <span className="font-normal"></span>
+            </label>
             <select
               name="contract"
               value={contract}
               onChange={(e) => setContract(e.target.value)}
-
               className="border rounded p-2"
             >
               <option value="">Select months</option>
@@ -240,13 +245,14 @@ export default function BookingForm({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <label className="font-bold">Start Date  <span className="font-normal">(required)</span></label>
+              <label className="font-bold">
+                Start Date <span className="font-normal">(required)</span>
+              </label>
               <input
                 type="date"
                 name="startDate"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-
                 className="border rounded p-2"
               />
               {state?.errors?.startDate && (
@@ -254,13 +260,14 @@ export default function BookingForm({
               )}
             </div>
             <div className="grid gap-2">
-              <label className="font-bold">End Date  <span className="font-normal">(required)</span></label>
+              <label className="font-bold">
+                End Date <span className="font-normal">(required)</span>
+              </label>
               <input
                 type="date"
                 name="dueDate"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-
                 className="border rounded p-2"
               />
               {state?.errors?.endDate && (
@@ -272,7 +279,9 @@ export default function BookingForm({
           <div className="grid">
             <div className="w-full flex gap-4">
               <div className="w-full">
-                <label className="font-bold">Monthly Rent ($)  <span className="font-normal"></span></label>
+                <label className="font-bold">
+                  Monthly Rent ($) <span className="font-normal"></span>
+                </label>
                 <input
                   type="number"
                   name="rent"
@@ -281,7 +290,6 @@ export default function BookingForm({
                     const value = e.target.value;
                     setRent(value === "" ? "" : Number(e.target.value));
                   }}
-
                   className="w-full border rounded p-2"
                 />
                 {state?.errors?.rent && (
@@ -298,7 +306,6 @@ export default function BookingForm({
                     const value = e.target.value;
                     setDeposit(value === "" ? "" : Number(e.target.value));
                   }}
-
                   className="w-full border rounded p-2"
                 />
                 {state?.errors?.deposit && (
@@ -319,27 +326,35 @@ export default function BookingForm({
           </div>
 
           <div className="grid gap-2">
-            <label className="font-bold">Payment status  <span className="font-normal">(required)</span></label>
+            <label className="font-bold">
+              Payment status <span className="font-normal">(required)</span>
+            </label>
             <select
               name="paymentStatus"
               value={paymentStatus}
               onChange={(e) => setPayment(e.target.value)}
-
-              className={`border rounded p-2 ${paymentStatus === 'paid' ? 'text-green-500' : 'text-red-500'} `}
-            >  <option value="unpaid" className="text-black">Unpaid</option>
-              <option value="paid" className="text-black">Paid</option>
-
+              className={`border rounded p-2 ${
+                paymentStatus === "paid" ? "text-green-500" : "text-red-500"
+              } `}
+            >
+              {" "}
+              <option value="unpaid" className="text-black">
+                Unpaid
+              </option>
+              <option value="paid" className="text-black">
+                Paid
+              </option>
             </select>
           </div>
 
-
           <div className="grid gap-2">
-            <label className="font-bold">Status  <span className="font-normal">(required)</span></label>
+            <label className="font-bold">
+              Status <span className="font-normal">(required)</span>
+            </label>
             <select
               name="status"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-
               className="border rounded p-2"
             >
               <option value="active">Active</option>
@@ -348,22 +363,20 @@ export default function BookingForm({
             </select>
           </div>
 
-            <div className="grid gap-2">
-            <label className="font-bold">Invoice send  <span className="font-normal">(required)</span></label>
+          <div className="grid gap-2">
+            <label className="font-bold">
+              Invoice send <span className="font-normal">(required)</span>
+            </label>
             <select
               name="invoiceSent"
               value={invoiceSent}
               onChange={(e) => setInvoiceSent(e.target.value)}
-
               className="border rounded p-2"
             >
-              <option value={true} >Yes</option>
+              <option value={true}>Yes</option>
               <option value={false}>No</option>
-            
             </select>
           </div>
-
-
         </div>
 
         <div className="space-y-4">
@@ -372,7 +385,12 @@ export default function BookingForm({
             <div className="w-full flex  items-center gap-4">
               <div className="flex flex-col">
                 <label>Select vehicle</label>
-                <select className="border rounded p-2" name="parking" value={parking} onChange={(e) => setParking(e.target.value)}>
+                <select
+                  className="border rounded p-2"
+                  name="parking"
+                  value={parking}
+                  onChange={(e) => setParking(e.target.value)}
+                >
                   <option value={""}>N/A</option>
                   <option value="car">Car</option>
                   <option value="motobike">Motobike</option>
@@ -391,8 +409,10 @@ export default function BookingForm({
               </div>
             </div>
           </div>
-          <AddPropertyFormBooking formData={formData} setFormData={setFormData} />
-
+          <AddPropertyFormBooking
+            formData={formData}
+            setFormData={setFormData}
+          />
 
           <div className="border p-4 rounded-md">
             <h1 className="font-bold">Attacment file</h1>
@@ -407,37 +427,44 @@ export default function BookingForm({
                 />
               ))}
 
-            {formData.fileUrls.length > 0 ? <div>
-              {formData.fileUrls?.map((item, index) => (
-                <div key={index} className="w-full flex items-center justify-between gap-2 border p-2 rounded hover:bg-gray-50">
-                  <a
-                    href={item}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-blue-600 hover:underline"
+            {formData.fileUrls.length > 0 ? (
+              <div>
+                {formData.fileUrls?.map((item, index) => (
+                  <div
+                    key={index}
+                    className="w-full flex items-center justify-between gap-2 border p-2 rounded hover:bg-gray-50"
                   >
-                    <FaFile size={18} />
-                    <span className="break-all">{item.split("/").pop()}</span>
-                  </a>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(index)}
-                    className="text-red-500 hover:underline"
-                  >
-                    <BiTrash />
-                  </button>
-                </div>
-              ))}
-            </div> : <div>No file Attacment</div>}
-
+                    <a
+                      href={item}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-blue-600 hover:underline"
+                    >
+                      <FaFile size={18} />
+                      <span className="break-all">{item.split("/").pop()}</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="text-red-500 hover:underline"
+                    >
+                      <BiTrash />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div>No file Attacment</div>
+            )}
           </div>
 
           <div className="p-4 bg-primary rounded-xl ">
-
             <ChooseFile files={files} setFiles={setFiles} />
           </div>
           <div className="grid gap-2 mt- p-4 bg-primary rounded-xl ">
-            <label>Notes  <span className="font-normal">(optional)</span></label>
+            <label>
+              Notes <span className="font-normal">(optional)</span>
+            </label>
             <textarea
               name="notes"
               value={notes}
@@ -445,23 +472,23 @@ export default function BookingForm({
               rows={3}
               className="border rounded p-2"
             />
-
           </div>
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className={`p-2 bg-blue-600 text-secondarytext w-full mb-4 hover:bg-blue-500 hover:text-slate-200 rounded-md ${isPending ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+          className={`p-2 bg-blue-600 text-secondarytext w-full mb-4 hover:bg-blue-500 hover:text-slate-200 rounded-md ${
+            isPending ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           {isPending
             ? booking?._id
               ? "Updating..."
               : "Adding..."
             : booking?._id
-              ? "Update"
-              : "Create Booking"}
+            ? "Update"
+            : "Create Booking"}
         </button>
       </form>
     </div>

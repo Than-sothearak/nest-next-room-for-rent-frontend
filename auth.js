@@ -5,7 +5,6 @@ import { mongoDb } from "@/utils/connectDB";
 import { z } from "zod";
 import { verifyPassword } from "@/lib/isVerify";
 import { authConfig } from "./authConfig";
-import { GiToken } from "react-icons/gi";
 
 export async function getUser(email) {
   await mongoDb();
@@ -55,7 +54,6 @@ export const { auth, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      
       if (token) {
         session.user = {
           _id: token._id.toString(),

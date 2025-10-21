@@ -32,6 +32,10 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 25,
   },
+
+    textBold: {
+    fontWeight: "bold",
+  },
   logo: {
     width: 90,
     height: 90,
@@ -49,7 +53,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontWeight: "bold",
   },
-  section: {
+  totals: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "flex-end",
     marginTop: 6,
     marginBottom: 6,
   },
@@ -140,7 +148,7 @@ const InvoicePDF = ({ data }) => {
 
   const subtotal = items.reduce((sum, item) => sum + item.amt, 0);
   const deposit = Number(0);
-  const total = subtotal;
+  const total = subtotal + deposit;
   const balance = total - deposit;
 
   return (
@@ -209,35 +217,51 @@ const InvoicePDF = ({ data }) => {
               </Text>
             </View>
           ))}
-         <View style={styles.tableRow}>
- 
-<Text style={[styles.tableCell, { flexGrow: 1, textAlign: "right" }]}>
-  Sub-total:
-</Text>
-<Text style={[styles.tableCell, styles.amount]}>
-  ${subtotal.toFixed(2)}
-</Text>
-
-</View>
-
-         <View style={styles.tableRow}>
- 
-<Text style={[styles.tableCell, { flexGrow: 1, textAlign: "right" }]}>
-  Total
-</Text>
-<Text style={[styles.tableCell, styles.amount]}>
-${total.toFixed(2)}
-</Text>
-
-</View>
+         
         </View>
 
-        {/* Summary */}
-
-        <Text>Sub-total: ${subtotal.toFixed(2)}</Text>
-        <Text>TOTAL: ${total.toFixed(2)}</Text>
-        <Text>Deposit: ${deposit.toFixed(2)}</Text>
-        <Text>Balance: ${balance.toFixed(2)}</Text>
+      
+              {/* Totals */}
+              <View style={styles.totals}>
+                <View
+                  style={{
+                    minWidth: "100px",
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <Text>Sub-total:</Text>
+                    <Text>${subtotal.toFixed(2)}</Text>
+                  </View>
+      
+                    <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <Text>Deposit:</Text>
+                    <Text>${0}</Text>
+                  </View>
+      
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <Text style={styles.textBold}>Total:</Text>
+                    <Text style={styles.textBold}>${total.toFixed(2)}</Text>
+                  </View>
+                </View>
+              </View>
         {/* Payment Method */}
         <View style={styles.paymentSection}>
           <Text>Method of Payment:</Text>
