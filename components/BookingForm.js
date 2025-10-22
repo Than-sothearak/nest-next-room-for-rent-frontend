@@ -3,7 +3,7 @@
 import { createBooking, updateBooking } from "@/actions/Booking";
 import { useActionState, useEffect, useState } from "react";
 import ChooseFile from "./ChooseFile";
-import { formatDate, formatDateForForm } from "@/utils/formatDate";
+import { formatDateForForm } from "@/utils/formatDate";
 import { BiTrash } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import toast, { CheckmarkIcon, Toaster } from "react-hot-toast";
@@ -27,7 +27,6 @@ export default function BookingForm({
 
   const [contract, setContract] = useState(booking?.contract || "");
   const [files, setFiles] = useState([]);
-  const [isSuccess, setIsSuccess] = useState(false);
   const [selectedUser, setSelectedUser] = useState(booking?.userId || "");
   const [selectedRoom, setSelectedRoom] = useState(booking?.roomId || "");
   const [startDate, setStartDate] = useState(
@@ -36,32 +35,43 @@ export default function BookingForm({
   const [endDate, setEndDate] = useState(
     formatDateForForm(booking?.dueDate) || ""
   );
-  const [rent, setRent] = useState(booking?.rent || "");
-  const [deposit, setDeposit] = useState(booking?.deposit || "");
-  const [status, setStatus] = useState(booking?.status || "");
-  const [invoiceSent, setInvoiceSent] = useState(booking?.invoiceSent || false);
+  const [rent, setRent] = useState(booking?.rent ?? "");
+  const [deposit, setDeposit] = useState(booking?.deposit ?? "");
+  const [status, setStatus] = useState(booking?.status || "active");
+
+  // ✅ Payment + Telegram states
+  const [paymentStatus, setPayment] = useState(booking?.paymentStatus || "unpaid");
+  const [invoiceSent, setInvoiceSent] = useState(Boolean(booking?.invoiceSent) || false);
+  const [telegramStatus, setTelegramStatus] = useState(
+    booking?.telegramStatus || "not_sent" // not_sent | queued | sent | failed
+  );
+  const [sendTelegram, setSendTelegram] = useState(false); // action toggle on submit
+
   const [notes, setNotes] = useState(booking?.notes || "");
-  const [paymentStatus, setPayment] = useState(booking?.paymentStatus || "");
   const [parking, setParking] = useState(booking?.parking?.slot || "");
   const [qty, setQty] = useState(booking?.parking?.size || "");
+
+  // Totals (optionally include add-on properties)
+  const propertiesTotal = (formData.properties || []).reduce((sum, p) => {
+    const price = Number(p?.price || 0);
+    const q = Number(p?.qty || 0);
+    return sum + (isFinite(price * q) ? price * q : 0);
+  }, 0);
+
   const calculateTotal = () => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const months =
-      (end.getFullYear() - start.getFullYear()) * 12 +
-      (end.getMonth() - start.getMonth()) +
-      1;
-    return months > 0 ? Number(rent) + Number(deposit) : 0;
+    // First invoice: monthly rent + deposit + add-ons (simple and predictable)
+    const rentNum = Number(rent || 0);
+    const depNum = Number(deposit || 0);
+    return (isFinite(rentNum) ? rentNum : 0) + (isFinite(depNum) ? depNum : 0) + propertiesTotal;
   };
 
   const handleRemoveImage = (index) => {
     setFormData((prevFormData) => {
-      const removedFile = prevFormData.fileUrls[index]; // Get the removed image URL
-
+      const removedFile = prevFormData.fileUrls[index];
       return {
         ...prevFormData,
-        fileUrls: prevFormData.fileUrls.filter((_, i) => i !== index), // Remove from imageUrls
-        removedFiles: [...(prevFormData.removedFiles || []), removedFile], // Store removed image properly
+        fileUrls: prevFormData.fileUrls.filter((_, i) => i !== index),
+        removedFiles: [...(prevFormData.removedFiles || []), removedFile],
       };
     });
   };
@@ -72,27 +82,39 @@ export default function BookingForm({
     undefined
   );
 
-  const handleCLose = () => {
-    setIsSuccess(false);
-  };
-
   const router = useRouter();
+
   useEffect(() => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       fileUrls: booking?.files || [],
-    });
+    }));
   }, [booking]);
 
   useEffect(() => {
     if (state?.success) {
-      const notify = () => toast.success(state.message);
-      notify();
+      toast.success(state.message);
     } else if (state?.errors) {
-      const notify = () => toast.error(state.message);
-      notify();
+      toast.error(state.message);
     }
   }, [state]);
+
+  // Helper for colored select text
+  const paymentColor =
+    paymentStatus === "paid"
+      ? "text-green-600"
+      : paymentStatus === "partial"
+      ? "text-amber-600"
+      : "text-red-600";
+
+  const telegramColor =
+    telegramStatus === "sent"
+      ? "text-green-600"
+      : telegramStatus === "queued"
+      ? "text-blue-600"
+      : telegramStatus === "failed"
+      ? "text-red-600"
+      : "text-gray-700";
 
   return (
     <div>
@@ -119,35 +141,20 @@ export default function BookingForm({
           </div>
         </div>
       )}
-      <form
-        action={action}
-        className="grid grid-cols-2 max-md:grid-cols-1 gap-4"
-      >
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={8}
-          containerClassName=""
-          containerStyle={{}}
-          toastOptions={{
-            // Define default options
-            className: "",
-            duration: 5000,
-            removeDelay: 1000,
-            style: {
-              background: "oklch(62.3% 0.214 259.815)",
-              color: "#fff",
-            },
-          }}
-        />
-        <div className="space-y-4 bg-white shadow  p-4  rounded-xl">
+
+      <form action={action} className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
+        <Toaster position="top-center" />
+
+        {/* LEFT COLUMN */}
+        <div className="space-y-4 bg-white shadow p-4 rounded-xl">
           <h2 className="text-xl font-semibold">
-            {booking ? "Edit Booking" : "Create Booking"} Invoice:{" "}
+            {booking?._id ? "Edit Booking" : "Create Booking"} · Invoice:{" "}
             {booking
               ? String(booking?.invoiceId).padStart(5, "0")
-              : String(invoices + 1).padStart(5, "0")}{" "}
+              : String(invoices + 1).padStart(5, "0")}
           </h2>
 
+          {/* USER */}
           <div className="grid gap-2">
             <label className="font-bold">
               User phone number <span className="font-normal">(required)</span>
@@ -155,331 +162,297 @@ export default function BookingForm({
             <select
               name="userId"
               value={selectedUser}
-              title={users?.find((u) => u._id === selectedUser)?.username || ""}
               onChange={(e) => setSelectedUser(e.target.value)}
-              className="border rounded p-2"
+              className="border rounded p-2 bg-gray-100"
+              required
             >
               <option value="">Select user</option>
               {users.map((u) => (
-                <option key={u._id} value={u._id} title={u.username}>
+                <option key={u._id} value={u._id}>
                   {u.phone}
                 </option>
               ))}
             </select>
-            {state?.errors?.userId && (
-              <p className="text-red-500">{state.errors.userId}</p>
-            )}
           </div>
 
+          {/* ROOM */}
           <div className="grid gap-2">
             <label className="font-bold">
               Room available <span className="font-normal">(required)</span>
             </label>
-
             <select
               name="roomId"
               value={selectedRoom}
               onChange={(e) => setSelectedRoom(e.target.value)}
-              className="border rounded p-2"
+              className="border rounded p-2 bg-gray-100"
+              required
             >
-            <option value={oneRoom._id}>{oneRoom.roomName}</option>
-            {booking === "undefined" ? (
-                rooms
-                  .filter((r) => r.status === 1)
-                  .map((r) => (
-                    <option key={r._id} value={r._id}>
-                      {r.name || r.roomName}
-                    </option>
-                  ))
+              {oneRoom ? (
+                <option value={oneRoom?._id}>{oneRoom?.roomName}</option>
               ) : (
-                rooms
-                  .filter((r) => r.status === 1)
-                  .map((r) => (
-                    <option key={r._id} value={r._id}>
-                      {r.name || r.roomName}
-                    </option>
-                  ))
+                <option value="">Select room</option>
               )}
+              {rooms
+                .filter((r) => r.status === 1)
+                .map((r) => (
+                  <option key={r._id} value={r._id}>
+                    {r.name || r.roomName}
+                  </option>
+                ))}
             </select>
-
-            {state?.errors?.roomId && (
-              <p className="text-red-500">{state.errors.roomId}</p>
-            )}
           </div>
+
+          {/* CONTRACT */}
           <div className="grid gap-2">
-            <label className="font-bold flex gap-2">
-              Contract <span className="font-normal"></span>
-            </label>
+            <label className="font-bold">Contract</label>
             <select
               name="contract"
               value={contract}
               onChange={(e) => setContract(e.target.value)}
-              className="border rounded p-2"
+              className="border rounded p-2 bg-gray-100"
             >
               <option value="">Select months</option>
-
-              <option value={1}>1 month</option>
-
-              <option value={2}>2 month</option>
-
-              <option value={3}>3 month</option>
-
-              <option value={4}>4 month</option>
-
-              <option value={5}>5 month</option>
-
-              <option value={6}>6 month</option>
-
-              <option value={7}>7 month</option>
-
-              <option value={8}>8 month</option>
-
-              <option value={10}>9 month</option>
-              <option value={11}>11 month</option>
-
-              <option value={12}>12 month</option>
+              {[...Array(12)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1} month{i > 0 ? "s" : ""}
+                </option>
+              ))}
             </select>
-            {state?.errors?.contract && (
-              <p className="text-red-500">{state.errors.contract}</p>
-            )}
           </div>
+
+          {/* DATES */}
           <div className="grid grid-cols-2 gap-4">
             <div className="grid gap-2">
-              <label className="font-bold">
-                Start Date <span className="font-normal">(required)</span>
-              </label>
+              <label className="font-bold">Start Date</label>
               <input
                 type="date"
                 name="startDate"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="border rounded p-2"
+                className="border rounded p-2 bg-gray-100"
               />
-              {state?.errors?.startDate && (
-                <p className="text-red-500">{state.errors.startDate}</p>
-              )}
             </div>
             <div className="grid gap-2">
-              <label className="font-bold">
-                End Date <span className="font-normal">(required)</span>
-              </label>
+              <label className="font-bold">End Date</label>
               <input
                 type="date"
                 name="dueDate"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="border rounded p-2"
+                className="border rounded p-2 bg-gray-100"
               />
-              {state?.errors?.endDate && (
-                <p className="text-red-500">{state.errors.endDate}</p>
-              )}
             </div>
           </div>
 
-          <div className="grid">
-            <div className="w-full flex gap-4">
-              <div className="w-full">
-                <label className="font-bold">
-                  Monthly Rent ($) <span className="font-normal"></span>
-                </label>
-                <input
-                  type="number"
-                  name="rent"
-                  value={rent}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setRent(value === "" ? "" : Number(e.target.value));
-                  }}
-                  className="w-full border rounded p-2"
-                />
-                {state?.errors?.rent && (
-                  <p className="text-red-500">{state.errors.rent}</p>
-                )}
-              </div>
-              <div className="w-full flex flex-col">
-                <label className="font-bold">Deposit ($)</label>
-                <input
-                  type="number"
-                  name="deposit"
-                  value={deposit}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setDeposit(value === "" ? "" : Number(e.target.value));
-                  }}
-                  className="w-full border rounded p-2"
-                />
-                {state?.errors?.deposit && (
-                  <p className="text-red-500">{state.errors.deposit}</p>
-                )}
-              </div>
-            </div>
+          {/* RENT & DEPOSIT */}
+          <div className="flex gap-4">
+            <input
+              type="number"
+              name="rent"
+              placeholder="Rent"
+              value={rent}
+              onChange={(e) => setRent(e.target.value === "" ? "" : Number(e.target.value))}
+              className="border rounded p-2 w-full bg-gray-100"
+            />
+            <input
+              type="number"
+              name="deposit"
+              placeholder="Deposit"
+              value={deposit}
+              onChange={(e) => setDeposit(e.target.value === "" ? "" : Number(e.target.value))}
+              className="border rounded p-2 w-full bg-gray-100"
+            />
           </div>
 
+          {/* TOTALS */}
           <div className="grid gap-2">
-            <label className="font-bold">Total Price</label>
+            <label className="font-bold">Items total (services)</label>
             <input
               type="text"
-              value={calculateTotal()}
+              value={propertiesTotal.toFixed(2)}
+              disabled
+              className="border rounded p-2 bg-gray-100"
+            />
+            <label className="font-bold">First invoice total</label>
+            <input
+              type="text"
+              value={calculateTotal().toFixed(2)}
               disabled
               className="border rounded p-2 bg-gray-100"
             />
           </div>
 
+          {/* BOOKING STATUS */}
           <div className="grid gap-2">
-            <label className="font-bold">
-              Payment status <span className="font-normal">(required)</span>
-            </label>
-            <select
-              name="paymentStatus"
-              value={paymentStatus}
-              onChange={(e) => setPayment(e.target.value)}
-              className={`border rounded p-2 ${
-                paymentStatus === "paid" ? "text-green-500" : "text-red-500"
-              } `}
-            >
-              {" "}
-              <option value="unpaid" className="text-black">
-                Unpaid
-              </option>
-              <option value="paid" className="text-black">
-                Paid
-              </option>
-            </select>
-          </div>
-
-          <div className="grid gap-2">
-            <label className="font-bold">
-              Status <span className="font-normal">(required)</span>
-            </label>
+            <label className="font-bold">Booking status</label>
             <select
               name="status"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="border rounded p-2"
+              className="border rounded p-2 bg-gray-100"
             >
               <option value="active">Active</option>
               <option value="completed">Completed</option>
               <option value="cancelled">Cancelled</option>
             </select>
           </div>
-
-          <div className="grid gap-2">
-            <label className="font-bold">
-              Invoice send <span className="font-normal">(required)</span>
-            </label>
-            <select
-              name="invoiceSent"
-              value={invoiceSent}
-              onChange={(e) => setInvoiceSent(e.target.value)}
-              className="border rounded p-2"
-            >
-              <option value={true}>Yes</option>
-              <option value={false}>No</option>
-            </select>
-          </div>
         </div>
 
+        {/* RIGHT COLUMN */}
         <div className="space-y-4">
+          {/* PARKING */}
           <div className="p-4 bg-primary rounded-xl">
             <label className="font-bold">Parking</label>
-            <div className="w-full flex  items-center gap-4">
-              <div className="flex flex-col">
-                <label>Select vehicle</label>
-                <select
-                  className="border rounded p-2"
-                  name="parking"
-                  value={parking}
-                  onChange={(e) => setParking(e.target.value)}
-                >
-                  <option value={""}>N/A</option>
-                  <option value="car">Car</option>
-                  <option value="motobike">Motobike</option>
-                </select>
-              </div>
-              <div className="flex flex-col">
-                <label>Qty</label>
-                <input
-                  placeholder="Enter size..."
-                  name="parkingSize"
-                  type="number"
-                  onChange={(e) => setQty(e.target.value)}
-                  value={qty}
-                  className="border rounded p-2 "
-                />
-              </div>
+            <div className="flex gap-4 mt-2">
+              <select
+                className="border rounded p-2 bg-gray-100"
+                name="parking"
+                value={parking}
+                onChange={(e) => setParking(e.target.value)}
+              >
+                <option value={""}>N/A</option>
+                <option value="car">Car</option>
+                <option value="motobike">Motobike</option>
+              </select>
+              <input
+                placeholder="Qty"
+                name="parkingSize"
+                type="number"
+                onChange={(e) => setQty(e.target.value)}
+                value={qty}
+                className="border rounded p-2 bg-gray-100"
+              />
             </div>
           </div>
-          <AddPropertyFormBooking
-            formData={formData}
-            setFormData={setFormData}
-          />
 
-          <div className="border p-4 rounded-md">
-            <h1 className="font-bold">Attacment file</h1>
-            {formData?.removedFiles &&
-              formData.removedFiles.map((item, index) => (
-                <input
-                  key={index}
-                  name="removedFiles"
-                  type="text"
-                  defaultValue={item}
-                  className="w-full p-2 rounded-md bg-secondary text-xs focus:ring-0 focus:outline-none hidden"
-                />
-              ))}
+          {/* PROPERTIES / ADD-ONS */}
+          <AddPropertyFormBooking formData={formData} setFormData={setFormData} />
 
-            {formData.fileUrls.length > 0 ? (
-              <div>
-                {formData.fileUrls?.map((item, index) => (
-                  <div
-                    key={index}
-                    className="w-full flex items-center justify-between gap-2 border p-2 rounded hover:bg-gray-50"
-                  >
-                    <a
-                      href={item}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-blue-600 hover:underline"
-                    >
-                      <FaFile size={18} />
-                      <span className="break-all">{item.split("/").pop()}</span>
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="text-red-500 hover:underline"
-                    >
-                      <BiTrash />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div>No file Attacment</div>
-            )}
+          {/* BILLING (Payment + Telegram) */}
+          <div className="p-4 bg-white rounded-xl shadow border space-y-3">
+            <h3 className="font-semibold text-lg">Billing</h3>
+
+            {/* Payment Status */}
+            <div className="grid gap-1">
+              <label className="font-bold">Payment status</label>
+              <select
+                name="paymentStatus"
+                value={paymentStatus}
+                onChange={(e) => setPayment(e.target.value)}
+                className={`border rounded p-2 bg-gray-100 ${paymentColor}`}
+              >
+                <option className="text-black" value="unpaid">Unpaid</option>
+                <option className="text-black" value="partial">Partial</option>
+                <option className="text-black" value="paid">Paid</option>
+              </select>
+              <p className="text-xs text-gray-500">
+                Mark as <b>Paid</b> once payment is confirmed.
+              </p>
+            </div>
+
+            {/* Invoice Sent (boolean) */}
+            <div className="grid gap-1">
+              <label className="font-bold">Invoice sent</label>
+              <select
+                name="invoiceSent"
+                value={String(invoiceSent)}
+                onChange={(e) => setInvoiceSent(e.target.value === "true")}
+                className="border rounded p-2 bg-gray-100"
+              >
+                <option className="text-black" value="false">No</option>
+                <option className="text-black" value="true">Yes</option>
+              </select>
+              {/* Hidden boolean-safe field if your server prefers explicit true/false */}
+              <input type="hidden" name="invoiceSentBool" value={invoiceSent ? "true" : "false"} />
+            </div>
+
+            {/* Telegram Status + Send toggle */}
+            {/* <div className="grid gap-1">
+              <label className="font-bold">Telegram status</label>
+              <select
+                name="telegramStatus"
+                value={telegramStatus}
+                onChange={(e) => setTelegramStatus(e.target.value)}
+                className={`border rounded p-2 bg-gray-100 ${telegramColor}`}
+              >
+                <option className="text-black" value="not_sent">Not sent</option>
+                <option className="text-black" value="queued">Queued</option>
+                <option className="text-black" value="sent">Sent</option>
+                <option className="text-black" value="failed">Failed</option>
+              </select>
+              <p className="text-xs text-gray-500">
+                Status is updated by your system after attempting to send.
+              </p>
+            </div> */}
+
+            {/* <div className="flex items-center gap-2">
+              <input
+                id="sendTelegram"
+                type="checkbox"
+                checked={sendTelegram}
+                onChange={(e) => setSendTelegram(e.target.checked)}
+                className="w-4 h-4 accent-blue-600"
+              />
+              <label htmlFor="sendTelegram" className="text-sm">
+                Send invoice via Telegram on submit
+              </label>
+
+              <input type="hidden" name="sendTelegram" value={sendTelegram ? "true" : "false"} />
+            </div> */}
           </div>
 
-          <div className="p-4 bg-primary rounded-xl ">
+          {/* FILE ATTACHMENT */}
+          <div className="border p-4 rounded-md bg-white shadow-sm">
+            <h3 className="font-bold">Attachment file</h3>
+            {formData.fileUrls?.map((item, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center border p-2 rounded mt-2 bg-gray-50"
+              >
+                <a
+                  href={item}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-blue-600 hover:underline"
+                >
+                  <FaFile size={18} />
+                  <span className="break-all">{item.split("/").pop()}</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="text-red-500"
+                >
+                  <BiTrash />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-4 bg-primary rounded-xl">
             <ChooseFile files={files} setFiles={setFiles} />
           </div>
-          <div className="grid gap-2 mt- p-4 bg-primary rounded-xl ">
-            <label>
-              Notes <span className="font-normal">(optional)</span>
-            </label>
+
+          {/* NOTES */}
+          <div className="grid gap-2">
+            <label className="font-bold">Notes</label>
             <textarea
               name="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
-              className="border rounded p-2"
+              className="border rounded p-2 w-full bg-gray-100"
+              placeholder="Notes (optional)"
             />
           </div>
         </div>
 
+        {/* SUBMIT */}
         <button
           type="submit"
           disabled={isPending}
-          className={`p-2 bg-blue-600 text-secondarytext w-full mb-4 hover:bg-blue-500 hover:text-slate-200 rounded-md ${
-            isPending ? "opacity-50 cursor-not-allowed" : ""
+          className={`p-2 bg-blue-600 text-secondarytext w-full mb-4 rounded-md ${
+            isPending ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-500"
           }`}
         >
           {isPending
