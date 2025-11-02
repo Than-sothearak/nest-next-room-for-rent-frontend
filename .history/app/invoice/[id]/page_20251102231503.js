@@ -21,13 +21,11 @@ export default async function InvoicePage(props) {
 
   data = payment
   if (!payment) {
-    const booking = JSON.parse(
-      JSON.stringify(await Booking.findOne({ _id: id }).populate("userId")
+    const booking = JSON.stringify(await Booking.findOne({ _id: id }).populate("userId")
       .populate("roomId").sort({ startDate: -1 }))
-    )
     data = booking;
   }
- 
+  console.log(data)
   return (
     <div>
       <p className="text-center">Invoice page</p>

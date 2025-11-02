@@ -10,7 +10,7 @@ import { mongoDb } from "@/utils/connectDB";
 export default async function DashboardLayout({ children, admin, user }) {
   const session = await auth();
   await mongoDb();
-  await new Promise((res) => setTimeout(res, 3000));
+  await new Promise((res) => setTimeout(res, 10000));
   const userId = await User.findOne({ _id: session?.user?._id });
 
   if (!session || !userId) {
@@ -49,6 +49,7 @@ export default async function DashboardLayout({ children, admin, user }) {
              
                 <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
                 <div className="max-lg:mx-2 overflow-x-auto my-4">{admin}</div>
+                <div className="max-lg:mac object-right"> {children}</div>
              
             </div>
             <Footer />

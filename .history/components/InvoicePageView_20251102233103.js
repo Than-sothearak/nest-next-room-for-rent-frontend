@@ -261,7 +261,7 @@ const InvoicePageView = ({ data }) => {
 
             <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: "8px" }}>
               <Text>Deposit:</Text>
-              <Text>$00.00</Text>
+              <Text>${deposit.toFixed(2)}</Text>
             </View>
 
             <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: "8px" }}>

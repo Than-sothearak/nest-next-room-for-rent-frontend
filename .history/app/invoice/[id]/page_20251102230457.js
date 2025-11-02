@@ -1,7 +1,9 @@
+import DownloadInvoiceButton from "@/components/DownloadInvoiceButton";
 import InvoicePreview from "@/components/InvoicePreview";
 import { Booking } from "@/models/Booking";
 import { Payment } from "@/models/Payment";
 import { mongoDb } from "@/utils/connectDB";
+import { formatDate } from "@/utils/formatDate";
 import React from "react";
 
 export default async function InvoicePage(props) {
@@ -21,13 +23,10 @@ export default async function InvoicePage(props) {
 
   data = payment
   if (!payment) {
-    const booking = JSON.parse(
-      JSON.stringify(await Booking.findOne({ _id: id }).populate("userId")
-      .populate("roomId").sort({ startDate: -1 }))
-    )
-    data = booking;
+
+    data = JSON.stringify(await Booking.findOne({ _id: id }))
   }
- 
+
   return (
     <div>
       <p className="text-center">Invoice page</p>

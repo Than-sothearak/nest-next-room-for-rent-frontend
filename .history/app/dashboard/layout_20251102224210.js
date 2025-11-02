@@ -10,7 +10,7 @@ import { mongoDb } from "@/utils/connectDB";
 export default async function DashboardLayout({ children, admin, user }) {
   const session = await auth();
   await mongoDb();
-  await new Promise((res) => setTimeout(res, 3000));
+  await new Promise((res) => setTimeout(res, 10000));
   const userId = await User.findOne({ _id: session?.user?._id });
 
   if (!session || !userId) {
