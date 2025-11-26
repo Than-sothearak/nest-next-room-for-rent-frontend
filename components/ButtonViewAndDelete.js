@@ -67,7 +67,7 @@ const ButtonViewAndDelete = ({
       >
         <Link
           href={link}
-          className="bg-blue-500  text-primary border border-secondary px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
+          className="bg-blue-600  text-primary border border-secondary px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
         >
           Edit
         </Link>

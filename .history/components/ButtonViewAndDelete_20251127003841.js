@@ -12,6 +12,7 @@ const ButtonViewAndDelete = ({
 }) => {
   const [isClicked, setIsClicked] = useState(true);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isLoading, setIsLoading] =useState(false)
 
   const handleShowConfirm = () => {
     setIsClicked(false);
@@ -20,6 +21,7 @@ const ButtonViewAndDelete = ({
 
 
   const handelDelete = async (id) => {
+    setIsLoading(true)
     startTransition(() => {
       setOptimisticData(id) // Optimistic UI update
     });
@@ -27,16 +29,17 @@ const ButtonViewAndDelete = ({
     const res = await deleteById(id)
     if (res?.success) {
       toast.success(res.message);
+      setIsLoading(false)
     } else {
       toast.error(res.message);
+      setIsLoading(false)
     }
 
     setShowConfirmation(false)
   }
   return (
 
-<div>
-  
+
 
     <form
       className="justify-end flex items-center gap-2"
@@ -64,7 +67,7 @@ const ButtonViewAndDelete = ({
       >
         <Link
           href={link}
-          className="bg-blue-500  text-primary border border-secondary px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
+          className="bg-blue-600  text-primary border border-secondary px-2 py-1 rounded-md hover:bg-tertiary hover:text-secondarytext text-sm"
         >
           Edit
         </Link>
@@ -78,20 +81,19 @@ const ButtonViewAndDelete = ({
       </div>
 
       {/* Confirmation Modal */}
-  
-    </form>
-        {showConfirmation && (
-               <div className="w-full h-full fixed inset-0 bg-black/80 flex justify-center items-center z-50">
+      {showConfirmation &&
+        createPortal(
+          <div className="w-full h-full fixed inset-0 bg-black/80 flex justify-center items-center">
             <div className="bg-white text-black p-6 rounded-md w-[300px]">
               <p className="text-center text-sm mb-4">
-                {"Are you sure to delete this item?"}
+                {isLoading ? "Deleting..." : "Are you sure to delete this item?"}
               </p>
               <div className="w-full flex justify-between gap-4">
                 <button
-
+                  disabled={isLoading}
                   type="button"
                   onClick={handleShowConfirm}
-                  className={`'hover:bg-gray-600'} bg-gray-400 rounded-md  w-full text-white`}
+                  className={`${isLoading ? 'cursor-wait' : ''} 'hover:bg-gray-600'} bg-gray-400 rounded-md  w-full text-white`}
                 >
                   No
                 </button>
@@ -99,8 +101,8 @@ const ButtonViewAndDelete = ({
                   <button
                     type="button"
                     onClick={() => handelDelete(id)}
-
-                    className={` rounded-md bg-red-500 px-4 py-2 text-white w-full hover:bg-red-700`}
+                    disabled={isLoading}
+                    className={` rounded-md bg-red-500 px-4 py-2 text-white w-full hover:bg-red-700 ${isLoading ? 'cursor-wait' : ''}`}
                   >
                     Yes
                   </button>
@@ -108,8 +110,9 @@ const ButtonViewAndDelete = ({
               </div>
             </div>
           </div>,
+          document.body
         )}
-</div>
+    </form>
 
   );
 };

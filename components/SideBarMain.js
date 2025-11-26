@@ -124,7 +124,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation,ser
 
       <div className={`mt-4 ${isCollapsed ? 'hidden' : 'w-full'}`}>
         <SidebarList
-        servicesCount={servicesCount}
+          servicesCount={servicesCount}
           navList={navigation}
           handleClick={handleClick}
           isCollapsed={isCollapsed}

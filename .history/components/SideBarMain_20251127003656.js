@@ -13,7 +13,7 @@ import Image from "next/image";
 import ConnectTelegram from "./ButtonConnectTelegram";
 import { SidebarListMobile } from "./SidebarListMobile";
 
-const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) => {
+const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation,servicesCount,link }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -26,7 +26,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) 
 
   return (
     <div
-      className={`bg-blue-500 text-primaryText ${isCollapsed ? 'p-0' : 'p-2'} h-full overflow-y-auto transition-all duration-300 ease-in-out
+      className={`bg-primary text-primarytext ${isCollapsed ? 'p-0' : 'p-2'} h-full overflow-y-auto transition-all duration-300 ease-in-out
         max-lg:fixed top-0 left-0 z-50
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         ${isCollapsed ? "w-14 justify-start flex-col items-center flex " : "w-80  "} 
@@ -100,7 +100,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) 
               <p className="text-2xl">Hi, {currentUser?.username}!</p>
 
               <Link
-                href={`/dashboard/users/${session?.user?._id}`}
+                href={`${session?.user?.isAdmin ? '/dashboard/users/' : '/dashboard/client-page/'}${session?.user?._id}`}
                 className="bg-slate-200 hover:bg-slate-300  w-full text-center flex gap-2 justify-center items-center border border-slate-300 p-4 rounded-xl cursor-pointer"
               >
                 <p>Edit your account information</p>
@@ -124,6 +124,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation }) 
 
       <div className={`mt-4 ${isCollapsed ? 'hidden' : 'w-full'}`}>
         <SidebarList
+          servicesCount={servicesCount}
           navList={navigation}
           handleClick={handleClick}
           isCollapsed={isCollapsed}

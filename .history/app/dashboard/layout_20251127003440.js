@@ -46,6 +46,16 @@ export default async function DashboardLayout({ children, admin, user }) {
                 session={session}
                 user={JSON.parse(JSON.stringify(userId))}
               />
+              <div>
+                <p>
+                  This thoa jsdsjdskj dakdjksjdksdsjdks
+                  dakdjksjdksdsjdks
+
+                  dsadklj;adkpldak;awiocasd
+                  
+                </p>
+              </div>
+             
                 <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
                 <div className="max-lg:mx-2 overflow-x-auto my-4">{admin}</div>
              
