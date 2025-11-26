@@ -13,7 +13,7 @@ bot.command("start", async (ctx) => {
   const userIdFromPayload = ctx.message.text.split(" ")[1]; // /start <userId>
 
   if (!userIdFromPayload) {
-    return ctx.reply("❗Please connect from the dashboard.");
+    return ctx.reply("id:" + " " + ctx.chat.id + " " + "@" + ctx.chat.username)
   }
 
   await mongoDb();

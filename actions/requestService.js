@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import { Service } from "@/models/Service";
 import { User } from "@/models/User";
-import { formatTo12Hour } from "@/utils/formatDate";
+import { formatDate, formatTo12Hour } from "@/utils/formatDate";
 import { sendMessageToTelegram } from "@/utils/sendTelegramMessage";
 import { revalidatePath } from "next/cache";
 
@@ -42,7 +42,7 @@ export async function requestService(booking, prevState, formData) {
 
         await sendMessageToTelegram(
             admin.telegramChatId,
-            `<b>📢 New Service Request</b>\n\n<b>User:</b> ${booking.userId.username} (${booking.userId.phone})\n<b>Service Type:</b> ${serviceType}\n<b>Room Number:</b> ${booking.roomId.roomName}\n<b>Schedule:</b> ${startDate}\n<b>Time:</b> ${formatTo12Hour(startTime)}\n<b>Note:</b> ${note || "None"}\n\nPlease review and take action.\n<b>👉 Visit here to see your progress:\nhttp://192.168.100.4:3000/dashboard/services</b>`
+            `<b>📢 New Service Request</b>\n\n<b>User:</b> ${booking.userId.username} (${booking.userId.phone})\n<b>Service Type:</b> ${serviceType}\n<b>Room Number:</b> ${booking.roomId.roomName}\n<b>Schedule:</b> ${formatDate(startDate)}\n<b>Time:</b> ${formatTo12Hour(startTime)}\n<b>Note:</b> ${note || "None"}\n\nPlease review and take action.\n<b>👉 Visit here to see your progress:\nhttps://next-room-for-rent.vercel.app/</b>`
         );
 
         console.log("Service request notification sent to admin successfully!");
