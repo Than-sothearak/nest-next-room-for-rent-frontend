@@ -13,21 +13,21 @@ export default async function DashboardLayout({ children, admin, user }) {
   await new Promise((res) => setTimeout(res, 1000));
   const userId = await User.findOne({ _id: session?.user?._id });
 
-  if (!session || !userId) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold">Unauthorized</h1>
-      </div>
-    );
-  }
-  let services = [];
-  if (session?.user?.isAdmin) {
-    services = await Service.find({ status: "pending" });
-  }
+  // if (!session || !userId) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <h1 className="text-2xl font-bold">Unauthorized</h1>
+  //     </div>
+  //   );
+  // }
+  // let services = [];
+  // if (session?.user?.isAdmin) {
+  //   services = await Service.find({ status: "pending" });
+  // }
 
   return (
     <>
-      {session?.user?.isAdmin ? (
+      {/* {session?.user?.isAdmin ? (
         <div className="flex">
           <div className="bg-primary">
             <Sidebar
@@ -78,7 +78,33 @@ export default async function DashboardLayout({ children, admin, user }) {
             <Footer />
           </div>
         </div>
-      )}
+      )} */}
+
+        <div className="flex">
+          <div className="bg-primary">
+            <Sidebar
+              navigation={pageNavigation}
+              session={session}
+              // servicesCount={services.length}
+              link={"/dashboard/users/"}
+            />
+          </div>
+          <div className="flex flex-col justify-between w-full lg:mx-4 lg:overflow-x-auto h-screen ">
+            <div className="">
+              <Navbar
+                link={"/dashboard/users/"}
+                // servicesCount={services.length}
+                navigation={pageNavigation}
+                session={session}
+                // user={JSON.parse(JSON.stringify(userId))}
+              />
+                <div className="max-lg:mx-2 overflow-x-auto">{children}</div>
+                <div className="max-lg:mx-2 overflow-x-auto my-4">{admin}</div>
+             
+            </div>
+            <Footer />
+          </div>
+        </div>
     </>
   );
 }

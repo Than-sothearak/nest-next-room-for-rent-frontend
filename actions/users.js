@@ -10,28 +10,35 @@ import { auth } from "@/auth";
 await mongoDb();
 
 export async function getUsers(query, page) {
-  const session = await auth();
-  // if (!session?.user?.isAdmin) {
-  //   return console.log("Access denied!");
-  // }
-  const ITEM_PER_PAGE = 10;
-
   try {
-    if (query) {
-      const users = await User.find({
-        $or: [{ username: { $regex: query, $options: "i" } }],
-      });
-      const count = users.length;
-      return { users, count };
+    const numPage = parseInt(page) || 1;
+    const res = await fetch(`http://localhost:3000/users?page=${numPage}`, {
+      cache: "no-store", // Always fetch fresh data
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch users");
     }
 
-    const count = await User.countDocuments();
-    const users = await User.find()
-      .sort({ createdAt: -1 })
-      .limit(ITEM_PER_PAGE)
-      .skip(ITEM_PER_PAGE * (page - 1));
+    const getData = await res.json();
+    const users = getData.users;
+    const count = await getData.count;
+    const ITEAM_PER_PAGE = getData.ITEM_PER_PAGE;
+    const countPage = Math.ceil(parseFloat(count / ITEAM_PER_PAGE)) || 1;
 
-    return { users, count };
+    if (query) {
+      const res = await fetch(`http://localhost:3000/users?query=${query}`, {
+        cache: "no-store", // Always fetch fresh data
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch users");
+      }
+
+      return await res.json();
+    }
+
+    return { users, count, ITEAM_PER_PAGE, countPage };
   } catch (err) {
     console.error(err);
     throw new Error("Failed to fetch users!");
@@ -52,16 +59,14 @@ export async function addUsers(prevState, formData) {
   const name = formData.get("name");
   const email = formData.get("email");
   const phone = formData.get("phone");
-   const status = formData.get("status")
+  const status = formData.get("status");
   const address = formData.get("address");
   const gender = formData.get("gender");
   const dateOfBirth = formData.get("dateOfBirth");
   const password = formData.get("password");
   const role = formData.get("role");
   const imageFile = formData.get("image");
-  const telegramChatId = formData.get("telegramChatId")
-
-
+  const telegramChatId = formData.get("telegramChatId");
 
   let errors = {};
   if (name.length >= 21) {
@@ -86,7 +91,7 @@ export async function addUsers(prevState, formData) {
   }
   const isAdmin = role === "admin";
 
-  console.log(isAdmin)
+  console.log(isAdmin);
   const salt = await bcrypt.genSalt(10);
   if (password.length < 6) {
     errors.password =
@@ -155,7 +160,6 @@ export async function addUsers(prevState, formData) {
 }
 
 export async function updateUser(userId, prevState, formData) {
-  
   const session = await auth();
   if (!session?.user?.isAdmin && session?.user?._id !== userId) {
     return console.log("Access denied!");
@@ -167,7 +171,6 @@ export async function updateUser(userId, prevState, formData) {
   }
 
   try {
-
     const user = await User.findById(userId);
     if (!user) {
       return { error: "User not found", success: false };
@@ -176,14 +179,14 @@ export async function updateUser(userId, prevState, formData) {
     const name = formData.get("name");
     const email = formData.get("email");
     const phone = formData.get("phone");
-    const status = formData.get("status")
+    const status = formData.get("status");
     const gender = formData.get("gender");
     const dateOfBirth = formData.get("dateOfBirth");
     const address = formData.get("address");
     const password = formData.get("password");
     const role = session.user.isAdmin ? formData.get("role") : "user";
     const imageFile = formData.get("image");
-      const telegramChatId = formData.get("telegramChatId")
+    const telegramChatId = formData.get("telegramChatId");
 
     let errors = {};
     if (!name) errors.name = "Name is required";
@@ -234,10 +237,11 @@ export async function updateUser(userId, prevState, formData) {
     }
 
     await User.updateOne({ _id: userId }, userData);
-    return {success: "User successfully updated", message:  "User successfully updated"}
+    return {
+      success: "User successfully updated",
+      message: "User successfully updated",
+    };
   } catch (err) {
     console.log("Error updating user:", err);
   }
-
-
 }

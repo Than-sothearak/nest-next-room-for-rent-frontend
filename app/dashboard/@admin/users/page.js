@@ -8,21 +8,17 @@ import Pagination from "@/components/Pagination";
 
 const userPage = async ({ searchParams }) => {
   const session = await auth();
-    if (!session || !session.user?.isAdmin) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <h1 className="text-2xl font-bold">Unauthorized</h1>
-      </div>
-    );
-  }
+  //   if (!session || !session.user?.isAdmin) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <h1 className="text-2xl font-bold">Unauthorized</h1>
+  //     </div>
+  //   );
+  // }
   const { query } = await searchParams;
-  
   const {page} = await searchParams || 1;
-  const {users, count} = await getUsers(query, page);
-  const ITEM_PER_PAGE = 10
-  const countPage = Math.ceil(parseFloat(count/ITEM_PER_PAGE)) || 1;
-  
-  
+  const {users, countPage} = await getUsers(query, page);
+    
   const userColumns = [
    
     { header: "Username", accessor: "username" },
@@ -36,7 +32,6 @@ const userPage = async ({ searchParams }) => {
     { header: "Created At", accessor: "createdAt" },
   ,
   ];
-
 
   return (
     <div className="p-4 justify-center bg-primary rounded-lg">
@@ -60,8 +55,8 @@ const userPage = async ({ searchParams }) => {
       {/* Users Table */}
   <TableComponent 
   currentPage={page || 1}
-  itemPerPage={ITEM_PER_PAGE}
-  data={JSON.parse(JSON.stringify(users))} pageName="users" columns={userColumns} session={session} />
+  itemPerPage={countPage}
+  data={users} pageName="users" columns={userColumns} session={session} />
 
       {/* Pagination Buttons */}
       <Pagination 
