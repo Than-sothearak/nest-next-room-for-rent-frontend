@@ -6,6 +6,7 @@ export default async function singleUserPage(props) {
   const id = await params.id;
   const res = await fetch(`http://localhost:3000/users/${id}`)
   const user = await res.json();
+  console.log(user)
   if (!user) {
     return <p className="text-red-500">User not found!</p>;
   }

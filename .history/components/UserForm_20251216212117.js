@@ -6,12 +6,10 @@ import ChangPasswordForm from "./ChangPasswordForm";
 import { formatDate, formatDateForForm } from "@/utils/formatDate";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { set } from "mongoose";
 
 export default function UserForm({ userId, userData }) {
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(null);
   const [password, setPassword] = useState();
   const [formData, setFormData] = useState({
     username: userData?.username || "",      // ✅ FIX
@@ -38,6 +36,7 @@ export default function UserForm({ userId, userData }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log(JSON.stringify(formData));
 
     const url = userId ? `http://localhost:3000/users/${userId}` : "/users";
     const method = "PATCH";
@@ -52,20 +51,18 @@ export default function UserForm({ userId, userData }) {
       const data = await res.json();
 
       if (res.ok) {
-        setSuccess(data.success);
         toast.success(data.message || "Success!");
         router.refresh(); // refresh page
         setLoading(false);
-
+        alert("User saved successfully!");
       } else {
-        setSuccess(false);
         toast.error(data.message || "Failed!");
       }
     } catch (err) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
-
+    
     }
   };
 
@@ -281,8 +278,8 @@ export default function UserForm({ userId, userData }) {
                 onChange={handleChange}
                 required
                 className={`border rounded p-2 ${formData?.status === "active"
-                  ? "text-green-500"
-                  : "text-red-500"
+                    ? "text-green-500"
+                    : "text-red-500"
                   } `}
               >
                 <option value="active" className="text-black">
@@ -416,43 +413,45 @@ export default function UserForm({ userId, userData }) {
           </div>
 
           {/* Status Messages */}
-          {success ? (
-            <Toaster
-              position="top-center"
-              reverseOrder={false}
-              gutter={8}
-              containerClassName=""
-              containerStyle={{}}
-              toastOptions={{
-                // Define default options
-                className: "",
-                duration: 5000,
-                removeDelay: 1000,
-                style: {
-                  background: "oklch(79.2% 0.209 151.711)",
-                  color: "#fff",
-                },
-              }}
-            />
-          ) : <Toaster
-            position="top-center"
-            reverseOrder={false}
-            gutter={8}
-            containerClassName=""
-            containerStyle={{}}
-            toastOptions={{
-              // Define default options
-              className: "",
-              duration: 5000,
-              removeDelay: 1000,
-              style: {
-                background: "oklch(70.4% 0.191 22.216)",
-                color: "#fff",
-              },
-            }}
-          />}
+          {/* {state?.success && (
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(79.2% 0.209 151.711)",
+                    color: "#fff",
+                  },
+                }}
+              />
+            )} */}
 
-
+          {/* {state?.error && !state?.errors && (
+             <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />
+            )} */}
         </div>
       </form>
 

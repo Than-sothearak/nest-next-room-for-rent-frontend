@@ -54,6 +54,7 @@ export default function UserForm({ userId, userData }) {
       if (res.ok) {
         setSuccess(data.success);
         toast.success(data.message || "Success!");
+        setSuccess(false);
         router.refresh(); // refresh page
         setLoading(false);
 

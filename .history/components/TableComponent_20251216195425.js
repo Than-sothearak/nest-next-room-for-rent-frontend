@@ -129,7 +129,7 @@ const TableComponent = ({
                 </td>
                 <td className="relative">
                   <ButtonViewAndDelete
-                  
+                    session={session}
                     link={`/dashboard/${pageName}/${row.id}`}
                     id={row.id}
                     pending={pending}

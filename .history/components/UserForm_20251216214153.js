@@ -6,7 +6,6 @@ import ChangPasswordForm from "./ChangPasswordForm";
 import { formatDate, formatDateForForm } from "@/utils/formatDate";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { set } from "mongoose";
 
 export default function UserForm({ userId, userData }) {
 
@@ -52,13 +51,19 @@ export default function UserForm({ userId, userData }) {
       const data = await res.json();
 
       if (res.ok) {
-        setSuccess(data.success);
-        toast.success(data.message || "Success!");
+        if (data.success) {
+          setSuccess(true);
+          toast.success(data.message || "Success!");
+        } else if (data?.error) {
+          setSuccess(false);
+          toast.error(data.message || "Failed!");
+        }
+
+       
         router.refresh(); // refresh page
         setLoading(false);
 
       } else {
-        setSuccess(false);
         toast.error(data.message || "Failed!");
       }
     } catch (err) {
@@ -434,25 +439,25 @@ export default function UserForm({ userId, userData }) {
                 },
               }}
             />
-          ) : <Toaster
-            position="top-center"
-            reverseOrder={false}
-            gutter={8}
-            containerClassName=""
-            containerStyle={{}}
-            toastOptions={{
-              // Define default options
-              className: "",
-              duration: 5000,
-              removeDelay: 1000,
-              style: {
-                background: "oklch(70.4% 0.191 22.216)",
-                color: "#fff",
-              },
-            }}
-          />}
+          ): <Toaster
+                position="top-center"
+                reverseOrder={false}
+                gutter={8}
+                containerClassName=""
+                containerStyle={{}}
+                toastOptions={{
+                  // Define default options
+                  className: "",
+                  duration: 5000,
+                  removeDelay: 1000,
+                  style: {
+                    background: "oklch(70.4% 0.191 22.216)",
+                    color: "#fff",
+                  },
+                }}
+              />}
 
-
+     
         </div>
       </form>
 
