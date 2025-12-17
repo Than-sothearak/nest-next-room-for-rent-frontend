@@ -9,10 +9,11 @@ import { auth } from "@/auth";
 
 await mongoDb();
 
-export async function getUsers(query, page) {
+export async function getUsers(query, page, limit) {
   try {
     const numPage = parseInt(page) || 1;
-    const res = await fetch(`http://localhost:3000/users?page=${numPage}`, {
+    const limitNum = parseInt(limit) || 10;
+    const res = await fetch(`http://localhost:3000/users?page=${numPage}&limit=${limitNum}`, {
       cache: "no-store", // Always fetch fresh data
     });
 
@@ -21,10 +22,10 @@ export async function getUsers(query, page) {
     }
 
     const getData = await res.json();
-    const users = getData.users;
-    const count = await getData.count;
-    const ITEAM_PER_PAGE = getData.ITEM_PER_PAGE;
-    const countPage = Math.ceil(parseFloat(count / ITEAM_PER_PAGE)) || 1;
+    const users = getData.data;
+    const count = getData.meta.totalItems;
+    const ITEAM_PER_PAGE = getData.meta.itemsPerPage;
+    const countPage = getData.meta.totalPages || 1;
 
     if (query) {
       const res = await fetch(`http://localhost:3000/users?query=${query}`, {

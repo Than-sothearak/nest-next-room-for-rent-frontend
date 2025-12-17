@@ -4,13 +4,13 @@ import { useSearchParams } from "next/navigation";
 
 const Pagination = ({ pathname, totalPages, currentPage, query }) => {
     const searchParams = useSearchParams()
-    const sortKey = searchParams.get("sortKey");
+    const limitNum= searchParams.get("limit");
     const sortDirection = searchParams.get("sortDirection");
   if (totalPages <= 1) return null;
 
   const pageNum = Math.ceil(Number(currentPage)) || 1;
   const getHref = (page) =>
-    `/dashboard/${pathname}?page=${page}${query ? `&query=${query}` : ""}&sortKey=${sortKey || ""}&sortDirection=${sortDirection || "descending"}`;
+    `/dashboard/${pathname}?page=${page}${query ? `&query=${query}` : ""}&limit=${limitNum || ""}&sortDirection=${sortDirection || "descending"}`;
 
   return (
     <div className="w-full flex justify-center items-center gap-2 mt-4">

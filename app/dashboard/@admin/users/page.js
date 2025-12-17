@@ -17,7 +17,8 @@ const userPage = async ({ searchParams }) => {
   // }
   const { query } = await searchParams;
   const {page} = await searchParams || 1;
-  const {users, countPage} = await getUsers(query, page);
+  const {limit} = await searchParams || 10;
+  const {users, countPage} = await getUsers(query, page, limit);
     
   const userColumns = [
    
