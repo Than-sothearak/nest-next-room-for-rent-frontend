@@ -1,13 +1,13 @@
 "use server";
-// const bcrypt = require("bcryptjs");
-// import { User } from "@/models/User";
-// import { mongoDb } from "@/utils/connectDB";
-// import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
-// import { redirect } from "next/navigation";
-// import { revalidatePath } from "next/cache";
-// import { auth } from "@/auth";
+const bcrypt = require("bcryptjs");
+import { User } from "@/models/User";
+import { mongoDb } from "@/utils/connectDB";
+import { deleteFileFromS3, uploadFileToS3 } from "@/utils/uploadImageFileToS3";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { auth } from "@/auth";
 
-// await mongoDb();
+await mongoDb();
 
 export async function getUsers(query, page, limit) {
   try {
