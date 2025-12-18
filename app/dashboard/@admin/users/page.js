@@ -16,29 +16,27 @@ const userPage = async ({ searchParams }) => {
   //   );
   // }
   const { query } = await searchParams;
-  const {page} = await searchParams || 1;
-  const {limit} = await searchParams || 10;
-  const {users, countPage} = await getUsers(query, page, limit);
-    
+  const { page } = (await searchParams) || 1;
+  const { limit } = (await searchParams) || 10;
+  const { users, countPage, totalItems } = await getUsers(query, page, limit);
+
   const userColumns = [
-   
     { header: "Username", accessor: "username" },
     { header: "Email", accessor: "email" },
     { header: "Status", accessor: "status" },
     { header: "Role", accessor: "isAdmin" },
     { header: "Ip", accessor: "lastIP" },
-     { header: "Location", accessor: "location" },
+    { header: "Location", accessor: "location" },
     { header: "Device", accessor: "deviceModel" },
     { header: "Active", accessor: "lastLogin" },
     { header: "Created At", accessor: "createdAt" },
-  ,
+    ,
   ];
 
   return (
     <div className="p-4 justify-center bg-primary rounded-lg">
       <div className="flex justify-between items-center gap-4">
         <div>
-         
           <SearchComponent
             placeHolder="Search for product..."
             linkPage="/dashboard/users"
@@ -51,18 +49,25 @@ const userPage = async ({ searchParams }) => {
           Add new
         </Link>
       </div>
-      
 
       {/* Users Table */}
-  <TableComponent 
-  currentPage={page || 1}
-  itemPerPage={countPage}
-  data={users} pageName="users" columns={userColumns} session={session} />
+      <TableComponent
+        currentPage={page || 1}
+        itemPerPage={countPage}
+        data={users}
+        totalItems={totalItems}
+        pageName="users"
+        columns={userColumns}
+        session={session}
+      />
 
       {/* Pagination Buttons */}
-      <Pagination 
-      pathname={"users"}
-      totalPages={countPage} currentPage={page} query={query} />
+      <Pagination
+        pathname={"users"}
+        totalPages={countPage}
+        currentPage={page}
+        query={query}
+      />
     </div>
   );
 };

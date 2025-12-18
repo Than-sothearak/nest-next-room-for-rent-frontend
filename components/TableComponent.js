@@ -10,6 +10,7 @@ import { FormSendMessage } from "./FormSendMessage";
 
 const TableComponent = ({
   productCount,
+  totalItems,
   data,
   columns,
   pageName,
@@ -35,7 +36,7 @@ const TableComponent = ({
 
   return (
     <div className="overflow-y-clip overflow-x-auto">
-      <h1 className="mt-4">Total: {productCount}</h1>
+      <h1 className="mt-4">Total: {totalItems}</h1>
       {optimisticData.length !== 0 ? (
         <table className="my-4 w-full text-sm">
           <thead>

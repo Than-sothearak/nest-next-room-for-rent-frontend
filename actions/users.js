@@ -11,35 +11,30 @@
 
 export async function getUsers(query, page, limit) {
   try {
+  
     const numPage = parseInt(page) || 1;
     const limitNum = parseInt(limit) || 10;
-    const res = await fetch(`http://localhost:3000/users?page=${numPage}&limit=${limitNum}`, {
+    let url = `http://localhost:3000/users?page=${numPage}&limit=${limitNum}`;
+  
+    if (query) {
+      url = `http://localhost:3000/users?query=${query}&page=${numPage}&limit=${limitNum}`;
+    }
+   
+    const res = await fetch(url, {
       cache: "no-store", // Always fetch fresh data
     });
 
-    if (!res.ok) {
+      if (!res.ok) {
       throw new Error("Failed to fetch users");
     }
 
     const getData = await res.json();
     const users = getData.data;
-    const count = getData.meta.totalItems;
+    const totalItems = getData.meta.totalItems;
     const ITEAM_PER_PAGE = getData.meta.itemsPerPage;
     const countPage = getData.meta.totalPages || 1;
-
-    if (query) {
-      const res = await fetch(`http://localhost:3000/users?query=${query}`, {
-        cache: "no-store", // Always fetch fresh data
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      return await res.json();
-    }
-
-    return { users, count, ITEAM_PER_PAGE, countPage };
+    
+    return { users, totalItems, ITEAM_PER_PAGE, countPage };
   } catch (err) {
     console.error(err);
     throw new Error("Failed to fetch users!");

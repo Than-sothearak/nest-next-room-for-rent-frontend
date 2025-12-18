@@ -9,12 +9,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { set } from "mongoose";
 
 export default function UserForm({ userId, userData }) {
-
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [password, setPassword] = useState();
   const [formData, setFormData] = useState({
-    username: userData?.username || "",      // ✅ FIX
+    username: userData?.username || "", // ✅ FIX
     email: userData?.email || "",
     phone: userData?.phone || "",
     gender: userData?.gender || "male",
@@ -22,7 +21,8 @@ export default function UserForm({ userId, userData }) {
     dateOfBirth: userData?.dateOfBirth || "",
     address: userData?.address || "",
     telegramChatId: userData?.telegramChatId || "",
-    isAdmin: userData?.isAdmin ?? false,     // ✅ FIX
+    isAdmin: userData?.isAdmin ?? false, // ✅ FIX
+    roles: ['user'],
     imageUrl: userData?.imageUrl || "",
   });
 
@@ -39,14 +39,27 @@ export default function UserForm({ userId, userData }) {
     e.preventDefault();
     setLoading(true);
 
-    const url = userId ? `http://localhost:3000/users/${userId}` : "/users";
-    const method = "PATCH";
+      // Ensure dateOfBirth is a proper Date object
+  const payload = {
+    ...formData,
+    dateOfBirth: formData.dateOfBirth
+      ? new Date(formData.dateOfBirth)
+      : null,
+  };
+
+    let url = userId ? `http://localhost:3000/users/${userId}` : `http://localhost:3000/users/`;
+    let method;
+    if (userId) {
+      method = "PATCH";
+    } else {
+      method = "POST";
+    }
 
     try {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -56,7 +69,6 @@ export default function UserForm({ userId, userData }) {
         toast.success(data.message || "Success!");
         router.refresh(); // refresh page
         setLoading(false);
-
       } else {
         setSuccess(false);
         toast.error(data.message || "Failed!");
@@ -65,10 +77,8 @@ export default function UserForm({ userId, userData }) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
-
     }
   };
-
 
   // if (session?.user?.isAdmin === false && session?.user?._id !== userId)
   //   return (
@@ -97,10 +107,7 @@ export default function UserForm({ userId, userData }) {
       >
         <div>
           <ChooseSingleImageFile
-            imageUrl={
-              formData?.imageUrl ||
-              "/images/user.png"
-            }
+            imageUrl={formData?.imageUrl || "/images/user.png"}
           />
           <h2 className="text-lg font-bold mt-4 text-center">
             {formData.role === "admin" ? "Admin" : "User"}
@@ -270,8 +277,6 @@ export default function UserForm({ userId, userData }) {
                     </p>
                   )} */}
               </div>
-
-
             </div>
             <div className="grid gap-2">
               <label className="font-bold">Account status</label>
@@ -280,10 +285,11 @@ export default function UserForm({ userId, userData }) {
                 value={formData?.status}
                 onChange={handleChange}
                 required
-                className={`border rounded p-2 ${formData?.status === "active"
-                  ? "text-green-500"
-                  : "text-red-500"
-                  } `}
+                className={`border rounded p-2 ${
+                  formData?.status === "active"
+                    ? "text-green-500"
+                    : "text-red-500"
+                } `}
               >
                 <option value="active" className="text-black">
                   Active
@@ -309,7 +315,6 @@ export default function UserForm({ userId, userData }) {
                   placeholder="Na"
                   className="text-lg bg-secondary border w-full px-4 py-2.5 rounded-lg transition-all appearance-none bg-transparent border-secondary outline-none focus:ring-2 focus:border-none"
                 />
-
               </div>
             </div>
           </div>
@@ -380,8 +385,9 @@ export default function UserForm({ userId, userData }) {
             <button
               type="submit"
               disabled={loading}
-              className={`text-secondarytext w-full bg-blue-600 hover:bg-blue-700 rounded-xl py-3 ${loading ? "opacity-70 cursor-not-allowed" : ""
-                }`}
+              className={`text-secondarytext w-full bg-blue-600 hover:bg-blue-700 rounded-xl py-3 ${
+                loading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -434,25 +440,25 @@ export default function UserForm({ userId, userData }) {
                 },
               }}
             />
-          ) : <Toaster
-            position="top-center"
-            reverseOrder={false}
-            gutter={8}
-            containerClassName=""
-            containerStyle={{}}
-            toastOptions={{
-              // Define default options
-              className: "",
-              duration: 5000,
-              removeDelay: 1000,
-              style: {
-                background: "oklch(70.4% 0.191 22.216)",
-                color: "#fff",
-              },
-            }}
-          />}
-
-
+          ) : (
+            <Toaster
+              position="top-center"
+              reverseOrder={false}
+              gutter={8}
+              containerClassName=""
+              containerStyle={{}}
+              toastOptions={{
+                // Define default options
+                className: "",
+                duration: 5000,
+                removeDelay: 1000,
+                style: {
+                  background: "oklch(70.4% 0.191 22.216)",
+                  color: "#fff",
+                },
+              }}
+            />
+          )}
         </div>
       </form>
 
