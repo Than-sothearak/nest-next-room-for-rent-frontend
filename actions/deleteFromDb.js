@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@/auth";
 import { Booking } from "@/models/Booking";
 import { Category } from "@/models/Category";
 import { Room } from "@/models/Room";
@@ -11,10 +10,7 @@ import { revalidatePath } from "next/cache";
 
 export async function deleteById(id, prevState) {
   await mongoDb();
-  const session = await auth();
-  if (!session?.user?.isAdmin) {
-    return console.log("Access denied! you are not admin");
-  }
+
   try {
     if (!id) {
       return { error: "ID is required" };

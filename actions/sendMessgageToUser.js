@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@/auth";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
 import { sendMessageToTelegram } from "@/utils/sendTelegramMessage";
@@ -8,10 +7,6 @@ import { sendMessageToTelegram } from "@/utils/sendTelegramMessage";
 export async function sendMessageToUser(userData, prevState, formData) {
   await mongoDb();
 
-  const session = await auth();
-  if (!session.user.isAdmin) {
-    return { error: "Access denied! You are not logged in." };
-  }
   const message = formData.get("message");
   try {
     const user = await User.findById(userData._id);

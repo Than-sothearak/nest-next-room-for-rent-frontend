@@ -5,7 +5,7 @@ import React from 'react'
 
 const LastPaymentPage = async ({searchParams}) => {
     
-     const session = await auth();
+     const session = true;
       {
         if (!session) {
           return <div>Please log in to access the dashboard.</div>;

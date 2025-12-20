@@ -14,7 +14,6 @@ const TableComponent = ({
   data,
   columns,
   pageName,
-  session,
   currentPage,
   itemPerPage,
 }) => {

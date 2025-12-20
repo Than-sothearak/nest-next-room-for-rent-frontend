@@ -19,7 +19,6 @@ const SideBarClient = ({ session, user, navigation, servicesCount, link}) => {
       navigation={navigation}
         currentUser={user}
         handleClick={handleClick}
-        session={session}
         isOpen={isOpen}
       />
 

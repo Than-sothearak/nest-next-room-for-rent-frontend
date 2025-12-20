@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { SidebarList } from "./SidebarList";
-import Logout from "./Logout";
 import { IoClose } from "react-icons/io5";
 import { HiMenuAlt2 } from "react-icons/hi";
 import ChooseSingleImageFile from "./ChooseSingleImage";
@@ -13,11 +12,12 @@ import Image from "next/image";
 import ConnectTelegram from "./ButtonConnectTelegram";
 import { SidebarListMobile } from "./SidebarListMobile";
 
-const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation,servicesCount,link }) => {
+const SideBarMain = ({ handleClick, isOpen, currentUser, navigation,servicesCount,link }) => {
   const [isClicked, setIsClicked] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-
+ 
+  const session = currentUser ? { user: currentUser } : null;
   const toggleCollapse = () => {
     setIsCollapsed((prev) => !prev);
     setIsProfileOpen(false); // hide profile on collapse
@@ -108,7 +108,7 @@ const SideBarMain = ({ handleClick, isOpen, session, currentUser, navigation,ser
 
               <ConnectTelegram userId={currentUser._id} user={currentUser} />
 
-              <Logout />
+            
             </div>
           </div>
         </div>

@@ -1,5 +1,4 @@
 "use server";
-import { auth } from "@/auth";
 import { Room } from "@/models/Room";
 import { Service } from "@/models/Service";
 import { User } from "@/models/User";
@@ -10,12 +9,7 @@ import { revalidatePath } from "next/cache";
 
 
 export async function getServices(query, page, sortKey, sortDate, sortDirection,) {
-  const session = await auth();
   await mongoDb();
-  if (!session?.user?.isAdmin) {
-    return console.log("Access denied!");
-  }
-
   try {
     const ITEM_PER_PAGE = 13;
     let sort = { createdAt: -1 }

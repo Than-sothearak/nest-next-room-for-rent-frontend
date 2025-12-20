@@ -1,4 +1,7 @@
 "use server";
+
+import { cookies } from "next/headers";
+
 // const bcrypt = require("bcryptjs");
 // import { User } from "@/models/User";
 // import { mongoDb } from "@/utils/connectDB";
@@ -11,20 +14,27 @@
 
 export async function getUsers(query, page, limit) {
   try {
-  
+    const cookieStore = await cookies();
+    
+    const token = cookieStore.get("access_token").value;
     const numPage = parseInt(page) || 1;
     const limitNum = parseInt(limit) || 10;
     let url = `http://localhost:3000/users?page=${numPage}&limit=${limitNum}`;
-  
+
     if (query) {
       url = `http://localhost:3000/users?query=${query}&page=${numPage}&limit=${limitNum}`;
     }
-   
+
     const res = await fetch(url, {
-      cache: "no-store", // Always fetch fresh data
+      method: "GET", // or 'POST' depending on your API
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // ✅ put it here
+      },
     });
 
-      if (!res.ok) {
+    if (!res.ok) {
       throw new Error("Failed to fetch users");
     }
 
@@ -33,7 +43,7 @@ export async function getUsers(query, page, limit) {
     const totalItems = getData.meta.totalItems;
     const ITEAM_PER_PAGE = getData.meta.itemsPerPage;
     const countPage = getData.meta.totalPages || 1;
-    
+
     return { users, totalItems, ITEAM_PER_PAGE, countPage };
   } catch (err) {
     console.error(err);

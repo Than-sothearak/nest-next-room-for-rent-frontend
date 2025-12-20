@@ -1,6 +1,4 @@
 "use server"
-
-import { auth } from "@/auth";
 import { Service } from "@/models/Service";
 import { User } from "@/models/User";
 import { formatDate, formatTo12Hour } from "@/utils/formatDate";
@@ -9,10 +7,6 @@ import { revalidatePath } from "next/cache";
 
 export async function requestService(booking, prevState, formData) {
 
-    const session = await auth();
-    if (!session) {
-        return console.log("Access denied! you are not login");
-    }
     const admin = await User.findOne({ isAdmin: true });
     try {
         if (!formData || typeof formData.get !== "function") {

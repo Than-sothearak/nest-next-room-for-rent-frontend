@@ -3,11 +3,10 @@ import Link from "next/link";
 import React from "react";
 import { getUsers } from "@/actions/users";
 import TableComponent from "@/components/TableComponent";
-import { auth } from "@/auth";
 import Pagination from "@/components/Pagination";
 
 const userPage = async ({ searchParams }) => {
-  const session = await auth();
+ 
   //   if (!session || !session.user?.isAdmin) {
   //   return (
   //     <div className="flex items-center justify-center h-screen">
@@ -58,7 +57,6 @@ const userPage = async ({ searchParams }) => {
         totalItems={totalItems}
         pageName="users"
         columns={userColumns}
-        session={session}
       />
 
       {/* Pagination Buttons */}

@@ -14,7 +14,6 @@ export default async function Sidebar({ session ,navigation,servicesCount, link 
        link={link}
        servicesCount={servicesCount}
         navigation={navigation}
-        session={session}
         // user={JSON.parse(JSON.stringify(user))}
       />
     </>

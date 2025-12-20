@@ -1,29 +1,16 @@
-import { auth } from "@/auth";
 import { Navbar } from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-import { User } from "@/models/User";
 import { pageNavigation, userNavigation } from "@/lib/navLinks";
 import Footer from "@/components/Footer";
-import { Service } from "@/models/Service";
-import { mongoDb } from "@/utils/connectDB";
+import { cookies } from "next/headers";
 
 export default async function DashboardLayout({ children, admin, user }) {
-  const session = await auth();
-  await mongoDb();
-  await new Promise((res) => setTimeout(res, 1000));
-  const userId = await User.findOne({ _id: session?.user?._id });
-
-  // if (!session || !userId) {
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <h1 className="text-2xl font-bold">Unauthorized</h1>
-  //     </div>
-  //   );
-  // }
-  // let services = [];
-  // if (session?.user?.isAdmin) {
-  //   services = await Service.find({ status: "pending" });
-  // }
+//  const cookie = cookies();
+//  const token = cookie.get("access_token")
+//   const session = null; //await getSession();
+//  if (token === null) {
+//    return <div>Please log in to access the dashboard.</div>;
+//  }
 
   return (
     <>
@@ -84,7 +71,7 @@ export default async function DashboardLayout({ children, admin, user }) {
           <div className="bg-primary">
             <Sidebar
               navigation={pageNavigation}
-              session={session}
+
               // servicesCount={services.length}
               link={"/dashboard/users/"}
             />
@@ -95,7 +82,7 @@ export default async function DashboardLayout({ children, admin, user }) {
                 link={"/dashboard/users/"}
                 // servicesCount={services.length}
                 navigation={pageNavigation}
-                session={session}
+              
                 // user={JSON.parse(JSON.stringify(userId))}
               />
                 <div className="max-lg:mx-2 overflow-x-auto">{children}</div>

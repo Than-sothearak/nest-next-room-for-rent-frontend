@@ -1,15 +1,9 @@
-import { auth } from "@/auth";
 import { ClientDashboard } from "@/components/ClientDashboard";
 import { Booking } from "@/models/Booking";
 import { Payment } from "@/models/Payment";
 import { User } from "@/models/User";
 const UserDashboardPage = async () => {
-  const session = await auth();
-  {
-    if (!session) {
-      return <div>Please log in to access the dashboard.</div>;
-    }
-  }
+await mongoDb();
 
   const user = await User.findById(session.user._id);
   const clientData = await Booking.findOne({ userId: user._id })
