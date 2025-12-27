@@ -1,17 +1,10 @@
 "use server"
-import { auth } from "@/auth";
 import { hashPassowrd, verifyPassword } from "@/lib/isVerify";
 import { User } from "@/models/User";
 import { mongoDb } from "@/utils/connectDB";
-import { redirect } from "next/navigation";
 
 export async function changePassword(userId, prevState, formData) {
 await mongoDb();
-const session = await auth();
-
-  if (!session?.user?.isAdmin && session?.user?._id !== userId)  {
-    return console.log("Access denied!")
-  }
 
   await new Promise((resolve) => setTimeout(resolve, 500));
   if (!formData || typeof formData.get !== "function") {
