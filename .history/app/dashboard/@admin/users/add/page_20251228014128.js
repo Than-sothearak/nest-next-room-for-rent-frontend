@@ -1,0 +1,10 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import UserForm from "@/components/UserForm";
+import { getServerSession } from "next-auth";
+
+export default async function addUserPage() {
+   const session = await getServerSession(authOptions)
+  return (
+    <UserForm session={session}/>
+  );
+}
