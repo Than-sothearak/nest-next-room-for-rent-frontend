@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 const AdminDashboardPage = async () => {
   const session = true
   {

@@ -12,27 +12,28 @@ export const authOptions = {
       async authorize(credentials) {
         try {
           // Call your NestJS login API
-        const res = await fetch("http://localhost:3000/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password,
-          }),
-        });
-        
-         const data = await res.json();
+          const res = await fetch("http://localhost:3000/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
 
-    if (!res.ok) {
-      // 🔥 Pass backend message here
-      throw new Error(data.message || "Login failed");
-    }
+          const data = await res.json();
 
-        return {
-          id: data.user.id,
-          email: data.user.email,
-          accessToken: data.accessToken,
-        };
+          if (!res.ok) {
+            // 🔥 Pass backend message here
+            throw new Error(data.message || "Login failed");
+          }
+
+          return {
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.username,
+            accessToken: data.user.accessToken,
+          };
         } catch (error) {
           console.error("Error in authorize:", error);
           return null;
@@ -42,6 +43,10 @@ export const authOptions = {
   ],
   session: {
     strategy: "jwt", // stores session in a secure JWT cookie
+     maxAge: 60 * 60 * 2, // ✅ 2 hours
+  },
+    jwt: {
+    maxAge: 60 * 60 * 2, // ✅ 2 hours
   },
   pages: {
     signIn: "/login", // custom login page
@@ -58,7 +63,7 @@ export const authOptions = {
       session.user.id = token.id;
       session.accessToken = token.accessToken;
       return session;
-    }
+    },
   },
 };
 
